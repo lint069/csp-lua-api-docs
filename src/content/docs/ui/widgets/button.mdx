@@ -1,0 +1,75 @@
+---
+title: ui.button
+description: Creates a standard interactive button.
+---
+
+import { Tabs, TabItem } from "@astrojs/starlight/components";
+
+A basic interactive push-button. It is used to trigger actions when clicked.
+
+## Signature
+
+```lua title="lua"
+local clicked = ui.button(label, size)
+```
+
+## Description
+
+The button returns `true` for a single frame when it is pressed and released.
+Because CSP scripts run every frame, you typically place this inside an `if` statement within your `update` loop.
+
+:::tip[Button IDs]
+ImGui uses the label string as an ID. If you have two buttons with the same name, they may conflict.
+Use the `##` separator to give buttons unique IDs with the same visible label:
+
+```lua title="lua"
+ui.button("Save##1")
+ui.button("Save##2")
+```
+
+:::
+
+## Parameters
+
+| Parameter | Type     | Required | Default      | Description                                              |
+| :-------- | :------- | :------- | :----------- | :------------------------------------------------------- |
+| `label`   | `string` | Yes      | -            | The text displayed on the button.                        |
+| `size`    | `vec2`   | No       | `vec2(0, 0)` | The dimensions of the button. `0` uses standard padding. |
+
+## Return Value
+
+| Type      | Description                                            |
+| :-------- | :----------------------------------------------------- |
+| `boolean` | Returns `true` during the frame the button is clicked. |
+
+---
+
+## Examples
+
+<Tabs>
+<TabItem label="Basic Button">
+
+A simple button that logs a message when clicked.
+
+```lua title="lua"
+if ui.button("Click Me") then
+ac.log("Button was pressed!")
+end
+```
+
+</TabItem>
+<TabItem label="Sized Button">
+
+Creating a wide button that spans 200 pixels.
+
+```lua title="lua"
+local buttonSize = vec2(200, 40)
+local buttonClicked = ui.button("Large Action", buttonSize)
+
+if buttonClicked then
+-- trigger action
+end
+```
+
+</TabItem>
+</Tabs>

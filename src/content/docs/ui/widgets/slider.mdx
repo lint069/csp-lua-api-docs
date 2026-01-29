@@ -1,0 +1,75 @@
+---
+title: ui.slider
+description: Creates a draggable bar to adjust numerical values.
+---
+
+import { Tabs, TabItem } from "@astrojs/starlight/components";
+
+A widget that allows users to select a value from a specified range by dragging a handle.
+
+## Signature
+
+```lua title="lua"
+-- standard usage
+local newValue, changed = ui.slider(label, value, min, max, format)
+
+-- using a refnumber
+local changed = ui.slider(label, myRefNumber, min, max, format)
+```
+
+## Description
+
+Sliders are ideal for adjusting settings like opacity, volume, or sensitivity.
+
+:::tip[Manual Input]
+Users can **Ctrl + Left Click** on any slider to manually type a specific numerical value using their keyboard.
+:::
+
+## Parameters
+
+| Parameter | Type                    | Required | Default  | Description                                  |
+| :-------- | :---------------------- | :------- | :------- | :------------------------------------------- |
+| `label`   | `string`                | Yes      | -        | Identifier label. Use `##` to hide the text. |
+| `value`   | `number` or `refnumber` | Yes      | -        | The current value.                           |
+| `min`     | `number`                | No       | `0.0`    | Minimum possible value.                      |
+| `max`     | `number`                | No       | `1.0`    | Maximum possible value.                      |
+| `format`  | `string`                | No       | `"%.3f"` | C-style format string for the display value. |
+
+## Return Value
+
+| Type      | Description                                          |
+| :-------- | :--------------------------------------------------- |
+| `boolean` | Returns `true` while the slider is being moved.      |
+| `number`  | (Only if passing standard number) The updated value. |
+
+---
+
+## Examples
+
+<Tabs>
+<TabItem label="Basic Slider">
+
+Adjusting a simple float value.
+
+```lua title="lua"
+local opacity = refnumber(1.0)
+
+if ui.slider("Opacity", opacity, 0, 1) then
+-- Opacity is being changed
+end
+```
+
+</TabItem>
+<TabItem label="Integer Format">
+
+Displaying the value as a whole number.
+
+```lua title="lua"
+local count = refnumber(5)
+
+-- use "%.0f" to hide decimals in the slider text
+ui.slider("Item Count", count, 0, 10, "Count: %.0f")
+```
+
+</TabItem>
+</Tabs>

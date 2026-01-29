@@ -1,0 +1,91 @@
+---
+title: rgbm
+description: Reference for the 4-channel color primitive with an intensity multiplier.
+---
+
+import { Tabs, TabItem } from "@astrojs/starlight/components";
+
+The `rgbm` type is the standard color primitive in CSP. It consists of `r`, `g`, and `b` channels, plus a `mult` (multiplier) channel.
+
+:::note[Multipliers vs. Alpha]
+In standard UI contexts, `mult` often acts as **alpha** (0.0 to 1.0). In lighting or emissive contexts, `mult` acts as **intensity**, allowing colors to go much brighter than 1.0 for HDR effects.
+:::
+
+## Constructors
+
+```lua title="lua"
+-- black (0, 0, 0) with mult=0
+local c1 = rgbm()
+
+-- red with full opacity
+local c2 = rgbm(1, 0, 0, 1)
+
+-- bright white
+local bright = rgbm(1, 1, 1, 10)
+```
+
+## Properties
+
+| Property | Type     | Description                                     |
+| :------- | :------- | :---------------------------------------------- |
+| `r`      | `number` | Red channel (typically 0–1).                    |
+| `g`      | `number` | Green channel (typically 0–1).                  |
+| `b`      | `number` | Blue channel (typically 0–1).                   |
+| `mult`   | `number` | Multiplier (Alpha or Brightness).               |
+| `rgb`    | `rgb`    | Returns the standard 3-channel `rgb` component. |
+
+---
+
+## Predefined Colors
+
+The `rgbm.colors` table contains several common colors with `mult` set to 1.
+
+| Color Name                | Values (R, G, B, M) |
+| :------------------------ | :------------------ |
+| `rgbm.colors.white`       | `1, 1, 1, 1`        |
+| `rgbm.colors.red`         | `1, 0, 0, 1`        |
+| `rgbm.colors.transparent` | `0, 0, 0, 0`        |
+| `rgbm.colors.black`       | `0, 0, 0, 1`        |
+
+---
+
+## Methods
+
+### `luminance()`
+
+Returns the perceived brightness of the color.
+
+```lua title="lua"
+local brightness = myColor:luminance()
+```
+
+### `hex()`
+
+Returns the color as a CSS-style hex string (e.g., `#AARRGGBB`).
+
+```lua title="lua"
+local str = myColor:hex()
+```
+
+---
+
+## Examples
+
+<Tabs>
+<TabItem label="UI Opacity">
+
+Using the multiplier to fade a UI element.
+
+```lua title="lua"
+local baseColor = rgbm.colors.blue:clone()
+
+function script.update(dt)
+-- pulse the alpha/mult channel
+    baseColor.mult = math.sin(ac.getSim().gameTime) \* 0.5 + 0.5
+    ui.drawRectFilled(vec2(10, 10), vec2(50, 50), baseColor)
+
+end
+```
+
+</TabItem>
+</Tabs>

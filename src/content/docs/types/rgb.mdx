@@ -1,0 +1,44 @@
+---
+title: rgb
+description: Reference for the 3-channel color primitive.
+---
+
+Standard three-channel color type containing `r`, `g`, and `b`. While `rgbm` is preferred for UI and lighting, `rgb` is often used for simple material properties and track conditions.
+
+## Constructors
+
+```lua title="lua"
+-- default black
+local c = rgb()
+
+-- custom color
+local yellow = rgb(1, 1, 0)
+```
+
+## Properties
+
+| Property | Type     | Description          |
+| :------- | :------- | :------------------- |
+| `r`      | `number` | Red channel (0–1).   |
+| `g`      | `number` | Green channel (0–1). |
+| `b`      | `number` | Blue channel (0–1).  |
+
+---
+
+## Methods
+
+### `rgbm()`
+
+Converts the `rgb` color into an `rgbm` type.
+
+```lua title="lua"
+local colorM = myRgb:rgbm(0.5) -- mult=0.5
+```
+
+### `toHsv()`
+
+Returns a `hsv` representation of the color.
+
+```lua title="lua"
+local hsvColor = myRgb:toHsv()
+```
