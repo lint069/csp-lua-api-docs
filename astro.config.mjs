@@ -6,6 +6,7 @@ import starlightSidebarSwipe from "starlight-sidebar-swipe";
 // import starlightLinksValidator from "starlight-links-validator";
 import remarkMath from "remark-math";
 import rehypeMathJax from "rehype-mathjax";
+import astroExpressiveCode from 'astro-expressive-code';
 
 // https://astro.build/config
 export default defineConfig({
@@ -17,6 +18,9 @@ export default defineConfig({
     rehypePlugins: [rehypeMathJax],
   },
   integrations: [
+    astroExpressiveCode({
+      themes: ['dark-plus'],
+    }),
     starlight({
       title: "CSP Lua API Docs",
       social: [

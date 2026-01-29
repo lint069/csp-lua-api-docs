@@ -9,7 +9,7 @@ Draws a solid, filled rectangle between two defined points on the screen or canv
 
 ## Signature
 
-```lua title="lua"
+```lua
 ui.drawRectFilled(p1, p2, color, rounding, roundingFlags)
 ```
 
@@ -31,7 +31,7 @@ If you require a hollow rectangle (borders only), use [`ui.drawRect`](../draw-re
 | `rounding`      | `number`                                    | No       | `0.0`   | The radius of the corners in pixels.           |
 | `roundingFlags` | [`ui.CornerFlags`](../enums/#uicornerflags) | No       | `All`   | Bitmask determining which corners are rounded. |
 
-## Return Value
+## Return Values
 
 - **None**
 
@@ -42,7 +42,7 @@ If you require a hollow rectangle (borders only), use [`ui.drawRect`](../draw-re
 
 Draw a semi-transparent black background box.
 
-```lua title="lua"
+```lua
 local p1 = vec2(0, 0)
 local p2 = vec2(200, 100)
 local black = rgbm(0, 0, 0, 0.5)
@@ -56,7 +56,7 @@ ui.drawRectFilled(p1, p2, black)
 
 Draw a filled green shape with fully rounded corners (pill shape).
 
-```lua title="lua"
+```lua
 local p1 = vec2(50, 50)
 local p2 = vec2(150, 90)
 local green = rgbm(0, 1, 0, 1)

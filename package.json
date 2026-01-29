@@ -18,6 +18,10 @@
     "sharp": "^0.34.2",
     "starlight-image-zoom": "^0.13.2",
     "starlight-links-validator": "^0.19.2",
-    "starlight-sidebar-swipe": "^0.1.1"
+    "starlight-sidebar-swipe": "^0.1.1",
+    "summer-time": "^3.1.7"
+  },
+  "devDependencies": {
+    "shiki": "^3.21.0"
   }
 }

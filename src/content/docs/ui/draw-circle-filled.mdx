@@ -9,7 +9,7 @@ Draws a solid, filled circle around a specific center point.
 
 ## Signature
 
-```lua title="lua"
+```lua
 ui.drawCircleFilled(center, radius, color, segments)
 ```
 
@@ -30,7 +30,7 @@ If you require an outline (stroke), use [`ui.drawCircle`](../draw-circle/) inste
 | `color`    | `rgbm`    | Yes      | -          | The fill color and opacity.                                                              |
 | `segments` | `integer` | No       | `0` (Auto) | The number of vertices used to draw the circle. Higher values result in smoother curves. |
 
-## Return Value
+## Return Values
 
 - **None**
 
@@ -41,7 +41,7 @@ If you require an outline (stroke), use [`ui.drawCircle`](../draw-circle/) inste
 
 Draw a solid green circle.
 
-```lua title="lua"
+```lua
 local center = vec2(100, 100)
 local radius = 50
 local green = rgbm(0, 1, 0, 1)
@@ -55,7 +55,7 @@ ui.drawCircleFilled(center, radius, green)
 
 By lowering the segment count, you can create regular filled polygons.
 
-```lua title="lua"
+```lua
 local center = vec2(200, 100)
 local radius = 50
 

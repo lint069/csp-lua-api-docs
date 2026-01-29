@@ -9,7 +9,7 @@ Returns a reference to the state structure of a car. This is the primary method 
 
 ## Signature
 
-```lua title="lua"
+```lua
 ac.getCar(index)
 ```
 
@@ -19,7 +19,7 @@ ac.getCar(index)
 | :-------- | :-------- | :------- | :------ | :------------------------------------------------- |
 | `index`   | `integer` | Yes      | -       | The 0-based index of the car (0 being the player). |
 
-## Return Value
+## Return Values
 
 - **[`ac.StateCar`](#acstatecar)** (or `nil` if the index is invalid).
 
@@ -43,12 +43,10 @@ The state object returned contains read-only properties about the vehicle.
 
 Get the speed of the user's car (Index 0).
 
-```lua title="lua"
+```lua
 local car = ac.getCar(0)
 
-if car then
 ui.text("Speed: " .. math.ceil(car.speedKmh) .. " km/h")
-end
 ```
 
 </TabItem>
@@ -56,9 +54,9 @@ end
 
 While you can use `ac.getCar` in a loop, it is more efficient to use the iterator.
 
-```lua title="lua"
+```lua
 for i, car in ac.iterateCars.ordered() do
-ui.text(string.format("Car %d: %s", i, car.driverName))
+    ui.text(string.format("Car %d: %s", i, car.driverName))
 end
 ```
 

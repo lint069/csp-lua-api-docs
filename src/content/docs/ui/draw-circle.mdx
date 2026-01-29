@@ -9,7 +9,7 @@ Draws an unfilled circle outline around a specific center point.
 
 ## Signature
 
-```lua title="lua"
+```lua
 ui.drawCircle(center, radius, color, segments, thickness)
 ```
 
@@ -31,7 +31,7 @@ This function only draws the outline (stroke). If you require a solid shape, use
 | `segments`  | `integer` | No       | `0` (Auto) | The number of vertices used to draw the circle. Higher values result in smoother curves. |
 | `thickness` | `number`  | No       | `1.0`      | The width of the outline stroke in pixels.                                               |
 
-## Return Value
+## Return Values
 
 - **None**
 
@@ -42,7 +42,7 @@ This function only draws the outline (stroke). If you require a solid shape, use
 
 Draw a standard white circle.
 
-```lua title="lua"
+```lua
 local center = vec2(100, 100)
 local radius = 50
 
@@ -55,7 +55,7 @@ ui.drawCircle(center, radius, rgbm.colors.white)
 
 By lowering the segment count, you can create regular polygons.
 
-```lua title="lua"
+```lua
 local center = vec2(200, 100)
 local radius = 50
 

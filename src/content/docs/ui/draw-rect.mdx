@@ -9,7 +9,7 @@ Draws an unfilled rectangle outline between two defined points on the screen or 
 
 ## Signature
 
-```lua title="lua"
+```lua
 ui.drawRect(p1, p2, color, rounding, roundingFlags, thickness)
 ```
 
@@ -32,7 +32,7 @@ This function only draws the outline. If you require a solid shape, use [`ui.dra
 | `roundingFlags` | [`ui.CornerFlags`](../enums/#uicornerflags) | No       | `ui.CornerFlags.All` | Bitmask determining which corners apply the rounding radius. |
 | `thickness`     | `number`                                    | No       | `1.0`                | The width of the outline stroke in pixels.                   |
 
-## Return Value
+## Return Values
 
 - None
 
@@ -43,7 +43,7 @@ This function only draws the outline. If you require a solid shape, use [`ui.dra
 
 Draw a simple red box with default thickness and sharp corners.
 
-```lua title="lua"
+```lua
 local startPos = vec2(10, 10)
 local endPos = vec2(100, 50)
 local red = (1, 0, 0, 1)
@@ -57,7 +57,7 @@ ui.drawRect(startPos, endPos, red)
 
 Draw a thick blue box where only the top two corners are rounded.
 
-```lua title="lua"
+```lua
 local p1 = vec2(50, 50)
 local p2 = vec2(150, 150)
 local blue = rgbm(0, 0, 1, 1)

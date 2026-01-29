@@ -9,7 +9,7 @@ Draws a filled sector of a circle (a "pie slice"). This function can also draw a
 
 ## Signature
 
-```lua title="lua"
+```lua
 ui.drawPie(center, radius, angleFrom, angleTo, color, image)
 ```
 
@@ -32,7 +32,7 @@ This function renders a convex shape from the center point out to the arc define
 | `color`     | `rgbm`           | No       | `rgbm.colors.white` | The fill color.                                                                  |
 | `image`     | `ui.ImageSource` | No       | `nil`               | An optional texture (filename, `ui.MediaPlayer`, etc.) to draw inside the shape. |
 
-## Return Value
+## Return Values
 
 - **None**
 
@@ -43,7 +43,7 @@ This function renders a convex shape from the center point out to the arc define
 
 Draw a yellow circle with a "mouth" open (missing sector).
 
-```lua title="lua"
+```lua
 local center = vec2(100, 100)
 local radius = 50
 local yellow = rgbm(1, 1, 0, 1)
@@ -58,7 +58,7 @@ ui.drawPie(center, radius, 0.2, math.tau - 0.2, yellow)
 
 Draw a semi-transparent circular radar/map using a texture.
 
-```lua title="lua"
+```lua
 local center = vec2(200, 100)
 local radius = 80
 local tint = rgbm(1, 1, 1, 0.8)
