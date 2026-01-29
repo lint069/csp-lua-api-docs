@@ -1,64 +1,62 @@
 ---
 title: ac.getCar
-description: Accesses the state of a specific car in the session.
+description: The primary function for accessing vehicle data in the simulation.
 ---
 
 import { Tabs, TabItem } from "@astrojs/starlight/components";
 
-Returns a reference to the state structure of a car. This is the primary method for retrieving physics data, inputs, and identifiers.
+Returns a reference to a car's state structure. This is the starting point for almost any script interacting with vehicles.
 
 ## Signature
 
 ```lua title="lua"
-ac.getCar(index)
+local car = ac.getCar(index)
 ```
+
+## Description
+
+This function provides access to the `ac.StateCar` object for a specific vehicle in the session. Vehicle indices are 0-based.
+
+:::note[Indexing]
+The player's car is always at index `0`. In multiplayer or races with AI, other cars will occupy indices `1` through `N`.
+:::
 
 ## Parameters
 
-| Parameter | Type      | Required | Default | Description                                        |
-| :-------- | :-------- | :------- | :------ | :------------------------------------------------- |
-| `index`   | `integer` | Yes      | -       | The 0-based index of the car (0 being the player). |
+| Parameter | Type      | Required | Default | Description                   |
+| :-------- | :-------- | :------- | :------ | :---------------------------- |
+| `index`   | `integer` | Yes      | -       | The 0-based index of the car. |
 
 ## Return Value
 
-- **[`ac.StateCar`](#acstatecar)** (or `nil` if the index is invalid).
+| Type          | Description                                                           |
+| :------------ | :-------------------------------------------------------------------- |
+| `ac.StateCar` | A reference to the car's data. Returns `nil` if the index is invalid. |
 
-## `ac.StateCar`
+## Technical Notes
 
-The state object returned contains read-only properties about the vehicle.
-
-| Property   | Type      | Description                              |
-| :--------- | :-------- | :--------------------------------------- |
-| `speedKmh` | `number`  | Current speed in km/h.                   |
-| `rpm`      | `number`  | Current engine RPM.                      |
-| `gas`      | `number`  | Gas input (0 to 1).                      |
-| `brake`    | `number`  | Brake input (0 to 1).                    |
-| `steer`    | `number`  | Steering input (-1 to 1).                |
-| `gear`     | `integer` | Current gear (0 = R, 1 = N, 2 = 1st...). |
+- **Performance:** Calling `ac.getCar` is extremely cheap (it returns a pointer to a pre-allocated FFI struct). However, it is still best practice to cache the reference if you use it many times in a single loop.
+- **Thread Safety:** In physics scripts, this data is updated at the physics rate. In UI scripts, it is updated at the frame rate.
 
 ## Examples
 
 <Tabs>
-<TabItem label="Get Player Speed">
-
-Get the speed of the user's car (Index 0).
+<TabItem label="Check Player Speed">
 
 ```lua title="lua"
 local car = ac.getCar(0)
-
-if car then
-ui.text("Speed: " .. math.ceil(car.speedKmh) .. " km/h")
+if car.speedKmh > 100 then
+    ac.log("Fast!")
 end
 ```
 
 </TabItem>
-<TabItem label="Iterate Over All Cars">
-
-While you can use `ac.getCar` in a loop, it is more efficient to use the iterator.
+<TabItem label="Iterate All">
 
 ```lua title="lua"
-for i, car in ac.iterateCars.ordered() do
-ui.text(string.format("Car %d: %s", i, car.driverName))
+-- it is usually better to use the iterator for multiple cars
+for i, car in ac.iterateCars() do
+    ui.text(string.format("Car %d: %s", i, car.driverName))
 end
 ```
 
