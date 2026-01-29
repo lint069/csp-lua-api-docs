@@ -1,0 +1,67 @@
+---
+title: ui.drawCircleFilled
+description: Draws a solid (filled) circle on the UI canvas.
+---
+
+import { Tabs, TabItem } from "@astrojs/starlight/components";
+
+Draws a solid, filled circle around a specific center point.
+
+## Signature
+
+```lua title="lua"
+ui.drawCircleFilled(center, radius, color, segments)
+```
+
+## Description
+
+This function renders a filled circle. The smoothness of the circle depends on the number of `segments` used to draw it.
+
+:::note[Outlines]
+If you require an outline (stroke), use [`ui.drawCircle`](/ui/draw-circle) instead.
+:::
+
+## Parameters
+
+| Parameter  | Type      | Required | Default    | Description                                                                              |
+| :--------- | :-------- | :------- | :--------- | :--------------------------------------------------------------------------------------- |
+| `center`   | `vec2`    | Yes      | -          | Screen coordinates for the center of the circle.                                         |
+| `radius`   | `number`  | Yes      | -          | The radius of the circle in pixels.                                                      |
+| `color`    | `rgbm`    | Yes      | -          | The fill color and opacity.                                                              |
+| `segments` | `integer` | No       | `0` (Auto) | The number of vertices used to draw the circle. Higher values result in smoother curves. |
+
+## Return Value
+
+- **None**
+
+## Examples
+
+<Tabs>
+<TabItem label="Basic Usage">
+
+Draw a solid green circle.
+
+```lua title="lua"
+local center = vec2(100, 100)
+local radius = 50
+local green = rgbm(0, 1, 0, 1)
+
+-- draw a filled green circle
+ui.drawCircleFilled(center, radius, green)
+```
+
+</TabItem>
+<TabItem label="Filled Polygon">
+
+By lowering the segment count, you can create regular filled polygons.
+
+```lua title="lua"
+local center = vec2(200, 100)
+local radius = 50
+
+-- 6 segments creates a filled hexagon
+ui.drawCircleFilled(center, radius, rgbm.colors.red, 6)
+```
+
+</TabItem>
+</Tabs>

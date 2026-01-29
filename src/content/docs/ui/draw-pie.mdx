@@ -1,0 +1,71 @@
+---
+title: ui.drawPie
+description: Draws a filled circle sector (pie slice) or a full circle, optionally textured.
+---
+
+import { Tabs, TabItem } from "@astrojs/starlight/components";
+
+Draws a filled sector of a circle (a "pie slice"). This function can also draw a full circle if the angle difference exceeds $$2\pi$$. Unlike standard drawing functions, this one supports masking a texture inside the shape.
+
+## Signature
+
+```lua title="lua"
+ui.drawPie(center, radius, angleFrom, angleTo, color, image)
+```
+
+## Description
+
+This function renders a convex shape from the center point out to the arc defined by the start and end angles.
+
+- If `angleTo` is less than `angleFrom`, they are swapped automatically.
+- If the difference between angles is greater than `math.tau` ($$2\pi$$), it efficiently renders a full `ui.drawCircleFilled` instead.
+- If an `image` is provided, it applies `ui.beginTextureShade` to mask the texture within the pie shape.
+
+## Parameters
+
+| Parameter   | Type             | Required | Default             | Description                                                                      |
+| :---------- | :--------------- | :------- | :------------------ | :------------------------------------------------------------------------------- |
+| `center`    | `vec2`           | Yes      | -                   | Screen coordinates for the center of the circle.                                 |
+| `radius`    | `number`         | Yes      | -                   | The radius of the circle in pixels.                                              |
+| `angleFrom` | `number`         | Yes      | -                   | Starting angle in **radians**.                                                   |
+| `angleTo`   | `number`         | Yes      | -                   | Ending angle in **radians**.                                                     |
+| `color`     | `rgbm`           | No       | `rgbm.colors.white` | The fill color.                                                                  |
+| `image`     | `ui.ImageSource` | No       | `nil`               | An optional texture (filename, `ui.MediaPlayer`, etc.) to draw inside the shape. |
+
+## Return Value
+
+- **None**
+
+## Examples
+
+<Tabs>
+<TabItem label="Pacman">
+
+Draw a yellow circle with a "mouth" open (missing sector).
+
+```lua title="lua"
+local center = vec2(100, 100)
+local radius = 50
+local yellow = rgbm(1, 1, 0, 1)
+
+-- angles in radians
+-- 0.2 rad to 6.08 rad leaves a slice open
+ui.drawPie(center, radius, 0.2, math.tau - 0.2, yellow)
+```
+
+</TabItem>
+<TabItem label="Textured Radar">
+
+Draw a semi-transparent circular radar/map using a texture.
+
+```lua title="lua"
+local center = vec2(200, 100)
+local radius = 80
+local tint = rgbm(1, 1, 1, 0.8)
+
+-- draw full circle (0 to 2pi) masked with a map texture
+ui.drawPie(center, radius, 0, math.tau, tint, "map_texture.png")
+```
+
+</TabItem>
+</Tabs>

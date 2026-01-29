@@ -1,0 +1,67 @@
+---
+title: ui.drawCircle
+description: Draws an unfilled circle outline on the UI canvas.
+---
+
+import { Tabs, TabItem } from "@astrojs/starlight/components";
+
+Draws an unfilled circle outline around a specific center point.
+
+## Signature
+
+```lua title="lua"
+ui.drawCircle(center, radius, color, segments, thickness)
+```
+
+## Description
+
+This function renders the outline of a circle. The smoothness of the circle depends on the number of `segments` used to draw it.
+
+:::note[Filled Circles]
+This function only draws the outline (stroke). If you require a solid shape, use **[`ui.drawCircleFilled`](/ui/draw-circle-filled)** instead.
+:::
+
+## Parameters
+
+| Parameter   | Type      | Required | Default    | Description                                                                              |
+| :---------- | :-------- | :------- | :--------- | :--------------------------------------------------------------------------------------- |
+| `center`    | `vec2`    | Yes      | -          | Screen coordinates for the center of the circle.                                         |
+| `radius`    | `number`  | Yes      | -          | The radius of the circle in pixels.                                                      |
+| `color`     | `rgbm`    | Yes      | -          | The color and opacity of the outline.                                                    |
+| `segments`  | `integer` | No       | `0` (Auto) | The number of vertices used to draw the circle. Higher values result in smoother curves. |
+| `thickness` | `number`  | No       | `1.0`      | The width of the outline stroke in pixels.                                               |
+
+## Return Value
+
+- **None**
+
+## Examples
+
+<Tabs>
+<TabItem label="Basic Usage">
+
+Draw a standard white circle.
+
+```lua title="lua"
+local center = vec2(100, 100)
+local radius = 50
+
+-- draw a white circle with default smoothness
+ui.drawCircle(center, radius, rgbm.colors.white)
+```
+
+</TabItem>
+<TabItem label="Regular Polygon">
+
+By lowering the segment count, you can create regular polygons.
+
+```lua title="lua"
+local center = vec2(200, 100)
+local radius = 50
+
+-- 6 segments creates a hexagon
+ui.drawCircle(center, radius, rgbm.colors.red, 6, 3.0)
+```
+
+</TabItem>
+</Tabs>

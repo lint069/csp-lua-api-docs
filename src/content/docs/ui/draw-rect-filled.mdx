@@ -1,0 +1,70 @@
+---
+title: ui.drawRectFilled
+description: Draws a solid (filled) rectangle on the UI canvas.
+---
+
+import { Tabs, TabItem } from "@astrojs/starlight/components";
+
+Draws a solid, filled rectangle between two defined points on the screen or canvas.
+
+## Signature
+
+```lua title="lua"
+ui.drawRectFilled(p1, p2, color, rounding, roundingFlags)
+```
+
+## Description
+
+This function renders a filled rectangle. The shape is defined by an axis-aligned bounding box calculated from points `p1` (usually top-left) and `p2` (usually bottom-right).
+
+:::note[Outlines]
+If you require a hollow rectangle (borders only), use [`ui.drawRect`](/ui/draw-rect) instead.
+:::
+
+## Parameters
+
+| Parameter       | Type                                        | Required | Default | Description                                    |
+| :-------------- | :------------------------------------------ | :------- | :------ | :--------------------------------------------- |
+| `p1`            | `vec2`                                      | Yes      | -       | Screen coordinates for the first corner.       |
+| `p2`            | `vec2`                                      | Yes      | -       | Screen coordinates for the opposite corner.    |
+| `color`         | `rgbm`                                      | Yes      | -       | The fill color and opacity.                    |
+| `rounding`      | `number`                                    | No       | `0.0`   | The radius of the corners in pixels.           |
+| `roundingFlags` | [`ui.CornerFlags`](/ui/enums#uicornerflags) | No       | `All`   | Bitmask determining which corners are rounded. |
+
+## Return Value
+
+- **None**
+
+## Examples
+
+<Tabs>
+<TabItem label="Transparent Background">
+
+Draw a semi-transparent black background box.
+
+```lua title="lua"
+local p1 = vec2(0, 0)
+local p2 = vec2(200, 100)
+local black = rgbm(0, 0, 0, 0.5)
+
+-- black with 50% opacity
+ui.drawRectFilled(p1, p2, black)
+```
+
+</TabItem>
+<TabItem label="Rounded Button">
+
+Draw a filled green shape with fully rounded corners (pill shape).
+
+```lua title="lua"
+local p1 = vec2(50, 50)
+local p2 = vec2(150, 90)
+local green = rgbm(0, 1, 0, 1)
+local radius = 20
+
+-- radius of 20px for smooth corners
+ui.drawRectFilled(p1, p2, green, radius)
+```
+
+</TabItem>
+</Tabs>

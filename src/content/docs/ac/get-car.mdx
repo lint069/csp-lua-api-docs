@@ -1,0 +1,66 @@
+---
+title: ac.getCar
+description: Accesses the state of a specific car in the session.
+---
+
+import { Tabs, TabItem } from "@astrojs/starlight/components";
+
+Returns a reference to the state structure of a car. This is the primary method for retrieving physics data, inputs, and identifiers.
+
+## Signature
+
+```lua title="lua"
+ac.getCar(index)
+```
+
+## Parameters
+
+| Parameter | Type      | Required | Default | Description                                        |
+| :-------- | :-------- | :------- | :------ | :------------------------------------------------- |
+| `index`   | `integer` | Yes      | -       | The 0-based index of the car (0 being the player). |
+
+## Return Value
+
+- **[`ac.StateCar`](#acstatecar)** (or `nil` if the index is invalid).
+
+## `ac.StateCar`
+
+The state object returned contains read-only properties about the vehicle.
+
+| Property   | Type      | Description                              |
+| :--------- | :-------- | :--------------------------------------- |
+| `speedKmh` | `number`  | Current speed in km/h.                   |
+| `rpm`      | `number`  | Current engine RPM.                      |
+| `gas`      | `number`  | Gas input (0 to 1).                      |
+| `brake`    | `number`  | Brake input (0 to 1).                    |
+| `steer`    | `number`  | Steering input (-1 to 1).                |
+| `gear`     | `integer` | Current gear (0 = R, 1 = N, 2 = 1st...). |
+
+## Examples
+
+<Tabs>
+<TabItem label="Get Player Speed">
+
+Get the speed of the user's car (Index 0).
+
+```lua title="lua"
+local car = ac.getCar(0)
+
+if car then
+ui.text("Speed: " .. math.ceil(car.speedKmh) .. " km/h")
+end
+```
+
+</TabItem>
+<TabItem label="Iterate Over All Cars">
+
+While you can use `ac.getCar` in a loop, it is more efficient to use the iterator.
+
+```lua title="lua"
+for i, car in ac.iterateCars.ordered() do
+ui.text(string.format("Car %d: %s", i, car.driverName))
+end
+```
+
+</TabItem>
+</Tabs>
