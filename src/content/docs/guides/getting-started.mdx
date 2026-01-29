@@ -14,13 +14,11 @@ Welcome to the **Custom Shaders Patch (CSP) Lua SDK**. This framework allows dev
 The **Lua SDK** is the bridge between the C++ CSP core and user-generated content. It utilizes **LuaJIT**, allowing code to run extremely fast within the game loop, be it via a physics frame or render frame.
 
 :::caution[Prerequisites]
-This documentation assumes you are proficient with **Lua 5.1** or **LuaJIT**.
-We do not cover syntax, loops, tables, or basic programming concepts here. If you are new to Lua, and are willing to learn, we recommend [Lua.org](https://www.lua.org/pil/contents.html) or [Lua by Example](https://learnxinyminutes.com/docs/lua/). It is a scripting language, and arguably easier than Python, with less keywords.
+This documentation assumes you are proficient with **Lua** or **LuaJIT**.
+We do not cover syntax, loops, tables, or basic programming concepts here. If you are new to Lua, and are willing to learn, we recommend [Lua.org](https://www.lua.org/pil/contents.html) or [Lua by Example](https://luabyexample.techplexlabs.com/). It is a scripting language, and arguably easier than Python, with less keywords.
 :::
 
 ## Architecture
-
-
 
 ### Script Types
 
@@ -78,7 +76,7 @@ Let's create a simple "hello world" utility app to verify your environment is se
     ```
 
     :::note[Prerequisites]
-    If this is done correctly, an app named `hello csp` will show up automatically in 
+    If this is done correctly, an app named `hello csp` will show up automatically in
     Content Manager under `Content > Miscellaneous > Lua Apps`. If you then load into a driving session,
     expect to see an app named `CSP WINDOW` in the side bar, under all apps.
     :::

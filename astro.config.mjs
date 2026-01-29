@@ -11,6 +11,7 @@ import rehypeMathJax from "rehype-mathjax";
 export default defineConfig({
   site: "https://lint069.github.io/csp-lua-api-docs",
   base: "/csp-lua-api-docs",
+  trailingSlash: "always",
   markdown: {
     remarkPlugins: [remarkMath],
     rehypePlugins: [rehypeMathJax],
