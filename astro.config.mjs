@@ -9,6 +9,8 @@ import rehypeMathJax from "rehype-mathjax";
 
 // https://astro.build/config
 export default defineConfig({
+  site: "https://lint069.github.io",
+  base: "/csp-lua-api-docs",
   markdown: {
     remarkPlugins: [remarkMath],
     rehypePlugins: [rehypeMathJax],
