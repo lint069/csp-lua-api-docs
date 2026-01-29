@@ -1,0 +1,54 @@
+---
+title: ui.drawLine
+description: Draws a straight line between two points on the UI canvas.
+---
+
+import { Tabs, TabItem } from "@astrojs/starlight/components";
+
+Draws a single straight line segment between two defined coordinates.
+
+## Signature
+
+```lua
+ui.drawLine(p1, p2, color, thickness)
+```
+
+## Description
+
+This function renders a line segment starting at `p1` and ending at `p2`. It is useful for creating custom dividers, connecting points in a graph, or drawing custom wireframe shapes.
+
+:::note[Coordinate Space]
+Coordinates are relative to the current window or the screen, depending on the current `ui` context.
+:::
+
+## Parameters
+
+| Parameter   | Type     | Required | Default | Description                        |
+| :---------- | :------- | :------- | :------ | :--------------------------------- |
+| `p1`        | `vec2`   | Yes      | -       | The starting screen coordinates.   |
+| `p2`        | `vec2`   | Yes      | -       | The ending screen coordinates.     |
+| `color`     | `rgbm`   | Yes      | -       | The color and opacity of the line. |
+| `thickness` | `number` | No       | `1.0`   | The width of the line in pixels.   |
+
+## Return Values
+
+- **None**
+
+## Examples
+
+<Tabs>
+<TabItem label="Divider">
+
+Draw a horizontal white line to act as a separator.
+
+```lua
+local p1 = vec2(10, 50)
+local p2 = vec2(200, 50)
+local white = rgbm.colors.white
+
+-- draw a 1px thick horizontal line
+ui.drawLine(p1, p2, white)
+```
+
+</TabItem>
+</Tabs>

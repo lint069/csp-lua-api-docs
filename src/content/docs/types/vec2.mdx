@@ -1,0 +1,130 @@
+---
+title: vec2
+description: Reference for the 2D vector primitive used for coordinates and sizes.
+---
+
+import { Tabs, TabItem } from "@astrojs/starlight/components";
+
+A two-dimensional vector containing `x` and `y` floating-point values. This type is used extensively for UI positioning, dimensions, and texture coordinates (UVs).
+
+## Constructors
+
+```lua
+-- create a vector with x=0, y=0
+local v1 = vec2()
+
+-- create a vector with specific values
+local v2 = vec2(10, 20)
+
+-- create a vector from another vec2 (cloning)
+local v3 = vec2(v2)
+```
+
+## Properties
+
+| Property | Type     | Description               |
+| :------- | :------- | :------------------------ |
+| `x`      | `number` | The horizontal component. |
+| `y`      | `number` | The vertical component.   |
+
+---
+
+## Methods
+
+### `set()`
+
+Updates the vector's components in place.
+
+```lua
+v:set(x, y)
+v:set(otherVec2)
+```
+
+### `add()`
+
+Adds values to the current vector. If `out` is provided, the result is written there; otherwise, it modifies the original.
+
+```lua
+v:add(otherVec2, out)
+v:add(number, out)
+```
+
+### `normalize()`
+
+Normalizes the vector (makes its length 1) in place.
+
+```lua
+v:normalize(out)
+```
+
+### `length()`
+
+Returns the magnitude of the vector.
+
+```lua
+local len = v:length()
+```
+
+### `lerp()`
+
+Linear interpolation between the current vector and `otherVector`.
+
+```lua
+v:lerp(otherVector, mix, out)
+```
+
+---
+
+## Operator Overloading
+
+The `vec2` type supports standard Lua operators.
+
+:::caution[Performance]
+Using operators like `+` or `*` creates a new `vec2` object. In high-frequency scripts (like `update` loops), it is significantly more efficient to use methods like `:add()` or `:set()` on existing vectors to reduce garbage collection pressure.
+:::
+
+| Operator | Description                                       |
+| :------- | :------------------------------------------------ |
+| `+`      | Addition (`vec2 + vec2` or `vec2 + number`)       |
+| `-`      | Subtraction (`vec2 - vec2` or `vec2 - number`)    |
+| `*`      | Multiplication (`vec2 * vec2` or `vec2 * number`) |
+| `/`      | Division (`vec2 / vec2` or `vec2 / number`)       |
+| `#`      | Length operator (returns the magnitude)           |
+| `==`     | Equality (checks if `x` and `y` are identical)    |
+
+---
+
+## Examples
+
+<Tabs>
+<TabItem label="Basic Positioning">
+
+Using `vec2` to define a position and a size for a rectangle.
+
+```lua
+local pos = vec2(50, 50)
+local size = vec2(100, 40)
+
+ui.drawRectFilled(pos, pos + size, rgbm.colors.red)
+```
+
+</TabItem>
+<TabItem label="Efficient Updating">
+
+Updating a position every frame without creating new objects.
+
+```lua
+local position = vec2(0, 0)
+local velocity = vec2(10, 5)
+
+function script.update(dt)
+-- multiplies velocity by dt and adds it to position in-place
+position:addScaled(velocity, dt)
+
+    ui.drawCircleFilled(position, 10, rgbm.colors.white)
+
+end
+```
+
+</TabItem>
+</Tabs>

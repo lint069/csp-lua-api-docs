@@ -1,0 +1,110 @@
+---
+title: vec3
+description: Reference for the 3D vector primitive used for world space coordinates and directions.
+---
+
+import { Tabs, TabItem } from "@astrojs/starlight/components";
+
+A three-dimensional vector containing `x`, `y`, and `z` floating-point values. This is the primary type for world positions, directions, and 3D physics.
+
+## Constructors
+
+```lua
+-- create a vector with x=0, y=0, z=0
+local v1 = vec3()
+
+-- create a vector with specific values
+local v2 = vec3(10, 5, -2)
+
+-- create a vector from another vec3 (cloning)
+local v3 = vec3(v2)
+```
+
+## Properties
+
+| Property | Type     | Description                  |
+| :------- | :------- | :--------------------------- |
+| `x`      | `number` | The horizontal component.    |
+| `y`      | `number` | The vertical (up) component. |
+| `z`      | `number` | The depth component.         |
+
+---
+
+## Methods
+
+### `set()`
+
+Updates the vector's components in place.
+
+```lua
+v:set(x, y, z)
+v:set(otherVec3)
+```
+
+### `normalize()`
+
+Normalizes the vector (makes its length 1) in place. Returns the same vector for chaining.
+
+```lua
+v:normalize(out)
+```
+
+### `cross()`
+
+Calculates the cross product of two vectors (perpendicular vector).
+
+```lua
+v:cross(otherVec3, out)
+```
+
+### `dot()`
+
+Returns the dot product (scalar) of two vectors.
+
+```lua
+local product = v:dot(otherVec3)
+```
+
+### `rotate()`
+
+Rotates the vector using a `quat` (quaternion).
+
+```lua
+v:rotate(quaternion, out)
+```
+
+---
+
+## Examples
+
+<Tabs>
+<TabItem label="World Distance">
+
+Checking the distance between the player and a point in the world.
+
+```lua
+local carPos = ac.getCar(0).position
+local markerPos = vec3(100, 0, 200)
+
+local dist = carPos:distance(markerPos)
+
+if dist < 50 then
+ac.log("Near the marker!")
+end
+```
+
+</TabItem>
+<TabItem label="Directional Math">
+
+Calculating a forward vector relative to a car's orientation.
+
+```lua
+local car = ac.getCar(0)
+local forward = car.look -- vec3 direction
+
+-- move 5 meters forward from the car position
+local spawnPoint = car.position + forward \* 5
+```
+
+</TabItem>
+</Tabs>

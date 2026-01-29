@@ -1,0 +1,50 @@
+---
+title: ui.text
+description: Displays basic unformatted text.
+---
+
+import { Tabs, TabItem } from "@astrojs/starlight/components";
+
+The most basic widget for displaying strings of text on the UI.
+
+## Signature
+
+```lua
+ui.text(text)
+```
+
+## Description
+
+Displays a string. Text will stay on the same line as previous widgets if `ui.sameLine()` was called, otherwise it starts a new line.
+
+## Parameters
+
+| Parameter | Type     | Required | Default | Description                 |
+| :-------- | :------- | :------- | :------ | :-------------------------- |
+| `text`    | `string` | Yes      | -       | The string to be displayed. |
+
+---
+
+## Examples
+
+<Tabs>
+<TabItem label="Basic Text">
+
+```lua
+ui.text("Hello, Assetto Corsa!")
+```
+
+</TabItem>
+<TabItem label="Dynamic Text">
+
+Displaying changing values from the simulation.
+
+```lua
+function script.update(dt)
+local car = ac.getCar(0)
+ui.text(string.format("Current Speed: %.0f KM/H", car.speedKmh))
+end
+```
+
+</TabItem>
+</Tabs>
