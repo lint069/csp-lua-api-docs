@@ -1,0 +1,94 @@
+---
+title: setTimeout
+description: ...
+# sidebar:
+#   badge:
+#     text: Incomplete
+#     variant: danger # note | tip | caution | danger | success | default
+---
+
+import { Aside, Tabs, TabItem } from "@astrojs/starlight/components";
+
+## Signature
+
+```lua
+setTimeout(callback, delay, uniqueKey)
+```
+
+## Description
+
+Runs callback after the specified delay time. Returns `integer` which can be utilized by the [`clearTimeout()`](../cleartimeout/) function.
+Intervals are only called once per frame.
+
+<Aside type="note" title="info">
+  All callbacks will be run before the `update()` call, and they would only be run when the
+  script runs. So if your script is executed each frame and AC runs at 60 FPS,
+  smallest interval would be 0.016 seconds, and anything lower you'd set it to would
+  still act like 0.016 seconds.
+</Aside>
+
+## Parameters
+
+| Parameter   | Type       | Required | Default | Description                            |
+| ----------- | ---------- | -------- | ------- | -------------------------------------- |
+| `callback`  | `function` | Yes      | -       | Function to be called after the delay. |
+| `delay`     | `number`   | No       | `0`     | Delay time in seconds.                 |
+| `uniqueKey` | `any`      | No       | `nil`   | Unique identifier for the timer.       |
+
+<Aside type="note" title="info">
+    If `uniqueKey` is provided, and there is already an active timer with the same key,
+    the new timer will not be added.
+</Aside>
+
+## Return Values
+
+- `integer` CancellationID for the timeout. Can be used to cancel the timeout with [`clearTimeout()`](../cleartimeout/).
+
+## Examples
+
+<Tabs>
+<TabItem label="Basic Usage">
+
+```lua
+setTimeout(function()
+    ac.log("This message is printed after 2 seconds")
+end, 2)
+```
+
+</TabItem>
+<TabItem label="Canceling Timeout">
+
+```lua
+local cancellationID = setTimeout(function()
+    ac.shutdownAssettoCorsa()
+end, 3)
+
+function script.windowMain()
+    if ui.button("Prevent shutdown") then
+        local cancelled = clearTimeout(cancellationID)
+        ac.debug("prevented?", cancelled)
+    end
+end
+```
+
+</TabItem>
+<TabItem label="Using Unique Key">
+
+```lua
+setTimeout(function()
+    ac.log("Garbage collection")
+end, 2, "gc")
+
+-- This second timer with the same uniqueKey won't be added.
+setTimeout(function()
+    ac.log("This will not run")
+end, 2, "gc")
+
+-- This timer with a different uniqueKey runs normally.
+setTimeout(function()
+    ac.log("Other timer running")
+end, 2, "otherTimer")
+```
+
+</TabItem>
+</Tabs>

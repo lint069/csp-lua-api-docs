@@ -2,7 +2,7 @@
 import { defineConfig } from "astro/config";
 import starlight from "@astrojs/starlight";
 import starlightImageZoom from "starlight-image-zoom";
-import starlightSidebarSwipe from "starlight-sidebar-swipe";
+// import starlightSidebarSwipe from "starlight-sidebar-swipe";
 // import starlightLinksValidator from "starlight-links-validator";
 import remarkMath from "remark-math";
 import rehypeMathJax from "rehype-mathjax";
@@ -13,6 +13,7 @@ export default defineConfig({
   site: "https://lint069.github.io/csp-lua-api-docs",
   base: "/csp-lua-api-docs",
   trailingSlash: "always",
+  server: { port: 6969, host: true },
   markdown: {
     remarkPlugins: [remarkMath],
     rehypePlugins: [rehypeMathJax],
@@ -32,7 +33,7 @@ export default defineConfig({
       ],
       customCss: ["./src/css/style.css"],
       plugins: [
-        starlightSidebarSwipe(),
+        // starlightSidebarSwipe(),
         starlightImageZoom(),
         // starlightLinksValidator(),
       ],
@@ -52,6 +53,14 @@ export default defineConfig({
         {
           label: "ui",
           autogenerate: { directory: "ui" },
+        },
+        {
+          label: "io",
+          autogenerate: { directory: "io" },
+        },
+        {
+          label: "miscellaneous",
+          autogenerate: { directory: "miscellaneous" },
         },
       ],
     }),
