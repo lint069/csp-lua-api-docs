@@ -17,14 +17,14 @@ setTimeout(callback, delay, uniqueKey)
 
 ## Description
 
-Runs callback after the specified delay time. Returns `integer` which can be utilized by the [`clearTimeout()`](../cleartimeout/) function.
+Runs callback after the specified delay time. Returns `integer` which can be utilized by the [`clearTimeout()`](../clear-timeout/) function.
 Intervals are only called once per frame.
 
 <Aside type="note" title="info">
-  All callbacks will be run before the `update()` call, and they would only be run when the
-  script runs. So if your script is executed each frame and AC runs at 60 FPS,
-  smallest interval would be 0.016 seconds, and anything lower you'd set it to would
-  still act like 0.016 seconds.
+  All callbacks will be run before the `update()` call, and they would only be
+  run when the script runs. So if your script is executed each frame and AC runs
+  at 60 FPS, smallest interval would be 0.016 seconds, and anything lower you'd
+  set it to would still act like 0.016 seconds.
 </Aside>
 
 ## Parameters
@@ -36,8 +36,8 @@ Intervals are only called once per frame.
 | `uniqueKey` | `any`      | No       | `nil`   | Unique identifier for the timer.       |
 
 <Aside type="note" title="info">
-    If `uniqueKey` is provided, and there is already an active timer with the same key,
-    the new timer will not be added.
+  If `uniqueKey` is provided, and there is already an active timer with the same
+  key, the new timer will not be added.
 </Aside>
 
 ## Return Values

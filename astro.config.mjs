@@ -6,7 +6,7 @@ import starlightImageZoom from "starlight-image-zoom";
 // import starlightLinksValidator from "starlight-links-validator";
 import remarkMath from "remark-math";
 import rehypeMathJax from "rehype-mathjax";
-import astroExpressiveCode from 'astro-expressive-code';
+import astroExpressiveCode from "astro-expressive-code";
 
 // https://astro.build/config
 export default defineConfig({
@@ -20,7 +20,7 @@ export default defineConfig({
   },
   integrations: [
     astroExpressiveCode({
-      themes: ['dark-plus'],
+      themes: ["dark-plus"],
     }),
     starlight({
       title: "CSP Lua API Docs",
@@ -43,20 +43,28 @@ export default defineConfig({
           items: [{ label: "Getting Started", slug: "guides/getting-started" }],
         },
         {
-          label: "Types",
-          autogenerate: { directory: "types" },
+          label: "Primitives",
+          autogenerate: { directory: "primitives" },
         },
         {
           label: "ac",
           autogenerate: { directory: "ac" },
         },
         {
-          label: "ui",
-          autogenerate: { directory: "ui" },
-        },
-        {
           label: "io",
           autogenerate: { directory: "io" },
+        },
+        {
+          label: "math",
+          autogenerate: { directory: "math" },
+        },
+        {
+          label: "render",
+          autogenerate: { directory: "render" },
+        },
+        {
+          label: "ui",
+          autogenerate: { directory: "ui" },
         },
         {
           label: "miscellaneous",

@@ -35,3 +35,11 @@
 mjx-container svg {
   display: inline !important;
 }
+
+/* sidebar */
+[data-sidebar-group] > h2 {
+  text-transform: uppercase;
+  font-size: 0.75rem;
+  letter-spacing: 0.05rem;
+  opacity: 0.8;
+}
