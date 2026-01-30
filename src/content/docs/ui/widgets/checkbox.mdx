@@ -29,14 +29,14 @@ CSP provides two ways to handle state with this widget:
 ## Parameters
 
 | Parameter | Type                   | Required | Default | Description                      |
-| :-------- | :--------------------- | :------- | :------ | :------------------------------- |
+| --------- | ---------------------- | -------- | ------- | -------------------------------- |
 | `label`   | `string`               | Yes      | -       | Label text.                      |
 | `value`   | `boolean` or `refbool` | Yes      | -       | The current state of the toggle. |
 
 ## Return Values
 
 | Type      | Description                                                       |
-| :-------- | :---------------------------------------------------------------- |
+| --------- | ----------------------------------------------------------------- |
 | `boolean` | Returns `true` if the state was toggled this frame.               |
 | `boolean` | (Only if passing standard boolean) The new state of the checkbox. |
 
@@ -53,9 +53,9 @@ The most efficient way to manage state in CSP.
 local showDebug = refbool(false)
 
 function script.drawUI()
-if ui.checkbox("Show Debug Info", showDebug) then
-ac.log("Toggle clicked! New state: " .. tostring(showDebug.value))
-end
+    if ui.checkbox("Show Debug Info", showDebug) then
+        ac.log("Toggle clicked! New state: " .. tostring(showDebug.value))
+    end
 end
 ```
 

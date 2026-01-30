@@ -32,14 +32,14 @@ ui.button("Save##2")
 ## Parameters
 
 | Parameter | Type     | Required | Default      | Description                                              |
-| :-------- | :------- | :------- | :----------- | :------------------------------------------------------- |
+| --------- | -------- | -------- | ------------ | -------------------------------------------------------- |
 | `label`   | `string` | Yes      | -            | The text displayed on the button.                        |
 | `size`    | `vec2`   | No       | `vec2(0, 0)` | The dimensions of the button. `0` uses standard padding. |
 
 ## Return Values
 
 | Type      | Description                                            |
-| :-------- | :----------------------------------------------------- |
+| --------- | ------------------------------------------------------ |
 | `boolean` | Returns `true` during the frame the button is clicked. |
 
 ---
@@ -53,7 +53,7 @@ A simple button that logs a message when clicked.
 
 ```lua
 if ui.button("Click Me") then
-ac.log("Button was pressed!")
+    ac.log("Button was pressed!")
 end
 ```
 
@@ -67,7 +67,7 @@ local buttonSize = vec2(200, 40)
 local buttonClicked = ui.button("Large Action", buttonSize)
 
 if buttonClicked then
--- trigger action
+    -- trigger action
 end
 ```
 

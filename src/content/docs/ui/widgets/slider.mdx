@@ -28,7 +28,7 @@ Users can **Ctrl + Left Click** on any slider to manually type a specific numeri
 ## Parameters
 
 | Parameter | Type                    | Required | Default  | Description                                  |
-| :-------- | :---------------------- | :------- | :------- | :------------------------------------------- |
+| --------- | ----------------------- | -------- | -------- | -------------------------------------------- |
 | `label`   | `string`                | Yes      | -        | Identifier label. Use `##` to hide the text. |
 | `value`   | `number` or `refnumber` | Yes      | -        | The current value.                           |
 | `min`     | `number`                | No       | `0.0`    | Minimum possible value.                      |
@@ -38,7 +38,7 @@ Users can **Ctrl + Left Click** on any slider to manually type a specific numeri
 ## Return Values
 
 | Type      | Description                                          |
-| :-------- | :--------------------------------------------------- |
+| --------- | ---------------------------------------------------- |
 | `boolean` | Returns `true` while the slider is being moved.      |
 | `number`  | (Only if passing standard number) The updated value. |
 
@@ -55,7 +55,7 @@ Adjusting a simple float value.
 local opacity = refnumber(1.0)
 
 if ui.slider("Opacity", opacity, 0, 1) then
--- Opacity is being changed
+    -- Opacity is being changed
 end
 ```
 

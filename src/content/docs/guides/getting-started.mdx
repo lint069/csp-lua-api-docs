@@ -3,7 +3,7 @@ title: Getting Started
 description: An Introduction to the Assetto Corsa Custom Shaders Patch Lua SDK.
 ---
 
-import { FileTree, Steps, Card, CardGrid } from "@astrojs/starlight/components";
+import { FileTree, Steps, Card, CardGrid, Aside } from "@astrojs/starlight/components";
 
 Welcome to the **Custom Shaders Patch (CSP) Lua SDK**. This framework allows developers to extend Assetto Corsa's engine capabilities dynamically, ranging from custom UI overlays to completely new game modes, physics alterations, and rendering effects.
 
@@ -13,35 +13,36 @@ Welcome to the **Custom Shaders Patch (CSP) Lua SDK**. This framework allows dev
 
 The **Lua SDK** is the bridge between the C++ CSP core and user-generated content. It utilizes **LuaJIT**, allowing code to run extremely fast within the game loop, be it via a physics frame or render frame.
 
-:::caution[Prerequisites]
-This documentation assumes you are proficient with **Lua** or **LuaJIT**.
-We do not cover syntax, loops, tables, or basic programming concepts here. If you are new to Lua, and are willing to learn, we recommend [Lua.org](https://www.lua.org/pil/contents.html) or [Lua by Example](https://luabyexample.techplexlabs.com/). It is a scripting language, and arguably easier than Python, with less keywords.
-:::
+<Aside type="caution" title="Prerequisites">
+    This documentation assumes you are proficient with **Lua** or **LuaJIT**.
+    We do not cover syntax, loops, tables, or basic programming concepts here.
+    If you are new to Lua, and are willing to learn, we recommend [Lua.org](https://www.lua.org/pil/contents.html) or [Lua by Example](https://luabyexample.techplexlabs.com/).
+    It is a scripting language, and arguably easier than Python, with less keywords.
+</Aside>
 
 ## Architecture
 
 ### Script Types
 
 | Type | Context | Description |
-| :--- | :------ | :---------- |
+| ---- | ------- | ----------- |
 
 ## Project Structure
 
 A typical Lua App requires a specific folder structure to be recognized by Content Manager and CSP.
 
 <FileTree>
+- assettocorsa/
   - apps/
     - lua/
       - my_first_app/
         - **manifest.ini** (metadata and config) 
         - **my_first_app.lua** (entry point)
-        - textures/ (optional images)
-          - icon.png
 </FileTree>
 
-:::caution[Naming]
-Note that your main Lua script needs to have the same name as the folder you've placed it in.
-:::
+<Aside type="caution" title="Naming">
+    Note that your main Lua script needs to have the same name as the folder you've placed it in.
+</Aside>
 
 ## Your First App
 
@@ -75,11 +76,11 @@ Let's create a simple "hello world" utility app to verify your environment is se
     SIZE = 200, 100 ; the size of the window in pixels
     ```
 
-    :::note[Prerequisites]
-    If this is done correctly, an app named `hello csp` will show up automatically in
-    Content Manager under `Content > Miscellaneous > Lua Apps`. If you then load into a driving session,
-    expect to see an app named `CSP WINDOW` in the side bar, under all apps.
-    :::
+    <Aside type="note" title="Prerequisites">
+      If this is done correctly, an app named `hello csp` will show up automatically in
+      Content Manager under `Content > Miscellaneous > Lua Apps`. If you then load into a driving session,
+      expect to see an app named `CSP WINDOW` in the side bar, under all apps.
+    </Aside>
 
 3.  **Write the Logic**
 
@@ -87,12 +88,12 @@ Let's create a simple "hello world" utility app to verify your environment is se
 
     ```lua title="hello_csp.lua"
     -- this function is called every frame while the window is visible
-    function windowMain(dt)
-      ui.text("Hello, Assetto Corsa!")
+    function script.windowMain(dt)
+        ui.text("Hello, Assetto Corsa!")
 
-      if ui.button("Click Me") then
-        ac.log("Button was clicked!")
-      end
+        if ui.button("Click Me") then
+            ac.log("Button was clicked!")
+        end
     end
     ```
 

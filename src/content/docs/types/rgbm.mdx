@@ -27,7 +27,7 @@ local bright = rgbm(1, 1, 1, 10)
 ## Properties
 
 | Property | Type     | Description                                     |
-| :------- | :------- | :---------------------------------------------- |
+| -------- | -------- | ----------------------------------------------- |
 | `r`      | `number` | Red channel (typically 0–1).                    |
 | `g`      | `number` | Green channel (typically 0–1).                  |
 | `b`      | `number` | Blue channel (typically 0–1).                   |
@@ -41,7 +41,7 @@ local bright = rgbm(1, 1, 1, 10)
 The `rgbm.colors` table contains several common colors with `mult` set to 1.
 
 | Color Name                | Values (R, G, B, M) |
-| :------------------------ | :------------------ |
+| ------------------------- | ------------------- |
 | `rgbm.colors.white`       | `1, 1, 1, 1`        |
 | `rgbm.colors.red`         | `1, 0, 0, 1`        |
 | `rgbm.colors.transparent` | `0, 0, 0, 0`        |
@@ -80,10 +80,9 @@ Using the multiplier to fade a UI element.
 local baseColor = rgbm.colors.blue:clone()
 
 function script.update(dt)
--- pulse the alpha/mult channel
+    -- pulse the alpha/mult channel
     baseColor.mult = math.sin(ac.getSim().gameTime) \* 0.5 + 0.5
     ui.drawRectFilled(vec2(10, 10), vec2(50, 50), baseColor)
-
 end
 ```
 
