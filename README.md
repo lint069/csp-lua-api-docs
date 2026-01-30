@@ -1,8 +1,6 @@
 # (Unofficial) CSP Lua API Documentation
 
-<a href="https://opensource.org/license/mit">
-  <img alt="License MIT" src="https://img.shields.io/badge/License-MIT-blue?style=flat">
-</a>
+[![License MIT](https://img.shields.io/badge/License-MIT-blue?style=flat)](https://opensource.org/license/mit)
 
 Community maintained documentation for the **Custom Shaders Patch (CSP) Lua API** used in Assetto Corsa.
 This exists to make the API usable and understandable, giving developers a reliable place to look things up while building Lua scripts.
