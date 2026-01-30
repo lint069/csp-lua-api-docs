@@ -40,7 +40,10 @@ export default defineConfig({
       sidebar: [
         {
           label: "Start Here",
-          items: [{ label: "Getting Started", slug: "guides/getting-started" }],
+          items: [
+            { label: "About the SDK", slug: "guides/what-is-this" },
+            { label: "Getting Started", slug: "guides/getting-started" },
+          ],
         },
         {
           label: "Primitives",

@@ -1,15 +1,70 @@
 ---
 title: ac.getSim
-description: ...
-sidebar:
-  badge:
-    text: Incomplete
-    variant: caution
+description: Access the global state of the Assetto Corsa simulation.
 ---
 
-import { Aside } from "@astrojs/starlight/components";
+import {
+  Tabs,
+  TabItem,
+  Aside,
+  Badge,
+  Card,
+  CardGrid,
+} from "@astrojs/starlight/components";
 
-<Aside type="caution" title="Work in Progress">
-  This page is a stub and is currently being drafted. Information here may be
-  incomplete or subject to change.
-</Aside>
+The primary function for retrieving the global state of the simulation.
+It returns an [`ac.StateSim`](../objects/state-sim/) object containing everything
+from graphics settings to weather conditions and session timing.
+
+## Signature
+
+```lua
+local sim = ac.getSim()
+```
+
+## Description
+
+`ac.getSim()` provides a reference to a persistent FFI structure. This structure is updated once per graphics frame. It is the central source of truth for the environment, camera, and session progress.
+
+## Return Value
+
+| Type                                   | Description                                 |
+| :------------------------------------- | :------------------------------------------ |
+| [`ac.StateSim`](../objects/state-sim/) | A reference to the global simulation state. |
+
+## Technical Notes
+
+- **Update Rate:** This data is updated at the **rendering rate** (FPS). For physics-rate data, refer to specialized physics namespaces.
+- **Memory:** Like `ac.getCar`, this returns a pointer. Accessing `sim.cameraPosition` is significantly faster than calling a function to calculate it.
+
+---
+
+## Examples
+
+<Tabs>
+<TabItem label="Time Display">
+
+```lua
+local sim = ac.getSim()
+
+function script.drawUI()
+ui.text(string.format("Time: %02d:%02d", sim.timeHours, sim.timeMinutes))
+ui.text("Frame: " .. sim.frame)
+end
+```
+
+</TabItem>
+<TabItem label="Weather Logic">
+
+```lua
+local sim = ac.getSim()
+
+function script.update(dt)
+    if sim.rainIntensity > 0.5 then
+        -- trigger heavy rain logic (e.g., sound effects or wipers)
+    end
+end
+```
+
+</TabItem>
+</Tabs>

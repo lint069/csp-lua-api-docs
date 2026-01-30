@@ -3,98 +3,162 @@ title: Getting Started
 description: An Introduction to the Assetto Corsa Custom Shaders Patch Lua SDK.
 ---
 
-import { FileTree, Steps, Card, CardGrid, Aside } from "@astrojs/starlight/components";
+import {
+    Badge,
+  FileTree,
+  Steps,
+  Card,
+  CardGrid,
+  Aside,
+} from "@astrojs/starlight/components";
 
-Welcome to the **Custom Shaders Patch (CSP) Lua SDK**. This framework allows developers to extend Assetto Corsa's engine capabilities dynamically, ranging from custom UI overlays to completely new game modes, physics alterations, and rendering effects.
-
-## What is this SDK?
-
-**Assetto Corsa** is built on a proprietary engine by [Kunos Simulazioni](https://en.wikipedia.org/wiki/Kunos_Simulazioni). **Custom Shaders Patch** is a runtime hook, developed by [Ilja Jusupov](https://github.com/gro-ove), that injects modern rendering techniques and logic into that engine.
-
-The **Lua SDK** is the bridge between the C++ CSP core and user-generated content. It utilizes **LuaJIT**, allowing code to run extremely fast within the game loop, be it via a physics frame or render frame.
+This tutorial walks you through the process of creating a basic utility app. 
 
 <Aside type="caution" title="Prerequisites">
-    This documentation assumes you are proficient with **Lua** or **LuaJIT**.
-    We do not cover syntax, loops, tables, or basic programming concepts here.
-    If you are new to Lua, and are willing to learn, we recommend [Lua.org](https://www.lua.org/pil/contents.html) or [Lua by Example](https://luabyexample.techplexlabs.com/).
-    It is a scripting language, and arguably easier than Python, with less keywords.
+  Before starting, ensure you have:
+  - **Content Manager** installed.
+  - **Custom Shaders Patch**.
 </Aside>
-
-## Architecture
-
-### Script Types
-
-| Type | Context | Description |
-| ---- | ------- | ----------- |
+<Aside type="danger" title="Lua">
+  This documentation assumes you are already proficient with **Lua** or **LuaJIT**. 
+  
+  The SDK is a professional toolset and does not cover foundational programming concepts.
+  If you are new to the language, or to programming in general, it is strongly recommended to study the following resources before proceeding:
+  - [Lua.org](https://www.lua.org/pil/contents.html)
+  - [Lua by Example](https://luabyexample.techplexlabs.com/)
+</Aside>
 
 ## Project Structure
 
 A typical Lua App requires a specific folder structure to be recognized by Content Manager and CSP.
+Scripts that do not follow this hierarchy will not be loaded.
 
 <FileTree>
 - assettocorsa/
   - apps/
     - lua/
       - my_first_app/
-        - **manifest.ini** (metadata and config) 
-        - **my_first_app.lua** (entry point)
+        - manifest.ini <Badge text="Required" variant="danger" />
+        - my_first_app.lua <Badge text="Required" variant="danger" />
 </FileTree>
 
-<Aside type="caution" title="Naming">
-    Note that your main Lua script needs to have the same name as the folder you've placed it in.
+<Aside type="danger" title="Strict Naming Rule">
+    The main Lua script **must** have the exact same name as the folder it is contained in.
+    For example: `apps/lua/telemetry/telemetry.lua`.
 </Aside>
 
-## Your First App
+## Hello World
 
-Let's create a simple "hello world" utility app to verify your environment is set up correctly.
+Follow these steps to create a simple utility app with a functional button.
+Read more on creating your first app [here](https://github.com/ac-custom-shaders-patch/acc-lua-sdk/wiki/Lua-apps).
 
 <Steps>
 
-1.  **Create the Folder**
+1.  **Create the Application Folder**
 
-    Navigate to your Assetto Corsa root folder, then to `apps/lua/`. Create a new folder named `hello_csp`.
+    Navigate to your Assetto Corsa root folder, then to `apps/lua/`. Create a new folder named `hello_world`.
 
-2.  **Create the Manifest**
+2.  **Define a Manifest**
 
-    Create a file named `manifest.ini`. This tells AC how to load your window.
+    Create a file named `manifest.ini`. This metadata file tells Assetto Corsa how to handle your window instance.
 
     ```ini title="manifest.ini"
     [ABOUT]
-    NAME = hello csp
+    NAME = Hello World
     AUTHOR = YourName
-    VERSION = 0.1
+    VERSION = 1.0
     DESCRIPTION = My first Lua app
 
-    ; comments in .ini files are written like this,
-    ; using a semi-colon ;
+    ; write comments in .ini files with semi-colons
 
     [WINDOW_...]
     ID = main
-    NAME = CSP WINDOW ; the name of this specific window instance
+    NAME = Your First Window
     ICON = icon.png
-    FUNCTION_MAIN = windowMain ; this window instance's main entry point function
-    SIZE = 200, 100 ; the size of the window in pixels
+    FUNCTION_MAIN = windowMain
+    SIZE = 300, 150
     ```
 
-    If this is done correctly, an app named `hello csp` will show up automatically in
-    Content Manager under `Content > Miscellaneous > Lua Apps`. If you then load into a driving session,
-    expect to see an app named `CSP WINDOW` in the side bar, under all apps.
+    <Aside title="Note on WINDOW_...">
+        The `WINDOW_...` section allows you to define multiple windows for a single app.
+        Each window can point to a different entry-point function in your Lua script.
+    </Aside>
+    <Aside type="tip">
+        If this is done correctly, an app named `Hello World` will show up automatically in
+        Content Manager under `Content > Miscellaneous > Lua Apps`.
+    </Aside>
 
-3.  **Write the Logic**
+3.  **Write Logic**
 
-    Create `hello_csp.lua`, or whatever you set the name of the folder to. We will define the function referenced in the manifest (`windowMain`) and use the `ui` namespace.
+    Create `hello_world.lua`. We will use the `ui` namespace to draw text and a button.
 
-    ```lua title="hello_csp.lua"
-    -- this function is called every frame while the window is visible
+    ```lua title="hello_world.lua"
+    -- this function is called every frame while the window is visible.
+    -- the name matches 'FUNCTION_MAIN' in the manifest.
     function script.windowMain(dt)
         ui.text("Hello, Assetto Corsa!")
+        ui.separator()
 
-        if ui.button("Click Me") then
-            ac.log("Button was clicked!")
+        if ui.button("Click Me", vec2(ui.availableSpaceX(), 40)) then
+            ac.log("The button was clicked at " .. ac.getSim().gameTime .. "s")
+            ui.toast(ui.Icons.Confirm, "Action Triggered!")
         end
     end
     ```
 
-4.  **Launch and Test**
+    <Aside type="tip" title="Namespace Prefix">
+        Note the use of `script.windowMain`.
+        In CSP, your entry functions are usually defined as members of the global `script` table.
+        More on that later.
+    </Aside>
+
+4.  **Enable and Launch**
+
+    1. Open **Content Manager**.
+    4. Launch a session.
+    5. Expect to find an app named `Your First Window` in the side bar, under all apps.
 
 </Steps>
+
+---
+
+## Debugging and Output
+
+When developing, you need to see what is happening under the hood. CSP provides several ways to monitor your script.
+
+### The Lua Debug App
+While in a session, look for the **Lua Debug** app in the sidebar. This app provides:
+
+- **Console Output:** View everything sent via `ac.log()` or `print()`.
+- **Performance:** Monitor the CPU time used by your script.
+
+<Aside title="Developer Apps">
+    The Lua Debug app will appear under developer apps. If there is no subheading named Developer apps,
+    that means you'll have to enable them. In Content Manager, navigate to `Settings > Assetto Corsa > System`.
+    There will be a checkbox in the top-left for Developer apps, and you'll want to make sure it's checked.
+</Aside>
+<Aside type="tip" title="Live Reload">
+    Most scripts will reload automatically when saving the file in your code editor.
+</Aside>
+
+### Real-time Watches
+Use `ac.debug()` to track a value visually without spamming the log.
+
+```lua
+function script.update(dt)
+    local car = ac.getCar(0)
+    -- creates a live updating entry in the Lua Debug app
+    ac.debug("Current RPM", car.rpm)
+end
+```
+
+---
+
+<CardGrid>
+  <Card title="Read Sim Data" icon="magnifier">
+    Learn how to access car and track data in the [ac namespace](../../ac/get-car/).
+  </Card>
+  <Card title="Build Interfaces" icon="add-document">
+    Discover buttons, sliders, and canvases in the [ui namespace](../../ui/button/).
+  </Card>
+</CardGrid>
