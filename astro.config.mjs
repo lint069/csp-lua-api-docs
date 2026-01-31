@@ -70,6 +70,10 @@ export default defineConfig({
           autogenerate: { directory: "ui" },
         },
         {
+          label: "web",
+          autogenerate: { directory: "web" },
+        },
+        {
           label: "miscellaneous",
           autogenerate: { directory: "miscellaneous" },
         },
