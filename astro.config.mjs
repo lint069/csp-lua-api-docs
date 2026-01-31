@@ -73,6 +73,13 @@ export default defineConfig({
           label: "miscellaneous",
           autogenerate: { directory: "miscellaneous" },
         },
+        {
+          label: "Community",
+          items: [
+            { label: "About this Project", slug: "community/about" },
+            { label: "Contributing Guide", slug: "community/contributing" },
+          ],
+        },
       ],
     }),
   ],
