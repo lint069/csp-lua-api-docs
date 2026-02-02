@@ -1,15 +1,36 @@
 ---
 title: io.exists
 description: ...
-sidebar:
-  badge:
-    text: Incomplete
-    variant: caution
 ---
 
-import { Aside } from "@astrojs/starlight/components";
+## Signature
 
-<Aside type="caution" title="Work in Progress">
-  This page is a stub and is currently being drafted. Information here may be
-  incomplete or subject to change.
-</Aside>
+```lua
+io.exists(filename)
+```
+
+## Description
+
+Checks if file or directory exists. 
+If you need to know specifically if a file or directory exists, use `io.dirExists()` or `io.fileExists()` instead.
+
+## Parameters
+
+| Parameter | Type     | Required | Default | Description                                 |
+| --------- | -------- | -------- | ------- | ------------------------------------------- |
+| filename  | `string` | Yes      | -       | The path to the file or directory to check. |
+
+
+## Return Values
+
+| Type      | Description                                                |
+| --------- | ---------------------------------------------------------- |
+| `boolean` | `true` if the file or directory exists, `false` otherwise. |
+
+## Examples
+
+```lua
+if io.exists("./file.txt") then
+    ac.log("Exists!")
+end
+```

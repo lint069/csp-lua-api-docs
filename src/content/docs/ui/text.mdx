@@ -41,8 +41,8 @@ Displaying changing values from the simulation.
 
 ```lua
 function script.update(dt)
-local car = ac.getCar(0)
-ui.text(string.format("Current Speed: %.0f KM/H", car.speedKmh))
+    local car = ac.getCar(0)
+    ui.text(string.format("Current Speed: %.0f KM/H", car.speedKmh))
 end
 ```
 
