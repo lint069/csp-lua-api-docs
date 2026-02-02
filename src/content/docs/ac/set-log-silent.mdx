@@ -1,0 +1,53 @@
+---
+title: ac.setLogSilent
+description: ...
+---
+
+import { Aside } from "@astrojs/starlight/components";
+
+## Signature
+
+```lua
+ac.setLogSilent(value)
+```
+
+## Description
+
+Stops debugging functions ( [`ac.log()`](../log/) , [`ac.warn()`](../warn/) & [`ac.error()`](../error/) ) from logging things into the CSP log file, in case you need to log a lot.
+With it, you can use Lua Debug app to see latest log entries.
+
+## Parameters
+
+| Parameter | Type      | Required | Default | Description                                |
+| --------- | --------- | -------- | ------- | ------------------------------------------ |
+| value     | `boolean` | No       | `true`  | whether logging should be silenced or not. |
+
+## Return Values
+
+- None
+
+## Examples
+
+```lua
+ac.log("1")
+
+ac.setLogSilent(true) -- Disable logging to CSP log file
+
+ac.log("2")
+
+ac.setLogSilent(false) -- Re-enable logging
+
+ac.log("3")
+```
+
+Output `custom_shaders_patch.log`:
+```sh
+  ...
+  13835     M ✅ [Lua: App: yourApp] 1
+  13835     M ✅ [Lua: App: yourApp] 3
+  ...
+```
+
+<Aside type="note" title="Log file location">
+    custom_shaders_patch.log is located in `...\Documents\Assetto Corsa\logs\`
+</Aside>
