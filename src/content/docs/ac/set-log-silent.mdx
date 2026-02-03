@@ -1,53 +1,88 @@
 ---
 title: ac.setLogSilent
-description: ...
+description: Controls whether log functions write to the physical log file on disk.
 ---
 
-import { Aside } from "@astrojs/starlight/components";
+import { Aside, Tabs, TabItem } from "@astrojs/starlight/components";
 
-## Signature
+Determines if debugging functions such as
+`ac.log()`, `ac.warn()`, and `ac.error()` should write their output to the physical log file on your drive.
+
+## Usage Patterns
+
+<Tabs>
+<TabItem label="Silence Logs">
+
+Calling the function without an argument or with `true` stops disk writing.
 
 ```lua
-ac.setLogSilent(value)
+ac.setLogSilent(true)
 ```
+
+</TabItem>
+<TabItem label="Enable Disk Logging">
+
+Passing `false` restores default behavior, writing all log entries to the drive.
+
+```lua
+ac.setLogSilent(false)
+```
+
+</TabItem>
+</Tabs>
 
 ## Description
 
-Stops debugging functions ( [`ac.log()`](../log/) , [`ac.warn()`](../warn/) & [`ac.error()`](../error/) ) from logging things into the CSP log file, in case you need to log a lot.
-With it, you can use Lua Debug app to see latest log entries.
+The `ac.setLogSilent` function is a performance and hardware safety utility.
+Writing to a physical file on an SSD or HDD is a relatively slow operation compared to updating a UI element.
+When you are debugging complex logic that prints multiple messages every frame,
+the overhead of disk I/O has potential to cause noticeable stuttering or "lag" in the simulation.
+
+By silencing the log, you can continue to use high-frequency logging for development while ensuring the simulation remains smooth.
+This also helps prevent unnecessary wear on storage hardware during long development sessions.
 
 ## Parameters
 
-| Parameter | Type      | Required | Default | Description                                |
-| --------- | --------- | -------- | ------- | ------------------------------------------ |
-| value     | `boolean` | No       | `true`  | whether logging should be silenced or not. |
-
-## Return Values
-
-- None
+| Parameter | Type      | Required | Default | Description                                     |
+| :-------- | :-------- | :------- | :------ | :---------------------------------------------- |
+| `value`   | `boolean` | No       | `true`  | Whether logging to the disk should be silenced. |
 
 ## Examples
 
+<Tabs>
+<TabItem label="High Frequency Debugging">
+
+Silencing the log to safely monitor a variable that changes every frame.
+
 ```lua
-ac.log("1")
+-- stop writing to the physical file to save performance
+ac.setLogSilent(true)
 
-ac.setLogSilent(true) -- Disable logging to CSP log file
-
-ac.log("2")
-
-ac.setLogSilent(false) -- Re-enable logging
-
-ac.log("3")
+function script.update(dt)
+  local car = ac.getCar(0)
+  -- this would normally spam the drive, but is now safe
+  ac.log("Current Speed:", car.speedKmh)
+end
 ```
 
-Output `custom_shaders_patch.log`:
-```sh
-  ...
-  13835     M ✅ [Lua: App: yourApp] 1
-  13835     M ✅ [Lua: App: yourApp] 3
-  ...
+</TabItem>
+
+<TabItem label="Conditional Logging">
+
+Ensuring logs are only written to disk when a specific error state is met.
+
+```lua
+-- start silenced
+ac.setLogSilent(true)
+
+function checkSystem(status)
+  if status == "CRITICAL" then
+    -- re-enable disk logging so the error is saved for later review
+    ac.setLogSilent(false)
+    ac.error("Critical system failure detected!")
+  end
+end
 ```
 
-<Aside type="note" title="Log file location">
-    custom_shaders_patch.log is located in `...\Documents\Assetto Corsa\logs\`
-</Aside>
+</TabItem>
+</Tabs>
