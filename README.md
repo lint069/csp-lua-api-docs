@@ -7,7 +7,7 @@ This exists to make the API more understandable, giving developers a reliable pl
 
 ## Contributing
 
-Notice a mistake or think something could be better? *Contribute!*  
+Notice a mistake or think something could be improved? *Contribute!*  
 Check out `CONTRIBUTING.md` on how to submit changes, report issues, or suggest improvements.
 
 ## Authors
