@@ -1,15 +1,112 @@
 ---
 title: ac.storage
-description: ...
-sidebar:
-  badge:
-    text: Incomplete
-    variant: caution
+description: Permanent, long-term disk storage for user settings and script state.
 ---
 
-import { Aside } from "@astrojs/starlight/components";
+import { Aside, Tabs, TabItem } from "@astrojs/starlight/components";
 
-<Aside type="caution" title="Work in Progress">
-  This page is a stub and is currently being drafted. Information here may be
-  incomplete or subject to change.
+Provides a way to persist data to the user's storage drive, for use across Assetto Corsa sessions.
+
+<Aside type="note" title="State Location">
+  Data is saved to `%Documents%\Assetto Corsa\cfg\extension\state\lua` in
+  subfolders corresponding to the script type and name. Unlike `ac.store`, this
+  data survives a full computer restart.
 </Aside>
+
+## Usage Patterns
+
+<Tabs>
+<TabItem label="Table-Based">
+
+Define a layout of keys and default values.
+Accessing the returned table automatically manages disk input and output.
+
+```lua
+local settings = ac.storage({
+  uiVisible = true,
+  opacity = 0.8
+})
+```
+
+</TabItem>
+<TabItem label="Key-Value Pair">
+
+Manage a specific key directly.
+
+```lua
+local storedValue = ac.storage("my_key", "default_value")
+```
+
+</TabItem>
+<TabItem label="Property Access">
+
+Direct global access within the script's namespace.
+
+```lua
+ac.storage.lastActive = os.date()
+```
+
+</TabItem>
+</Tabs>
+
+## Description
+
+`ac.storage` handles the heavy lifting of reading from and writing to the storage drive.
+Writes are debounced, meaning disk access is deferred for a few seconds and skipped entirely if no value change is detected.
+The storage system supports the following data types:
+
+- `string`
+- `number`
+- `boolean`
+- `vec2`, `vec3`, and `vec4`
+- `rgb`, and `rgbm`
+
+## Parameters
+
+| Parameter   | Type                | Required | Description                                                |
+| :---------- | :------------------ | :------- | :--------------------------------------------------------- |
+| `layout`    | `table` or `string` | Yes      | Either a table of default values or a specific string key. |
+| `keyPrefix` | `string`            | No       | Optional prefix added to all keys in the storage table.    |
+
+## Examples
+
+<Tabs>
+<TabItem label="Settings Menu">
+
+Using storage to remember the state of a UI checkbox.
+
+```lua
+-- define our persistent settings
+local settings = ac.storage({
+  showMap = true
+})
+
+function script.drawUI()
+  -- checkbox updates the 'settings' table,
+  -- which triggers a disk save automatically
+  ui.checkbox("Show Minimap", settings.showMap)
+
+  if settings.showMap then
+    drawMyMap()
+  end
+end
+```
+
+</TabItem>
+
+<TabItem label="Session Counter">
+
+Counting how many times the user has run this script.
+
+```lua
+local stats = ac.storage({
+  runCount = 0
+})
+
+-- increment and save
+stats.runCount = stats.runCount + 1
+ac.log("This script has been run " .. stats.runCount .. " times.")
+```
+
+</TabItem>
+</Tabs>

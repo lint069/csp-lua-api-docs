@@ -1,15 +1,89 @@
 ---
 title: ac.log
-description: ...
-sidebar:
-  badge:
-    text: Incomplete
-    variant: caution
+description: Prints a message to the CSP and Lua App Debug logs.
 ---
 
-import { Aside } from "@astrojs/starlight/components";
+import { Aside, Tabs, TabItem } from "@astrojs/starlight/components";
 
-<Aside type="caution" title="Work in Progress">
-  This page is a stub and is currently being drafted. Information here may be
-  incomplete or subject to change.
+The primary debugging tool for monitoring script behavior and identifying errors in real-time.
+
+<Aside type="note" title="Log File Location">
+  Physical log entries are saved to `%Documents%\Assetto
+  Corsa\logs\custom_shaders_patch.log`. This is useful for reviewing logs after
+  a session has ended or a crash has occurred.
 </Aside>
+
+## Usage Patterns
+
+<Tabs>
+<TabItem label="Standard Log">
+
+The explicit namespace call. Recommended for clarity in larger projects.
+
+```lua
+ac.log("Script initialized")
+```
+
+</TabItem>
+<TabItem label="Print Alias">
+
+For convenience, the standard Lua `print()` is globally aliased to `ac.log()`.
+
+```lua
+print("Application started")
+```
+
+</TabItem>
+</Tabs>
+
+## Description
+
+`ac.log` outputs text to both the physical log file on your drive and the in-game **Lua Debug** app's console.
+It accepts a variable number of arguments and automatically joins them with spaces.
+Primitive values and CSP-specific types such as `vec3`, `rgb`, and `rgbm` are converted into readable string representations.
+
+<Aside type="tip" title="Silent Logging">
+  Frequent logging to a physical file can affect performance and contribute to
+  storage wear. For this type of logging, consider using
+  [`ac.setLogSilent`](../set-log-silent/) to keep messages visible in the UI
+  while disabling disk writes.
+</Aside>
+
+## Parameters
+
+| Parameter | Type  | Required | Description                                      |
+| :-------- | :---- | :------- | :----------------------------------------------- |
+| `...`     | `any` | Yes      | One or more values to be stringified and logged. |
+
+## Examples
+
+<Tabs>
+<TabItem label="Status Tracking">
+
+Passing multiple mixed-type variables to track state.
+
+```lua
+local gear = 4
+local speed = 120.5
+
+ac.log("Vehicle Status:", "Gear", gear, "Speed", speed)
+-- output: Vehicle Status: Gear 4 Speed 120.5
+```
+
+</TabItem>
+
+<TabItem label="Logging Structs">
+
+Debugging vector positions and colors without manual conversion.
+
+```lua
+local pos = vec3(10, 0, 50)
+local tint = rgbm(1, 0, 0, 0.5)
+
+ac.log("Checking coordinates...")
+ac.log(pos)
+ac.log(tint)
+```
+
+</TabItem>
+</Tabs>

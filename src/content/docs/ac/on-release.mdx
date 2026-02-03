@@ -1,15 +1,97 @@
 ---
 title: ac.onRelease
-description: ...
-sidebar:
-  badge:
-    text: Incomplete
-    variant: caution
+description: Registers a callback to run when the script is unloaded or reloaded.
 ---
 
-import { Aside } from "@astrojs/starlight/components";
+import { Aside, Tabs, TabItem } from "@astrojs/starlight/components";
 
-<Aside type="caution" title="Work in Progress">
-  This page is a stub and is currently being drafted. Information here may be
-  incomplete or subject to change.
+Registers a function to be executed when the script is stopped.
+This is primarily used to clean up resources, stop sounds, or revert state changes before the script terminates.
+
+<Aside type="caution" title="Execution Reliability">
+  While this function is called during normal script reloads and session exits,
+  it will not be called if Assetto Corsa crashes or is closed abruptly via the
+  task manager. You should not use this function for critical data saving.
 </Aside>
+
+## Usage Patterns
+
+<Tabs>
+<TabItem label="Standard Callback">
+
+A simple function call when the script unloads.
+
+```lua
+ac.onRelease(function()
+    ac.log("Script is shutting down")
+end)
+```
+
+</TabItem>
+<TabItem label="With Weak Reference">
+
+Pass an object to the callback. If the object is garbage collected before the script unloads, the callback will not run.
+
+```lua
+local myData = { id = 123 }
+
+ac.onRelease(function(item)
+    ac.log("Cleaning up for item ID: " .. item.id)
+end, myData)
+```
+
+</TabItem>
+</Tabs>
+
+## Description
+
+The `ac.onRelease` function allows you to hook into the script lifecycle.
+When you save a file in your editor, CSP triggers a hot-reload which unloads the current script instance before starting the new one.
+This function is the designated place to reset any modifications made to the simulation, such as emissive materials or active UI elements.
+
+If you provide an item as the second argument, CSP stores it with a weak reference.
+This ensures that the documentation doesn't accidentally prevent the object from being garbage collected.
+If the object naturally leaves memory during script execution, the associated cleanup callback is automatically discarded.
+
+## Parameters
+
+| Parameter  | Type       | Required | Description                                                                   |
+| :--------- | :--------- | :------- | :---------------------------------------------------------------------------- |
+| `callback` | `function` | Yes      | The function to run on release. It receives the `item` as its first argument. |
+| `item`     | `any`      | No       | An optional object to pass to the callback, stored using a weak reference.    |
+
+## Examples
+
+<Tabs>
+<TabItem label="Material Cleanup">
+
+Ensuring a car mesh stops glowing when the script reloads or the session ends.
+
+```lua
+local meshes = ac.findMeshes("EXT_LIGHT_GLOW")
+meshes:setMaterialProperty("ksEmissive", 1.0)
+
+ac.onRelease(function()
+    -- reset the emissive property so it doesn't stay stuck 'on'
+    meshes:setMaterialProperty("ksEmissive", 0.0)
+end)
+```
+
+</TabItem>
+
+<TabItem label="Audio Disposal">
+
+Stopping an active audio event to prevent it from looping after the script unloads.
+
+```lua
+local sound = ac.AudioEvent("event:/cars/my_car/horn")
+sound:start()
+
+ac.onRelease(function()
+    -- stop and dispose of the audio resource
+    sound:dispose()
+end)
+```
+
+</TabItem>
+</Tabs>
