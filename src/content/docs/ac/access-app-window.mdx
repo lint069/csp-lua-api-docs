@@ -1,0 +1,89 @@
+---
+title: ac.accessAppWindow
+description: Retrieves an interface to interact with or modify a specific application window.
+---
+
+import { Aside, Tabs, TabItem } from "@astrojs/starlight/components";
+
+Searches for an active window belonging to an original AC app,
+a Python app, or a Lua app.
+It returns an `ac.AppWindowAccessor` object used to control the window's visibility, position, and rendering behavior.
+
+<Aside type="caution" title="Window Persistence">
+  Always check the `.valid()` property of the returned accessor. If a user
+  closes the target app or the script that owns the window is unloaded, the
+  reference will become invalid.
+</Aside>
+
+## Usage Patterns
+
+<Tabs>
+<TabItem label="Standard Access">
+
+Find a window by its display name.
+
+```lua
+local chat = ac.accessAppWindow("Chat")
+```
+
+</TabItem>
+</Tabs>
+
+## Description
+
+The `ac.accessAppWindow` function acts as a bridge between your script and other apps running in the simulation.
+This is particularly good for creating custom HUD layouts or utility tools that manage the user's workspace.
+
+<Aside type="note" title="Available Operations">
+Once you have retrieved the accessor, you can:
+
+- Change the window's visibility.
+- Pin or unpin the window.
+- Move or resize the window (for ImGui-based apps).
+- Redirect the window to a different render layer (e.g., to draw it onto a 3D surface instead of the HUD).
+</Aside>
+
+## Parameters
+
+| Parameter    | Type     | Required | Description                                            |
+| :----------- | :------- | :------- | :----------------------------------------------------- |
+| `windowName` | `string` | Yes      | The exact name of the window as defined in its source. |
+
+## Return Values
+
+| Type                   | Description                                                                    |
+| :--------------------- | :----------------------------------------------------------------------------- |
+| `ac.AppWindowAccessor` | An object providing methods to control the window. Returns `nil` if not found. |
+
+## Examples
+
+<Tabs>
+<TabItem label="Force Hide App">
+
+Finding the official 'Chat' app and ensuring it is hidden.
+
+```lua
+local chatWindow = ac.accessAppWindow("Chat")
+
+if chatWindow and chatWindow:valid() then
+  chatWindow:setVisible(false)
+end
+```
+
+</TabItem>
+
+<TabItem label="Relocate App">
+
+Moving a specific app window to a fixed coordinate on the screen.
+
+```lua
+local telemetry = ac.accessAppWindow("Telemetry")
+
+if telemetry and telemetry:valid() then
+  -- move to top-left corner
+  telemetry:move(vec2(10, 10))
+end
+```
+
+</TabItem>
+</Tabs>

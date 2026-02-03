@@ -1,0 +1,84 @@
+---
+title: ac.accessExtraSwitchParams
+description: Retrieves an interface to access and modify the parameters of a vehicle's extra custom switches.
+---
+
+import { Aside, Tabs, TabItem } from "@astrojs/starlight/components";
+
+Provides access to the configuration and live state of a car's "Extra" switches (Extra A, Extra B, etc.).
+It returns an `ac.CarExtraSwitchParams` object used to simulate inputs or check the availability of these custom controls.
+
+<Aside type="note" title="Switch Mapping">
+  In most cars, the index corresponds to the standard CSP extra inputs: `0` for
+  Extra A, `1` for Extra B, and so on.
+</Aside>
+
+## Usage Patterns
+
+<Tabs>
+<TabItem label="Retrieval">
+
+Access the parameters for the "Extra A" switch (Index 0).
+
+```lua
+local switch = ac.accessExtraSwitchParams(0)
+```
+
+</TabItem>
+</Tabs>
+
+## Description
+
+The `ac.accessExtraSwitchParams` function is used to interact with the custom interactive elements of a vehicle mod.
+These switches are commonly used by vehicle mods to trigger animations such as opening doors, toggling interior lights,
+or changing aerodynamic configurations.
+
+The returned structure allows scripts to check whether a switch is active or being held,
+verify if the switch is available for the current vehicle,
+and simulate or override the switch state for logic-based triggers.
+
+## Parameters
+
+| Parameter | Type      | Required | Description                                      |
+| :-------- | :-------- | :------- | :----------------------------------------------- |
+| `index`   | `integer` | Yes      | The 0-based index of the extra switch to access. |
+
+## Return Values
+
+| Type                      | Description                                                                    |
+| :------------------------ | :----------------------------------------------------------------------------- |
+| `ac.CarExtraSwitchParams` | An object providing access to the switch parameters. Returns `nil` if invalid. |
+
+## Examples
+
+<Tabs>
+<TabItem label="Check Availability">
+
+Verifying if "Extra A" is actually configured for the current vehicle before running logic.
+
+```lua
+local extraA = ac.accessExtraSwitchParams(0)
+
+if extraA and extraA.available then
+  ac.log("Extra A is available on this car.")
+end
+```
+
+</TabItem>
+
+<TabItem label="Monitoring State">
+
+Using the access structure to check if a user is currently pressing the Extra B button.
+
+```lua
+local extraB = ac.accessExtraSwitchParams(1)
+
+function script.update(dt)
+  if extraB and extraB.down then
+    ui.text("Extra B is currently active!")
+  end
+end
+```
+
+</TabItem>
+</Tabs>

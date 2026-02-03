@@ -1,0 +1,82 @@
+---
+title: ac.accessMouseDelta
+description: Captures the mouse to track movement deltas independently of screen boundaries.
+---
+
+import { Aside, Tabs, TabItem } from "@astrojs/starlight/components";
+
+Returns the movement delta of the mouse in pixels since the last call.
+Calling this function hides the mouse cursor and fixes it in place, allowing for "endless" dragging.
+
+<Aside type="caution" title="Automatic Release">
+  The mouse will be released and reappear shortly after this function stops
+  being called. If `force` is not set to `true`, the function will return
+  `vec2(0, 0)` if the mouse is currently busy interacting with other UI
+  elements.
+</Aside>
+
+## Usage Patterns
+
+<Tabs>
+<TabItem label="Standard Capture">
+
+Capture movement and restore the cursor position once finished.
+
+```lua
+local delta = ac.accessMouseDelta(false, true, false)
+```
+
+</TabItem>
+<TabItem label="Camera Input">
+
+Use settings-defined raw input for camera-style movement.
+
+```lua
+local delta = ac.accessMouseDelta("camera", true, true)
+```
+
+</TabItem>
+</Tabs>
+
+## Description
+
+The `ac.accessMouseDelta` function is essential for implementing custom first-person cameras,
+3D orbit controls, or specialized mouse-steering logic.
+Unlike standard mouse tracking, which stops when the cursor hits the edge of the window,
+this function locks the cursor's OS position so movement can be tracked indefinitely.
+
+## Parameters
+
+| Parameter         | Type                          | Required | Default | Description                                                                                                    |
+| :---------------- | :---------------------------- | :------- | :------ | :------------------------------------------------------------------------------------------------------------- |
+| `rawInput`        | `boolean`, `nil`, or `string` | No       | `nil`   | Set to `true` for raw input, or `"camera"` to use raw input only if the user has enabled it in their settings. |
+| `restorePosition` | `boolean`                     | No       | `true`  | Whether the cursor should jump back to its starting point when released.                                       |
+| `force`           | `boolean`                     | No       | `false` | If `true`, captures the mouse even if it is currently hovering over a UI window.                               |
+
+## Return Values
+
+| Type   | Description                                                      |
+| :----- | :--------------------------------------------------------------- |
+| `vec2` | The horizontal and vertical distance moved since the last frame. |
+
+## Examples
+
+<Tabs>
+<TabItem label="First-Person Look">
+
+Applying mouse movement to a camera orientation.
+
+```lua
+function script.update(dt)
+  -- only capture if the right mouse button is held
+  if ui.mouseDown(ui.MouseButton.Right) then
+    local delta = ac.accessMouseDelta("camera", true, true)
+
+    myCamera.yaw = myCamera.yaw + (delta.x * 0.1)
+    myCamera.pitch = myCamera.pitch - (delta.y * 0.1)
+  end
+end
+```
+
+</TabItem>
+</Tabs>

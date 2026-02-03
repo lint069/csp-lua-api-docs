@@ -1,15 +1,80 @@
 ---
 title: ac.error
-description: ...
-sidebar:
-  badge:
-    text: Incomplete
-    variant: caution
+description: Prints an error message to the CSP and Lua App Debug logs.
 ---
 
-import { Aside } from "@astrojs/starlight/components";
+import { Aside, Tabs, TabItem } from "@astrojs/starlight/components";
 
-<Aside type="caution" title="Work in Progress">
-  This page is a stub and is currently being drafted. Information here may be
-  incomplete or subject to change.
+Reports critical failures or invalid script states.
+This function alerts you to problems that require immediate attention during development.
+
+<Aside type="danger" title="Execution Behavior">
+  Unlike the standard Lua `error()` function, `ac.error()` does not stop the
+  execution of your script. It only logs the message. If you need to halt the
+  script entirely, use the standard Lua `error()` instead.
 </Aside>
+
+## Usage Patterns
+
+<Tabs>
+<TabItem label="Standard Error">
+
+The explicit call to log a critical failure.
+
+```lua
+ac.error("Failed to load configuration file")
+```
+
+</TabItem>
+</Tabs>
+
+## Description
+
+`ac.error` functions similarly to `ac.log`, but it is intended for messages that signify a problem.
+In the **Lua Debug** app, messages sent via this function are highlighted in red, making them much easier to spot amidst regular status logs.
+
+Messages are written to both the in-game console and the physical `custom_shaders_patch.log` file.
+Like other logging functions, its output to the physical file can be suppressed by using [`ac.setLogSilent`](../set-log-silent/).
+This is recommended if an error is occurring every frame to prevent potential performance degradation.
+
+## Parameters
+
+| Parameter | Type  | Required | Description                                      |
+| :-------- | :---- | :------- | :----------------------------------------------- |
+| `...`     | `any` | Yes      | One or more values to be stringified and logged. |
+
+## Examples
+
+<Tabs>
+<TabItem label="Resource Validation">
+
+Checking if a required scene node exists before attempting to manipulate it.
+
+```lua
+local carRoot = ac.findNodes("carRoot:0")
+
+if carRoot:empty() then
+    ac.error("Critical: Could not find the player car root node!")
+else
+    -- proceed with logic
+end
+```
+
+</TabItem>
+
+<TabItem label="API Response Error">
+
+Logging a failure when a web request or external resource is unavailable.
+
+```lua
+web.get("https://api.example.com/data", function(err, response)
+    if err then
+        ac.error("Web Request Failed:", err)
+        return
+    end
+    -- handle success
+end)
+```
+
+</TabItem>
+</Tabs>

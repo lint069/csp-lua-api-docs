@@ -1,0 +1,84 @@
+---
+title: ac.accessCarCamera
+description: Retrieves an interface to interact with or modify a specific car-attached camera.
+---
+
+import { Aside, Tabs, TabItem } from "@astrojs/starlight/components";
+
+Provides access to the configuration of a car's external cameras, which are typically cycled using the `F6` key.
+It returns an `ac.CarCameraParams` object used to read or modify properties such as position, direction, and field of view.
+
+<Aside type="note" title="Camera Count">
+  To find out how many cameras are available for a specific vehicle, check the
+  `car.carCamerasCount` property of an [`ac.StateCar`](../objects/state-car/)
+  object.
+</Aside>
+
+## Usage Patterns
+
+<Tabs>
+<TabItem label="Retrieval">
+
+Access the first available external camera for the targeted car.
+
+```lua
+local camera = ac.accessCarCamera(0)
+```
+
+</TabItem>
+</Tabs>
+
+## Description
+
+The `ac.accessCarCamera` function allows scripts to dynamically alter the behavior of car-mounted cameras. This is frequently used for creating cinematic tools, custom replay angles, or adjusting the default "chase" views provided by the car's developer.
+
+The returned object allows scripts to modify the camera’s position and orientation relative to the car,
+adjust its field of view for cinematic effects, and fine-tune rendering parameters such as exposure and depth of field.
+
+## Parameters
+
+| Parameter     | Type      | Required | Description                                    |
+| :------------ | :-------- | :------- | :--------------------------------------------- |
+| `cameraIndex` | `integer` | Yes      | The 0-based index of the car camera to access. |
+
+## Return Values
+
+| Type                 | Description                                                                             |
+| :------------------- | :-------------------------------------------------------------------------------------- |
+| `ac.CarCameraParams` | An object providing access to camera properties. Returns `nil` if the index is invalid. |
+
+## Examples
+
+<Tabs>
+<TabItem label="Adjusting FOV">
+
+Retrieving the first camera and setting a wide-angle field of view.
+
+```lua
+local cam = ac.accessCarCamera(0)
+
+if cam then
+  -- set to a very wide 110-degree FOV
+  cam.fov = 110
+end
+```
+
+</TabItem>
+
+<TabItem label="Iterating Cameras">
+
+Cycling through every camera available on the player's car to log their current names.
+
+```lua
+local car = ac.getCar(0)
+
+for i = 0, car.carCamerasCount - 1 do
+  local cam = ac.accessCarCamera(i)
+  if cam then
+    ac.log("Camera " .. i .. " FOV is currently: " .. cam.fov)
+  end
+end
+```
+
+</TabItem>
+</Tabs>
