@@ -1,0 +1,108 @@
+---
+import type { Props } from "@astrojs/starlight/props";
+import Default from "@astrojs/starlight/components/Sidebar.astro";
+---
+
+<div class="sidebar-filter-container">
+  <input
+    type="text"
+    id="sidebar-filter-input"
+    placeholder="/ to quick search..."
+    aria-label="Filter sidebar"
+  />
+</div>
+
+<Default {...Astro.props}><slot /></Default>
+
+<style>
+  .sidebar-filter-container {
+    padding: 1rem 1rem 0.5rem 1rem;
+    position: sticky;
+    top: 0;
+    z-index: 10;
+    background-color: var(--sl-color-bg-sidebar);
+  }
+
+  #sidebar-filter-input {
+    width: 100%;
+    padding: 0.4rem 0.8rem;
+    border-radius: 0.5rem;
+    border: 1px solid var(--sl-color-gray-5);
+    background: var(--sl-color-black);
+    color: var(--sl-color-white);
+    font-size: 0.85rem;
+    outline: none;
+    transition: border-color 0.2s;
+  }
+
+  #sidebar-filter-input:focus {
+    border-color: var(--sl-color-accent-high);
+  }
+
+  /* hide items that don't match */
+  :global(.sidebar-content [data-hidden="true"]) {
+    display: none !important;
+  }
+</style>
+
+<script>
+  const input = document.getElementById(
+    "sidebar-filter-input",
+  ) as HTMLInputElement;
+
+  input?.addEventListener("input", (e) => {
+    const target = e.target as HTMLInputElement;
+    const rawTerm = target.value.toLowerCase();
+
+    // remove dots and spaces so "getcar" matches "ac.getCar"
+    const term = rawTerm.replace(/[\s\.]/g, "");
+
+    // find all sidebar links
+    const links = document.querySelectorAll(".sidebar-content a");
+
+    links.forEach((link) => {
+      const linkText = link.textContent?.toLowerCase() || "";
+      const normalizedLink = linkText.replace(/[\s\.]/g, "");
+      const listItem = link.closest("li");
+
+      if (!listItem) return;
+
+      if (normalizedLink.includes(term) || term === "") {
+        listItem.setAttribute("data-hidden", "false");
+        // if it matches, make sure all parent groups are expanded
+        let parent = listItem.parentElement;
+        while (
+          parent &&
+          parent.classList.contains("sidebar-content") === false
+        ) {
+          if (parent.tagName === "DETAILS") {
+            (parent as HTMLDetailsElement).open = true;
+          }
+          parent = parent.parentElement;
+        }
+      } else {
+        listItem.setAttribute("data-hidden", "true");
+      }
+    });
+
+    // handle empty group headers
+    // by hiding groups if all children are hidden
+    const groups = document.querySelectorAll(".sidebar-content details");
+    groups.forEach((group) => {
+      const visibleChildren = group.querySelectorAll('li[data-hidden="false"]');
+      if (visibleChildren.length === 0 && term !== "") {
+        group.setAttribute("data-hidden", "true");
+      } else {
+        group.setAttribute("data-hidden", "false");
+      }
+    });
+  });
+
+  // shortcut key: press '/' to focus
+  window.addEventListener("keydown", (e) => {
+    if (e.key === "/" && document.activeElement?.tagName !== "INPUT") {
+      e.preventDefault();
+      input?.focus();
+    }
+  });
+</script>

@@ -31,6 +31,9 @@ export default defineConfig({
           href: "https://github.com/lint069/csp-lua-api-docs",
         },
       ],
+      components: {
+        Sidebar: "./src/components/SidebarFilter.astro",
+      },
       customCss: ["./src/css/style.css"],
       expressiveCode: {
         themes: ["dark-plus", "github-light"],
