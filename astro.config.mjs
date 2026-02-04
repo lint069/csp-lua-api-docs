@@ -6,7 +6,6 @@ import starlightImageZoom from "starlight-image-zoom";
 // import starlightLinksValidator from "starlight-links-validator";
 import remarkMath from "remark-math";
 import rehypeMathJax from "rehype-mathjax";
-import astroExpressiveCode from "astro-expressive-code";
 
 // https://astro.build/config
 export default defineConfig({
@@ -19,11 +18,12 @@ export default defineConfig({
     rehypePlugins: [rehypeMathJax],
   },
   integrations: [
-    astroExpressiveCode({
-      themes: ["dark-plus"],
-    }),
     starlight({
       title: "CSP Lua API Docs",
+      //editLink: {
+      //baseUrl: "https://github.com/lint069/csp-lua-api-docs/edit/main/",
+      //},
+      lastUpdated: true,
       social: [
         {
           icon: "github",
@@ -32,6 +32,13 @@ export default defineConfig({
         },
       ],
       customCss: ["./src/css/style.css"],
+      expressiveCode: {
+        themes: ["dark-plus", "github-light"],
+        useStarlightDarkModeSwitch: true,
+        styleOverrides: {
+          borderRadius: "0.2rem",
+        },
+      },
       plugins: [
         // starlightSidebarSwipe(),
         starlightImageZoom(),
@@ -52,34 +59,42 @@ export default defineConfig({
         {
           label: "Primitives",
           autogenerate: { directory: "primitives" },
+          collapsed: true,
         },
         {
           label: "ac",
           autogenerate: { directory: "ac" },
+          collapsed: true,
         },
         {
           label: "io",
           autogenerate: { directory: "io" },
+          collapsed: true,
         },
         {
           label: "math",
           autogenerate: { directory: "math" },
+          collapsed: true,
         },
         {
           label: "render",
           autogenerate: { directory: "render" },
+          collapsed: true,
         },
         {
           label: "ui",
           autogenerate: { directory: "ui" },
+          collapsed: true,
         },
         {
           label: "web",
           autogenerate: { directory: "web" },
+          collapsed: true,
         },
         {
           label: "miscellaneous",
           autogenerate: { directory: "miscellaneous" },
+          collapsed: true,
         },
         {
           label: "Community",
