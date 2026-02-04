@@ -1,5 +1,5 @@
 ---
-import { getCollection } from 'astro:content';
+import { getCollection } from "astro:content";
 
 interface Props {
   id: string;
@@ -7,11 +7,11 @@ interface Props {
 }
 
 const { id, label } = Astro.props;
-const allDocs = await getCollection('docs');
+const allDocs = await getCollection("docs");
 
 /**
- * look for the entry by ID. in Astro's content layer, 
- * IDs usually match the file path relative to content/docs/ 
+ * look for the entry by ID. in Astro's content layer,
+ * IDs usually match the file path relative to content/docs/
  * and often exclude the file extension.
  */
 const entry = allDocs.find((doc) => doc.id === id || doc.id === `${id}.mdx`);
@@ -21,8 +21,8 @@ const description = entry?.data.description;
 const badge = entry?.data.sidebar?.badge;
 
 // ensure base URL is clean for the link
-const baseUrl = import.meta.env.BASE_URL.replace(/\/$/, '');
-const href = `${baseUrl}/${id}/`.replace(/\/+/g, '/');
+const baseUrl = import.meta.env.BASE_URL.replace(/\/$/, "");
+const href = `${baseUrl}/${id}/`.replace(/\/+/g, "/");
 ---
 
 {
@@ -33,17 +33,24 @@ const href = `${baseUrl}/${id}/`.replace(/\/+/g, '/');
     </span>
   ) : (
     <span class="ref-container">
-      <a href={href} class="ref-link">{label || title}</a><span class="preview-card" role="tooltip">
-        <span class="card-header">
-          <span class="card-title">{title}</span>
-          {badge && <span class={`badge ${badge.variant}`}>{badge.text}</span>}
+      <>
+        <a href={href} class="ref-link">
+          {label || title}
+        </a>
+        <span class="preview-card" role="tooltip">
+          <span class="card-header">
+            <span class="card-title">{title}</span>
+            {badge && (
+              <span class={`badge ${badge.variant}`}>{badge.text}</span>
+            )}
+          </span>
+          <span class="card-body">{description}</span>
+          <span class="card-footer">
+            <span class="footer-prompt">Click to view reference</span>
+            <code class="footer-path">/{id}</code>
+          </span>
         </span>
-        <span class="card-body">{description}</span>
-        <span class="card-footer">
-          <span class="footer-prompt">Click to view reference</span>
-          <code class="footer-path">/{id}</code>
-        </span>
-      </span>
+      </>
     </span>
   )
 }
@@ -63,7 +70,7 @@ const href = `${baseUrl}/${id}/`.replace(/\/+/g, '/');
     border-bottom: 1px dashed var(--sl-color-accent);
     font-weight: 500;
     transition: color 0.2s ease;
-    display: inline; 
+    display: inline;
   }
 
   .ref-link:hover {
@@ -77,27 +84,27 @@ const href = `${baseUrl}/${id}/`.replace(/\/+/g, '/');
     bottom: calc(100% + 12px);
     left: 50%;
     transform: translateX(-50%) translateY(8px);
-    
+
     width: 300px;
     padding: 1rem;
     display: flex;
     flex-direction: column;
     gap: 0.5rem;
-    
+
     background-color: var(--sl-color-gray-6);
     border: 1px solid var(--sl-color-gray-5);
     border-radius: 0.5rem;
     box-shadow: var(--sl-shadow-lg);
-    
+
     visibility: hidden;
     opacity: 0;
     pointer-events: none;
-    transition: 
-      transform 0.2s cubic-bezier(0.23, 1, 0.32, 1), 
-      opacity 0.2s ease, 
+    transition:
+      transform 0.2s cubic-bezier(0.23, 1, 0.32, 1),
+      opacity 0.2s ease,
       visibility 0.2s;
     z-index: 1000;
-    
+
     /* reset formatting inside the card */
     white-space: normal;
     text-align: left;
@@ -164,10 +171,26 @@ const href = `${baseUrl}/${id}/`.replace(/\/+/g, '/');
     font-weight: 800;
     text-transform: uppercase;
   }
-  .badge.caution { background: var(--sl-color-orange-low); color: var(--sl-color-orange); border: 1px solid; }
-  .badge.danger { background: var(--sl-color-red-low); color: var(--sl-color-red); border: 1px solid; }
-  .badge.tip { background: var(--sl-color-green-low); color: var(--sl-color-green); border: 1px solid; }
-  .badge.note { background: var(--sl-color-blue-low); color: var(--sl-color-blue); border: 1px solid; }
+  .badge.caution {
+    background: var(--sl-color-orange-low);
+    color: var(--sl-color-orange);
+    border: 1px solid;
+  }
+  .badge.danger {
+    background: var(--sl-color-red-low);
+    color: var(--sl-color-red);
+    border: 1px solid;
+  }
+  .badge.tip {
+    background: var(--sl-color-green-low);
+    color: var(--sl-color-green);
+    border: 1px solid;
+  }
+  .badge.note {
+    background: var(--sl-color-blue-low);
+    color: var(--sl-color-blue);
+    border: 1px solid;
+  }
 
   /* --- error handling --- */
   .ref-error {
@@ -192,5 +215,7 @@ const href = `${baseUrl}/${id}/`.replace(/\/+/g, '/');
     z-index: 10;
   }
 
-  .ref-error:hover .error-tooltip { visibility: visible; }
+  .ref-error:hover .error-tooltip {
+    visibility: visible;
+  }
 </style>
