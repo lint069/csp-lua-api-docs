@@ -1,15 +1,103 @@
 ---
 title: mat4x4
-description: ...
-sidebar:
-  badge:
-    text: Incomplete
-    variant: caution
+description: Reference for the 4x4 Matrix primitive used for full world transformations.
 ---
 
-import { Aside } from "@astrojs/starlight/components";
+import { Aside, Tabs, TabItem } from "@astrojs/starlight/components";
 
-<Aside type="caution" title="Work in Progress">
-  This page is a stub and is currently being drafted. Information here may be
-  incomplete or subject to change.
+A 4x4 matrix representing a full 3D transformation, including translation, rotation, and scale.
+This is the structure used to position cameras, cars, and objects in world space.
+
+<Aside type="tip" title="Convenience Accessors">
+  While you can access the four `vec4` rows directly, `mat4x4` provides
+  convenience properties like `.position` and `.look` that return `vec3`
+  objects, making it much easier to read and write transformation data.
 </Aside>
+
+## Usage Patterns
+
+<Tabs>
+<TabItem label="Transformation Helpers">
+
+CSP provides several helper functions to generate specific matrix types.
+
+```lua
+-- matrix that only moves an object
+local move = mat4x4.translation(vec3(0, 10, 0))
+
+-- matrix rotated 45 degrees around the Y axis
+local rot = mat4x4.rotation(math.rad(45), vec3(0, 1, 0))
+
+-- matrix configured for a specific position and view direction
+local view = mat4x4.look(myPos, targetDir, vec3(0, 1, 0))
+```
+
+</TabItem>
+<TabItem label="Updating Objects">
+
+Matrices are often used to sync physical bodies with visual meshes.
+
+```lua
+function script.update(dt)
+  -- get the physical transform of a rigid body
+  local physTransform = myRigidBody:getTransformation()
+
+  -- apply it to a visual scene node
+  myMesh:setTransformation(physTransform)
+end
+```
+
+</TabItem>
+</Tabs>
+
+## Description
+
+The `mat4x4` primitive is a high-performance FFI structure.
+In CSP, world coordinates are typically handled through these matrices
+to ensure that complex hierarchical transformations, such as a driver's hand moving relative to a steering wheel,
+which itself moves relative to a car, remain accurate.
+
+Multiplying two matrices combines their transformations,
+producing a single matrix that represents both operations.
+A matrix can also be multiplied by a vector to transform it into world space;
+when applied to a point, translation is included, and when applied to a direction vector, translation is ignored.
+
+## Properties
+
+| Property   | Type   | Description                                            |
+| :--------- | :----- | :----------------------------------------------------- |
+| `row1..4`  | `vec4` | Direct access to the four row vectors.                 |
+| `position` | `vec3` | Convenience access to the translation component.       |
+| `look`     | `vec3` | Convenience access to the forward direction vector.    |
+| `up`       | `vec3` | Convenience access to the upward direction vector.     |
+| `side`     | `vec3` | Convenience access to the right-hand direction vector. |
+
+## Common Methods
+
+| Method                | Description                                                        |
+| :-------------------- | :----------------------------------------------------------------- |
+| `:inverse()`          | Returns a new matrix that performs the opposite transformation.    |
+| `:inverseSelf()`      | Inverts the matrix in place (more efficient).                      |
+| `:transpose()`        | Flips the matrix over its diagonal.                                |
+| `:transformPoint(v)`  | Multiplies the matrix by a `vec3` point (includes translation).    |
+| `:transformVector(v)` | Multiplies the matrix by a `vec3` direction (ignores translation). |
+| `:mulSelf(other)`     | Multiplies the current matrix by another in place.                 |
+
+## Examples
+
+<Tabs>
+<TabItem label="Moving a Camera">
+
+Manually setting the position of a grabbed camera using the convenience accessor.
+
+```lua
+local cam = ac.grabCamera()
+
+if cam then
+  -- move the camera 2 meters up without changing its rotation
+  cam.transform.position:add(vec3(0, 2, 0))
+end
+```
+
+</TabItem>
+</Tabs>

@@ -1,15 +1,110 @@
 ---
 title: hsv
-description: ...
-sidebar:
-  badge:
-    text: Incomplete
-    variant: caution
+description: Reference for the Hue-Saturation-Value color primitive.
 ---
 
-import { Aside } from "@astrojs/starlight/components";
+import { Aside, Tabs, TabItem } from "@astrojs/starlight/components";
 
-<Aside type="caution" title="Work in Progress">
-  This page is a stub and is currently being drafted. Information here may be
-  incomplete or subject to change.
+A color primitive representing color in the HSV (Hue, Saturation, Value) space.
+This format is commonly used for color shifting, cycling, and vibrancy adjustments where preserving hue is important.
+
+<Aside type="tip" title="Color Space Usage">
+  While `rgbm` is the standard for rendering and UI, `hsv` is significantly
+  easier to use for mathematical operations like color cycling. You can easily
+  convert a `hsv` object back to `rgb` or `rgbm` whenever you need to draw it.
 </Aside>
+
+## Usage Patterns
+
+<Tabs>
+<TabItem label="Constructors">
+
+Initialize a color using degree-based hue and normalized saturation and value.
+
+```lua
+-- default black (0, 0, 0)
+local c1 = hsv()
+
+-- bright red (0° hue, 100% saturation, 100% value)
+local c2 = hsv(0, 1, 1)
+
+-- a nice lime green (120° hue)
+local c3 = hsv(120, 1, 1)
+```
+
+</TabItem>
+<TabItem label="Conversion">
+
+Convert an existing HSV color to RGB for use in UI functions.
+
+```lua
+local myColor = hsv(240, 1, 1) -- blue
+local rgbColor = myColor:rgb()
+
+ui.drawRectFilled(vec2(0,0), vec2(20,20), rgbColor:rgbm(1))
+```
+
+</TabItem>
+</Tabs>
+
+## Description
+
+The `hsv` primitive allows for intuitive color manipulation by separating hue from saturation and brightness.
+
+The `h` component is typically measured in degrees from `0` to `360`,
+while the `s` and `v` components are normalized floating-point values in the range `0.0` to `1.0`.
+When interpolating between two HSV colors, CSP correctly handles hue wraparound, for example,
+blending 350° and 10° produces 0° rather than 180°.
+
+## Properties
+
+| Property | Type     | Description                       |
+| :------- | :------- | :-------------------------------- |
+| `h`      | `number` | Hue component (typically 0–360).  |
+| `s`      | `number` | Saturation component (0–1).       |
+| `v`      | `number` | Value/Brightness component (0–1). |
+
+## Common Methods
+
+| Method          | Description                                          |
+| :-------------- | :--------------------------------------------------- |
+| `:rgb(out)`     | Returns an `rgb` representation of the HSV color.    |
+| `:set(h, s, v)` | Updates the components in place.                     |
+| `:clone()`      | Creates a copy of the hsv object.                    |
+| `:unpack()`     | Returns `h`, `s`, and `v` as three separate numbers. |
+| `:table()`      | Returns the values in a standard Lua table.          |
+
+## Examples
+
+<Tabs>
+<TabItem label="Color Cycling">
+
+Creating a rainbow effect by incrementing the hue every frame.
+
+```lua
+local rainbow = hsv(0, 1, 1)
+
+function script.update(dt)
+  -- rotate the hue by 60 degrees per second
+  rainbow.h = (rainbow.h + (dt * 60)) % 360
+
+  -- draw text with the currently active color
+  ui.textColored("Rainbow Text", rainbow:rgb():rgbm(1))
+end
+```
+
+</TabItem>
+<TabItem label="Vibrancy Adjustment">
+
+Reducing the saturation of a color to create a "washed out" or grayscale effect.
+
+```lua
+function getMutedColor(originalHsv, factor)
+  local muted = originalHsv:clone()
+  muted.s = muted.s * factor -- reduce saturation
+  return muted:rgb()
+end
+```
+
+</TabItem>
+</Tabs>

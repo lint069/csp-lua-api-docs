@@ -3,87 +3,142 @@ title: rgbm
 description: Reference for the 4-channel color primitive with an intensity multiplier.
 ---
 
-import { Tabs, TabItem } from "@astrojs/starlight/components";
+import { Aside, Tabs, TabItem } from "@astrojs/starlight/components";
 
-The `rgbm` type is the standard color primitive in CSP. It consists of `r`, `g`, and `b` channels, plus a `mult` (multiplier) channel.
+The `rgbm` type is the standard color primitive in CSP,
+consisting of `r`, `g`, and `b` channels plus a `mult` (multiplier) channel that serves
+different roles depending on context.
 
-:::note[Multipliers vs. Alpha]
-In standard UI contexts, `mult` often acts as **alpha** (0.0 to 1.0). In lighting or emissive contexts, `mult` acts as **intensity**, allowing colors to go much brighter than 1.0 for HDR effects.
-:::
+<Aside type="note" title="Multiplier Semantics">
+  In UI contexts such as windows and buttons, the `mult` value typically behaves
+  like an alpha channel in the range `0.0` to `1.0`. In lighting or emissive
+  contexts, it represents intensity and may exceed `1.0` to produce HDR bloom or
+  glow effects.
+</Aside>
 
-## Constructors
+## Usage Patterns
+
+<Tabs>
+<TabItem label="Constructors">
+
+Initialize a color with specific values or from a hex string.
 
 ```lua
 -- black (0, 0, 0) with mult=0
 local c1 = rgbm()
 
--- red with full opacity
+-- solid red (1, 0, 0) with full opacity (1)
 local c2 = rgbm(1, 0, 0, 1)
 
--- bright white
-local bright = rgbm(1, 1, 1, 10)
+-- create from a hex string
+local c3 = rgbm("#FF5500")
 ```
+
+</TabItem>
+<TabItem label="Predefined Colors">
+
+Access the built-in color palette for quick styling.
+
+```lua
+local aqua = rgbm.colors.aqua
+local black = rgbm.colors.black
+local blue = rgbm.colors.blue
+local cyan = rgbm.colors.cyan
+local fuchsia = rgbm.colors.fuchsia
+local gray = rgbm.colors.gray
+local green = rgbm.colors.green
+local lime = rgbm.colors.lime
+local maroon = rgbm.colors.maroon
+local navy = rgbm.colors.navy
+local olive = rgbm.colors.olive
+local orange = rgbm.colors.orange
+local purple = rgbm.colors.purple
+local red = rgbm.colors.red
+local silver = rgbm.colors.silver
+local teal = rgbm.colors.teal
+local transparent = rgbm.colors.transparent
+local white = rgbm.colors.white
+local yellow = rgbm.colors.yellow
+```
+
+</TabItem>
+<TabItem label="Component Access">
+
+Extract specific channels or convert to other primitives.
+
+```lua
+local myColor = rgbm(1, 0.5, 0, 1)
+
+local r = myColor.r
+local alpha = myColor.mult
+
+-- get the 3-channel rgb version
+local base = myColor.rgb
+```
+
+</TabItem>
+</Tabs>
+
+## Description
+
+The `rgbm` type is highly flexible and optimized via FFI.
+It supports standard mathematical operators (`+`, `-`, `*`, `/`) and equality checks (`==`).
+
+Multiplying an `rgbm` by a number scales all four components,
+while multiplying by another `rgbm` performs per-channel multiplication.
+Like `vec3`, these are C-style structures; for high-frequency updates,
+use in-place methods such as `:setLerp()` instead of arithmetic operators to reduce allocations.
 
 ## Properties
 
 | Property | Type     | Description                                     |
-| -------- | -------- | ----------------------------------------------- |
+| :------- | :------- | :---------------------------------------------- |
 | `r`      | `number` | Red channel (typically 0–1).                    |
 | `g`      | `number` | Green channel (typically 0–1).                  |
 | `b`      | `number` | Blue channel (typically 0–1).                   |
-| `mult`   | `number` | Multiplier (Alpha or Brightness).               |
+| `mult`   | `number` | Multiplier (Alpha or Intensity).                |
 | `rgb`    | `rgb`    | Returns the standard 3-channel `rgb` component. |
 
----
+## Common Methods
 
-## Predefined Colors
-
-The `rgbm.colors` table contains several common colors with `mult` set to 1.
-
-| Color Name                | Values (R, G, B, M) |
-| ------------------------- | ------------------- |
-| `rgbm.colors.white`       | `1, 1, 1, 1`        |
-| `rgbm.colors.red`         | `1, 0, 0, 1`        |
-| `rgbm.colors.transparent` | `0, 0, 0, 0`        |
-| `rgbm.colors.black`       | `0, 0, 0, 1`        |
-
----
-
-## Methods
-
-### `luminance()`
-
-Returns the perceived brightness of the color.
-
-```lua
-local brightness = myColor:luminance()
-```
-
-### `hex()`
-
-Returns the color as a CSS-style hex string (e.g., `#AARRGGBB`).
-
-```lua
-local str = myColor:hex()
-```
-
----
+| Method                | Description                                         |
+| :-------------------- | :-------------------------------------------------- |
+| `:luminance()`        | Returns the perceived brightness of the color.      |
+| `:hex()`              | Returns a CSS-style hex string (e.g., `#AARRGGBB`). |
+| `:hsv()`              | Converts the color to an `hsv` primitive.           |
+| `:set(rgb, mult)`     | Updates the color values in place.                  |
+| `:setLerp(c1, c2, m)` | Smoothly blends between two colors in place.        |
 
 ## Examples
 
 <Tabs>
-<TabItem label="UI Opacity">
+<TabItem label="UI Fading">
 
-Using the multiplier to fade a UI element.
+Using the multiplier as an alpha channel to pulse the opacity of a rectangle.
 
 ```lua
-local baseColor = rgbm.colors.blue:clone()
+local myColor = rgbm.colors.blue:clone()
 
 function script.update(dt)
-    -- pulse the alpha/mult channel
-    baseColor.mult = math.sin(ac.getSim().gameTime) \* 0.5 + 0.5
-    ui.drawRectFilled(vec2(10, 10), vec2(50, 50), baseColor)
+  -- pulse the alpha (mult) between 0.0 and 1.0
+  myColor.mult = math.sin(ac.getSim().gameTime) * 0.5 + 0.5
+  ui.drawRectFilled(vec2(10, 10), vec2(60, 60), myColor)
 end
+```
+
+</TabItem>
+
+<TabItem label="HDR Lighting">
+
+Setting an emissive intensity much higher than 1.0 to create a glow.
+
+```lua
+local meshes = ac.findMeshes("LIGHT_GLOW")
+
+-- mult of 20.0 makes the color significantly brighter than a standard monitor pixel
+local glow = rgbm(1, 0.8, 0.2, 20.0)
+
+meshes:setMaterialProperty("ksEmissive", glow)
 ```
 
 </TabItem>

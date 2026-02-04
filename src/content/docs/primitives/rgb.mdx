@@ -1,44 +1,113 @@
 ---
 title: rgb
-description: Reference for the 3-channel color primitive.
+description: Reference for the 3-channel Red-Green-Blue color primitive.
 ---
 
-Standard three-channel color type containing `r`, `g`, and `b`. While `rgbm` is preferred for UI and lighting, `rgb` is often used for simple material properties and track conditions.
+import { Aside, Tabs, TabItem } from "@astrojs/starlight/components";
 
-## Constructors
+Standard three-channel color type containing `r`, `g`, and `b` floating-point values.
+
+<Aside type="tip" title="Color Type Selection">
+  While `rgb` is useful for simple material properties and track conditions,
+  [`rgbm`](../rgbm/) is the standard for UI and HDR lighting in CSP because it
+  includes a multiplier for alpha and intensity.
+</Aside>
+
+## Usage Patterns
+
+<Tabs>
+<TabItem label="Constructors">
+
+Initialize a color with specific values or from a hex string.
 
 ```lua
--- default black
-local c = rgb()
+-- default black (0, 0, 0)
+local c1 = rgb()
 
--- custom color
+-- custom color (Red, Green, Blue)
 local yellow = rgb(1, 1, 0)
+
+-- create from a hex string
+local c2 = rgb("#00FF88")
 ```
+
+</TabItem>
+<TabItem label="Upgrading to rgbm">
+
+Convert to `rgbm` to add an alpha/intensity channel.
+
+```lua
+local base = rgb(1, 0, 0)
+local forUI = base:rgbm(0.5) -- mult=0.5 (50% opacity)
+```
+
+</TabItem>
+</Tabs>
+
+## Description
+
+The `rgb` primitive represents colors using the additive color model.
+Each component is a floating-point number, typically ranging from `0.0` to `1.0`.
+
+The type supports standard mathematical operations,
+allowing colors to be added or multiplied directly (for example, combining red and green to produce yellow).
+The `:normalize()` method ensures the brightest channel does not exceed `1.0`,
+scaling the color back into range after arithmetic operations.
+
+Like other color and vector primitives,
+`rgb` is FFI-backed and optimized for performance.
+For tight loops or per-frame logic, using in-place methods such as `:add()` is more efficient
+than allocating new values with operators.
 
 ## Properties
 
 | Property | Type     | Description          |
-| -------- | -------- | -------------------- |
+| :------- | :------- | :------------------- |
 | `r`      | `number` | Red channel (0–1).   |
 | `g`      | `number` | Green channel (0–1). |
 | `b`      | `number` | Blue channel (0–1).  |
 
----
+## Common Methods
 
-## Methods
+| Method          | Description                                                         |
+| :-------------- | :------------------------------------------------------------------ |
+| `:rgbm(mult)`   | Converts the `rgb` color into an `rgbm` type with a set multiplier. |
+| `:hsv(out)`     | Returns a `hsv` representation of the color.                        |
+| `:hex()`        | Returns a hex string (e.g., `#RRGGBB`).                             |
+| `:luminance()`  | Returns the perceived brightness of the color.                      |
+| `:set(r, g, b)` | Updates the color values in place.                                  |
+| `:unpack()`     | Returns `r`, `g`, and `b` as three separate numbers.                |
 
-### `rgbm()`
+## Examples
 
-Converts the `rgb` color into an `rgbm` type.
+<Tabs>
+<TabItem label="Applying to Materials">
+
+Using `rgb` to set a basic material property in the scene.
 
 ```lua
-local colorM = myRgb:rgbm(0.5) -- mult=0.5
+local meshes = ac.findMeshes("GEO_CAR_BODY")
+local paintColor = rgb(0.1, 0.1, 0.8) -- deep blue
+
+-- many material properties expect a 3-channel rgb
+meshes:setMaterialProperty("ksDiffuse", paintColor)
 ```
 
-### `toHsv()`
+</TabItem>
 
-Returns a `hsv` representation of the color.
+<TabItem label="Luminance Check">
+
+Checking if a color is "bright" or "dark" to determine the best text color to use over it.
 
 ```lua
-local hsvColor = myRgb:toHsv()
+local myColor = rgb(0.2, 0.2, 0.2)
+
+if myColor:luminance() < 0.5 then
+  ui.textColored("Dark background, using white text", rgbm.colors.white)
+else
+  ui.textColored("Light background, using black text", rgbm.colors.black)
+end
 ```
+
+</TabItem>
+</Tabs>

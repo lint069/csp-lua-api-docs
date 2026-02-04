@@ -1,128 +1,123 @@
 ---
 title: vec2
-description: Reference for the 2D vector primitive used for coordinates and sizes.
+description: Reference for the 2D vector primitive used for UI coordinates, sizes, and UV mapping.
 ---
 
-import { Tabs, TabItem } from "@astrojs/starlight/components";
+import { Aside, Tabs, TabItem } from "@astrojs/starlight/components";
 
-A two-dimensional vector containing `x` and `y` floating-point values. This type is used extensively for UI positioning, dimensions, and texture coordinates (UVs).
+A two-dimensional vector containing `x` and `y` floating-point values.
+This type is used for UI positioning, element dimensions, and texture coordinates (UVs).
 
-## Constructors
+<Aside type="caution" title="Performance & Garbage Collection">
+  Standard mathematical operators like `+` or `*` create a new `vec2` object. In
+  UI scripts that run every frame, it is significantly more efficient to use
+  in-place methods like `:add()` or `:set()` to avoid putting pressure on the
+  Lua garbage collector.
+</Aside>
+
+## Usage Patterns
+
+<Tabs>
+<TabItem label="Constructors">
+
+Initialize a vector with specific values, or clone an existing one.
 
 ```lua
--- create a vector with x=0, y=0
+-- create a vector at 0,0
 local v1 = vec2()
 
--- create a vector with specific values
-local v2 = vec2(10, 20)
+-- create a vector with specific coordinates
+local v2 = vec2(100, 50)
 
 -- create a vector from another vec2 (cloning)
 local v3 = vec2(v2)
 ```
 
+</TabItem>
+<TabItem label="Methods">
+
+Update an existing vector in-place to save memory.
+
+```lua
+local pos = vec2(10, 10)
+local offset = vec2(5, 0)
+
+-- move the position without creating a new object
+pos:add(offset)
+```
+
+</TabItem>
+<TabItem label="Operators">
+
+Use standard math syntax for layout calculations.
+
+```lua
+local center = windowSize / 2
+local shifted = center + vec2(10, 10)
+```
+
+</TabItem>
+</Tabs>
+
+## Description
+
+The `vec2` type is the foundation of the `ui` and `display` namespaces.
+
+In standard UI contexts, `(0, 0)` represents the top-left corner of the window or screen.
+Positive `x` values move to the right, and positive `y` values move downward.
+The type supports operator overloading for `+`, `-`, `*`, `/`, equality checks (`==`), and the `#` operator for vector length.
+
+Methods such as `:add()`, `:sub()`, and `:normalize()` modify the vector in place and return it,
+allowing for method chaining (for example, `v:add(v2):scale(2)`).
+
 ## Properties
 
 | Property | Type     | Description               |
-| -------- | -------- | ------------------------- |
+| :------- | :------- | :------------------------ |
 | `x`      | `number` | The horizontal component. |
 | `y`      | `number` | The vertical component.   |
 
----
+## Common Methods
 
-## Methods
-
-### `set()`
-
-Updates the vector's components in place.
-
-```lua
-v:set(x, y)
-v:set(otherVec2)
-```
-
-### `add()`
-
-Adds values to the current vector. If `out` is provided, the result is written there; otherwise, it modifies the original.
-
-```lua
-v:add(otherVec2, out)
-v:add(number, out)
-```
-
-### `normalize()`
-
-Normalizes the vector (makes its length 1) in place.
-
-```lua
-v:normalize(out)
-```
-
-### `length()`
-
-Returns the magnitude of the vector.
-
-```lua
-local len = v:length()
-```
-
-### `lerp()`
-
-Linear interpolation between the current vector and `otherVector`.
-
-```lua
-v:lerp(otherVector, mix, out)
-```
-
----
-
-## Operator Overloading
-
-The `vec2` type supports standard Lua operators.
-
-:::caution[Performance]
-Using operators like `+` or `*` creates a new `vec2` object. In high-frequency scripts (like `update` loops), it is significantly more efficient to use methods like `:add()` or `:set()` on existing vectors to reduce garbage collection pressure.
-:::
-
-| Operator | Description                                       |
-| -------- | ------------------------------------------------- |
-| `+`      | Addition (`vec2 + vec2` or `vec2 + number`)       |
-| `-`      | Subtraction (`vec2 - vec2` or `vec2 - number`)    |
-| `*`      | Multiplication (`vec2 * vec2` or `vec2 * number`) |
-| `/`      | Division (`vec2 / vec2` or `vec2 / number`)       |
-| `#`      | Length operator (returns the magnitude)           |
-| `==`     | Equality (checks if `x` and `y` are identical)    |
-
----
+| Method                   | Description                                  |
+| :----------------------- | :------------------------------------------- |
+| `:set(x, y)`             | Updates the vector's components in place.    |
+| `:normalize(out)`        | Scales the vector to a length of 1.          |
+| `:length()`              | Returns the magnitude of the vector.         |
+| `:distance(other)`       | Returns the distance between two points.     |
+| `:lerp(other, mix, out)` | Linearly interpolates toward another vector. |
+| `:unpack()`              | Returns `x` and `y` as two separate numbers. |
 
 ## Examples
 
 <Tabs>
-<TabItem label="Basic Positioning">
+<TabItem label="UI Positioning">
 
-Using `vec2` to define a position and a size for a rectangle.
+Using `vec2` to define the position and size of a drawn rectangle.
 
 ```lua
-local pos = vec2(50, 50)
-local size = vec2(100, 40)
-
-ui.drawRectFilled(pos, pos + size, rgbm.colors.red)
+function script.drawUI()
+  local pos = vec2(50, 50)
+  local size = vec2(200, 100)
+  -- draw a rectangle using the vectors
+  ui.drawRectFilled(pos, pos + size, rgbm.colors.red)
+end
 ```
 
 </TabItem>
-<TabItem label="Efficient Updating">
 
-Updating a position every frame without creating new objects.
+<TabItem label="Intersection Check">
+
+Checking where two line segments intersect on a 2D plane.
 
 ```lua
-local position = vec2(0, 0)
-local velocity = vec2(10, 5)
+local p1, p2 = vec2(0, 0), vec2(100, 100)
+local p3, p4 = vec2(0, 100), vec2(100, 0)
 
-function script.update(dt)
--- multiplies velocity by dt and adds it to position in-place
-position:addScaled(velocity, dt)
+local hit = vec2.intersect(p1, p2, p3, p4)
 
-    ui.drawCircleFilled(position, 10, rgbm.colors.white)
-
+if hit then
+  ac.log("Lines intersect at: " .. hit.x .. ", " .. hit.y)
 end
 ```
 

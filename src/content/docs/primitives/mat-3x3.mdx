@@ -1,15 +1,97 @@
 ---
 title: mat3x3
-description: ...
-sidebar:
-  badge:
-    text: Incomplete
-    variant: caution
+description: Reference for the 3x3 Matrix primitive used for 3D rotation and scaling.
 ---
 
-import { Aside } from "@astrojs/starlight/components";
+import { Aside, Tabs, TabItem } from "@astrojs/starlight/components";
 
-<Aside type="caution" title="Work in Progress">
-  This page is a stub and is currently being drafted. Information here may be
-  incomplete or subject to change.
-</Aside>
+A 3x3 matrix primarily used to represent the rotation and scaling components of a 3D transformation.
+Unlike [`mat4x4`](../mat-4x4/), this type does not store translation (position) data.
+
+## Usage Patterns
+
+<Tabs>
+<TabItem label="Constructors">
+
+Initialize a neutral identity matrix or define specific rows.
+
+```lua
+-- create a new identity matrix (no rotation or scaling)
+local m1 = mat3x3.identity()
+
+-- create a matrix from three vec3 rows
+local r1 = vec3(1, 0, 0)
+local r2 = vec3(0, 1, 0)
+local r3 = vec3(0, 0, 1)
+local m2 = mat3x3(r1, r2, r3)
+```
+
+</TabItem>
+<TabItem label="Row Access">
+
+Directly access or modify the individual row vectors.
+
+```lua
+local m = mat3x3.identity()
+
+-- access the first row (a vec3)
+local xBasis = m.row1
+
+-- modify a row directly
+m.row2:set(0, 2, 0) -- scales the Y axis by 2
+```
+
+</TabItem>
+</Tabs>
+
+## Description
+
+The `mat3x3` type is a specialized container for linear transformations.
+While `mat4x4` is used for positioning objects in the world, `mat3x3` is used when only
+orientation and scale are required.
+
+It is commonly used for internal mathematical operations,
+physics-related inertia tensors, or for passing orientation data to shaders where
+the overhead of a fourth row is unnecessary. Like other CSP primitives, `mat3x3` is FFI-backed,
+making row access inexpensive, though methods such as `:clone()` still allocate new memory.
+
+A `mat4x4` effectively embeds a `mat3x3` in its upper-left portion to
+represent rotation and scale, with additional data used for translation.
+
+## Properties
+
+| Property | Type   | Description                                            |
+| :------- | :----- | :----------------------------------------------------- |
+| `row1`   | `vec3` | The first row vector (often representing the X-axis).  |
+| `row2`   | `vec3` | The second row vector (often representing the Y-axis). |
+| `row3`   | `vec3` | The third row vector (often representing the Z-axis).  |
+
+## Common Methods
+
+| Method              | Description                                                         |
+| :------------------ | :------------------------------------------------------------------ |
+| `:set(value)`       | Updates all matrix components to match another `mat3x3` in place.   |
+| `:clone()`          | Returns a new `mat3x3` instance with the same data.                 |
+| `mat3x3.identity()` | Static helper to create a neutral matrix with `1s` on the diagonal. |
+
+## Examples
+
+<Tabs>
+<TabItem label="Orientation Storage">
+
+Using a `mat3x3` to store a specific rotation state before applying it to other vectors.
+
+```lua
+-- define a simple rotation/scaling matrix
+local transform = mat3x3.identity()
+transform.row1:scale(1.5) -- stretch the X axis
+transform.row2:scale(1.5) -- stretch the Y axis
+
+function script.update(dt)
+  -- this matrix could now be used in custom math or
+  -- passed to specialized rendering functions.
+end
+```
+
+</TabItem>
+</Tabs>

@@ -1,15 +1,109 @@
 ---
 title: vec4
-description: ...
-sidebar:
-  badge:
-    text: Incomplete
-    variant: caution
+description: Reference for the 4D vector primitive used for advanced geometry and shader data.
 ---
 
-import { Aside } from "@astrojs/starlight/components";
+import { Aside, Tabs, TabItem } from "@astrojs/starlight/components";
 
-<Aside type="caution" title="Work in Progress">
-  This page is a stub and is currently being drafted. Information here may be
-  incomplete or subject to change.
+A four-dimensional vector containing `x`, `y`, `z`, and `w` floating-point values.
+
+<Aside type="caution" title="Memory Management">
+  Like all vector primitives in CSP, using operators like `+` or `*` creates a
+  new object. For logic that executes every frame, such as custom vertex
+  manipulation, use in-place methods like `:addScaled()` to maintain high
+  performance.
 </Aside>
+
+## Usage Patterns
+
+<Tabs>
+<TabItem label="Constructors">
+
+Initialize a 4D vector with specific values or by cloning an existing one.
+
+```lua
+-- create a vector at 0,0,0,0
+local v1 = vec4()
+
+-- create a vector with specific components
+local v2 = vec4(1.0, 0.5, 0.0, 1.0)
+
+-- create a vector from another vec4 (cloning)
+local v3 = vec4(v2)
+```
+
+</TabItem>
+<TabItem label="In-place Methods">
+
+Modify a vector without creating new Lua objects.
+
+```lua
+local data = vec4(0, 0, 0, 0)
+local update = vec4(1, 2, 3, 4)
+
+-- adds the update values directly to 'data'
+data:add(update)
+```
+
+</TabItem>
+</Tabs>
+
+## Description
+
+The `vec4` primitive is often used as a container for data that needs to be processed by the GPU.
+
+When working with functions such as `ui.renderShader` or `render.mesh`,
+`vec4` is commonly used to pass custom parameters, such as
+clipping planes or grouped constants, into shader constant buffers.
+The type supports standard mathematical operators (`+`, `-`, `*`, `/`) and equality checks,
+with the `#` operator returning the vector's 4D magnitude.
+
+`vec4` is an FFI-backed structure, making property access inexpensive.
+However, creating large numbers of new instances per frame should be avoided in performance-critical code.
+
+## Properties
+
+| Property | Type     | Description           |
+| :------- | :------- | :-------------------- |
+| `x`      | `number` | The first component.  |
+| `y`      | `number` | The second component. |
+| `z`      | `number` | The third component.  |
+| `w`      | `number` | The fourth component. |
+
+## Common Methods
+
+| Method                   | Description                                         |
+| :----------------------- | :-------------------------------------------------- |
+| `:set(x, y, z, w)`       | Updates all four components in place.               |
+| `:normalize(out)`        | Scales the vector to a 4D length of 1.              |
+| `:lerp(other, mix, out)` | Linearly interpolates between two 4D vectors.       |
+| `:dot(other)`            | Calculates the 4D dot product.                      |
+| `:unpack()`              | Returns `x`, `y`, `z`, and `w` as separate numbers. |
+| `:table()`               | Returns the values as a standard Lua array.         |
+
+## Examples
+
+<Tabs>
+<TabItem label="Shader Parameters">
+
+Preparing a `vec4` to pass custom data (like position and a radius) into a shader.
+
+```lua
+local shaderParams = vec4(10.5, 0.0, 50.2, 5.0) -- x,y,z position + radius in w
+
+ui.renderShader({
+    values = {
+        gTargetData = shaderParams
+    },
+    shader = [[
+        float4 main(PS_IN pin) {
+            float3 pos = gTargetData.xyz;
+            float radius = gTargetData.w;
+            // ... shader logic using the 4D container
+        }
+    ]]
+})
+```
+
+</TabItem>
+</Tabs>

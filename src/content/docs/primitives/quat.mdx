@@ -1,15 +1,111 @@
 ---
 title: quat
-description: ...
-sidebar:
-  badge:
-    text: Incomplete
-    variant: caution
+description: Reference for the Quaternion primitive used for 3D rotations.
 ---
 
-import { Aside } from "@astrojs/starlight/components";
+import { Aside, Tabs, TabItem } from "@astrojs/starlight/components";
 
-<Aside type="caution" title="Work in Progress">
-  This page is a stub and is currently being drafted. Information here may be
-  incomplete or subject to change.
+A four-dimensional complex number used to represent 3D rotations.
+Quaternions are used for rotation because they avoid gimbal lock and support smooth interpolation.
+
+<Aside type="caution" title="Mathematical Complexity">
+  While quaternions have `x`, `y`, `z`, and `w` properties, you should almost
+  never modify these values directly. Instead, use the helper methods like
+  `:setAngleAxis()` or `:setDirection()`.
 </Aside>
+
+## Usage Patterns
+
+<Tabs>
+<TabItem label="Constructors">
+
+Initialize a rotation using common spatial concepts.
+
+```lua
+-- identity rotation (no rotation)
+local q1 = quat()
+
+-- rotate 90 degrees (pi/2) around the Y (up) axis
+local q2 = quat.fromAngleAxis(math.pi / 2, vec3(0, 1, 0))
+
+-- rotation representing looking toward a specific direction
+local q3 = quat.fromDirection(vec3(1, 0, 1))
+```
+
+</TabItem>
+<TabItem label="Look Rotation">
+
+Align an object to face a specific direction.
+
+```lua
+local targetDir = (targetPos - myPos):normalize()
+local rotation = quat.fromDirection(targetDir)
+```
+
+</TabItem>
+</Tabs>
+
+## Description
+
+In CSP, the `quat` primitive is primarily used to define the orientation of nodes, cameras, and physical rigid bodies.
+
+A quaternion can rotate a `vec3` by multiplication (for example, `rotated = quat * vec3`).
+Multiplying two quaternions combines their rotations,
+but order matters: `q1 * q2` does not produce the same result as `q2 * q1`.
+
+For interpolation, the `:slerp()` method allows for smooth transitions between orientations
+at a constant angular velocity, making it the preferred approach for animated rotations.
+
+## Properties
+
+| Property | Type     | Description                    |
+| :------- | :------- | :----------------------------- |
+| `x`      | `number` | The imaginary X component.     |
+| `y`      | `number` | The imaginary Y component.     |
+| `z`      | `number` | The imaginary Z component.     |
+| `w`      | `number` | The real (scalar) W component. |
+
+## Common Methods
+
+| Method                       | Description                                                              |
+| :--------------------------- | :----------------------------------------------------------------------- |
+| `:setAngleAxis(angle, axis)` | Updates the quaternion to represent a rotation around an axis (radians). |
+| `:getAngleAxis()`            | Returns the angle and the axis vector representing the rotation.         |
+| `:normalize(out)`            | Ensures the quaternion has a length of 1 (required for valid rotations). |
+| `:mul(other, out)`           | Multiplies two quaternions to combine rotations.                         |
+| `:slerp(target, mix, out)`   | Performs a smooth spherical interpolation toward a target rotation.      |
+| `:clone()`                   | Creates a copy of the quaternion.                                        |
+
+## Examples
+
+<Tabs>
+<TabItem label="Rotate a Vector">
+
+Taking a "Forward" vector and rotating it 45 degrees to the side.
+
+```lua
+local forward = vec3(0, 0, 1)
+local rotation = quat.fromAngleAxis(math.rad(45), vec3(0, 1, 0))
+
+-- rotate the vector
+local sideView = rotation * forward
+```
+
+</TabItem>
+<TabItem label="Smooth Transition">
+
+Smoothly turning a camera to face a target over time using `:slerp()`.
+
+```lua
+local currentRot = quat() -- starting rotation
+local targetRot = quat.fromDirection(vec3(1, 0, 0)) -- target facing East
+
+function script.update(dt)
+  -- smoothly move 5% of the way toward the target every frame
+  currentRot:slerp(targetRot, 0.05)
+  ac.getSim().cameraLook:set(currentRot * vec3(0, 0, 1))
+end
+```
+
+</TabItem>
+</Tabs>

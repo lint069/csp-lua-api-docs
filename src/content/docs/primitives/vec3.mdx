@@ -3,84 +3,96 @@ title: vec3
 description: Reference for the 3D vector primitive used for world space coordinates and directions.
 ---
 
-import { Tabs, TabItem } from "@astrojs/starlight/components";
+import { Aside, Tabs, TabItem } from "@astrojs/starlight/components";
 
-A three-dimensional vector containing `x`, `y`, and `z` floating-point values. This is the primary type for world positions, directions, and 3D physics.
+A three-dimensional vector containing `x`, `y`, and `z` floating-point values.
+This type is used throughout the API for world positions, directions, and 3D physics.
 
-## Constructors
+<Aside type="caution" title="Performance & Garbage Collection">
+  Standard mathematical operators like `+` or `*` create a new `vec3` object. In
+  scripts that run every frame, it is significantly more efficient to use
+  in-place methods like `:add()` or `:set()` to avoid putting pressure on the
+  Lua garbage collector.
+</Aside>
+
+## Usage Patterns
+
+<Tabs>
+<TabItem label="Constructors">
+
+Initialize a vector with specific values, or create a copy of an existing one.
 
 ```lua
--- create a vector with x=0, y=0, z=0
+-- create a vector at 0,0,0
 local v1 = vec3()
 
--- create a vector with specific values
+-- create a vector with specific coordinates
 local v2 = vec3(10, 5, -2)
 
 -- create a vector from another vec3 (cloning)
 local v3 = vec3(v2)
 ```
 
+</TabItem>
+<TabItem label="Methods">
+
+Efficiently update an existing vector in-place to save memory.
+
+```lua
+local pos = vec3(0, 0, 0)
+local velocity = vec3(1, 0, 0)
+
+-- add velocity to position without creating a new object
+pos:add(velocity)
+```
+
+</TabItem>
+<TabItem label="Operators">
+
+Use standard math syntax for non-performance-critical logic.
+
+```lua
+local combined = vec3(1, 1, 1) + vec3(2, 2, 2)
+```
+
+</TabItem>
+</Tabs>
+
+## Description
+
+The `vec3` type is used extensively throughout the API to represent physical locations and orientations in the simulation.
+
+CSP uses a right-handed coordinate system,
+where `Y` is typically the vertical (up) axis and `X` and `Z` form the ground plane.
+The type supports operator overloading for `+`, `-`, `*`, `/`, unary negation, and the `#` operator for vector length.
+Most methods accept an optional `out` parameter,
+allowing results to be written to an existing vector instead of allocating a new one.
+
 ## Properties
 
 | Property | Type     | Description                  |
-| -------- | -------- | ---------------------------- |
+| :------- | :------- | :--------------------------- |
 | `x`      | `number` | The horizontal component.    |
 | `y`      | `number` | The vertical (up) component. |
 | `z`      | `number` | The depth component.         |
 
----
+## Common Methods
 
-## Methods
-
-### `set()`
-
-Updates the vector's components in place.
-
-```lua
-v:set(x, y, z)
-v:set(otherVec3)
-```
-
-### `normalize()`
-
-Normalizes the vector (makes its length 1) in place. Returns the same vector for chaining.
-
-```lua
-v:normalize(out)
-```
-
-### `cross()`
-
-Calculates the cross product of two vectors (perpendicular vector).
-
-```lua
-v:cross(otherVec3, out)
-```
-
-### `dot()`
-
-Returns the dot product (scalar) of two vectors.
-
-```lua
-local product = v:dot(otherVec3)
-```
-
-### `rotate()`
-
-Rotates the vector using a `quat` (quaternion).
-
-```lua
-v:rotate(quaternion, out)
-```
-
----
+| Method                   | Description                                          |
+| :----------------------- | :--------------------------------------------------- |
+| `:set(x, y, z)`          | Updates the vector's components in place.            |
+| `:normalize(out)`        | Scales the vector to a length of 1.                  |
+| `:dot(other)`            | Calculates the dot product (scalar) of two vectors.  |
+| `:cross(other, out)`     | Calculates the cross product (perpendicular vector). |
+| `:distance(other)`       | Returns the distance between two points in meters.   |
+| `:lerp(other, mix, out)` | Linearly interpolates toward another vector.         |
 
 ## Examples
 
 <Tabs>
 <TabItem label="World Distance">
 
-Checking the distance between the player and a point in the world.
+Check the distance between the player and a specific point in the track.
 
 ```lua
 local carPos = ac.getCar(0).position
@@ -89,21 +101,21 @@ local markerPos = vec3(100, 0, 200)
 local dist = carPos:distance(markerPos)
 
 if dist < 50 then
-    ac.log("Near the marker!")
+  ac.log("The car is near the marker")
 end
 ```
 
 </TabItem>
-<TabItem label="Directional Math">
+<TabItem label="Directional Look">
 
-Calculating a forward vector relative to a car's orientation.
+Calculate a point 5 meters in front of the car based on its current heading.
 
 ```lua
 local car = ac.getCar(0)
 local forward = car.look -- vec3 direction
 
--- move 5 meters forward from the car position
-local spawnPoint = car.position + forward \* 5
+-- calculate a point in front of the car
+local spawnPoint = car.position + (forward \* 5)
 ```
 
 </TabItem>
