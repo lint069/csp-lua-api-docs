@@ -1,8 +1,222 @@
 ---
 title: Contributing Guide
 description: Standards and technical requirements for adding content to these docs.
+sidebar:
+  badge:
+    text: Incomplete
+    variant: caution
 ---
 
-We welcome contributions.
-To maintain a high standard of documentation and ensure the build remains stable,
-all contributors must follow these guidelines.
+import { Steps, Aside, FileTree, Badge, Tabs, TabItem } from "@astrojs/starlight/components";
+
+<Aside type="caution" title="Work in Progress">
+  This page is not yet finalized.
+  Some sections may be incomplete or subject to revision.
+</Aside>
+
+This guide describes the workflow and standards for contributing to the CSP Lua API Documentation.
+It covers technical setup, repository structure, and documentation conventions.
+
+<Aside type="note" title="Prerequisites">
+  This project is built with [Astro](https://astro.build/) and
+  [Starlight](https://starlight.astro.build/).
+  Familiarity with Markdown (MDX) and basic Git usage is required.
+</Aside>
+
+## Technical Setup
+
+Before you can contribute, you need to set up the documentation engine on your local machine to preview your changes.
+
+<Steps>
+
+1.  Ensure you have [Node.js](https://nodejs.org/) and [Git](https://git-scm.com/) installed.
+
+    <Aside type="caution" title="PATH Environment">
+    Both `node` and `git` must be available in your system `PATH`.
+    Verify this by running the following commands in any folder to confirm all required tools are available:
+
+    ```bash
+    node -v
+    npm -v # bundled with nodejs
+    git -v
+    ```
+
+    If any of the commands above are not recognized, your installation may not be
+    correctly configured. Refer to the official installation documentation for
+    `Node.js` or `Git` to ensure the tools are available on your system `PATH`.
+    </Aside>
+
+    <Aside type="note" title="Package Manager">
+    Use `npm` when installing dependencies. Other package managers are not officially supported
+    for this repository.
+    </Aside>
+
+    <Aside type="tip" title="Git Clients">
+    [GitHub Desktop](https://desktop.github.com/download/) may be used instead of the command line if preferred.
+    </Aside>
+
+2.  Fork the repository on GitHub and clone it to your machine:
+
+    ```bash
+    git clone https://github.com/lint069/csp-lua-api-docs.git [name-of-folder]
+    cd [name-of-folder]
+    ```
+
+3.  Use `npm` to install the required packages:
+
+    ```bash
+    npm install
+    ```
+
+    <Aside type="note">
+    Installation time depends on your system and network speed,
+    and on the size of the modules within `package.json`.
+    </Aside>
+
+4.  Start the development server:
+
+    ```bash
+    npm run dev
+    ```
+
+    The site is typically available at `http://localhost:6969/csp-lua-api-docs/`.
+
+    <Aside type="note" title="Local Preview">
+    Astro may expose both local and network URLs:
+
+    ```sh
+    ┃ Local    http://localhost:6969/csp-lua-api-docs/
+    ┃ Network  http://<local-ip>:6969/csp-lua-api-docs/
+    ```
+
+    Use either address to preview the site in a browser.
+    </Aside>
+</Steps>
+
+## Repository Structure
+
+All documentation content lives under `src/content/docs/`.
+Each top-level directory corresponds to a namespace or documentation category.
+
+When adding a new page, ensure it is placed in the correct directory.
+
+<FileTree>
+- src/
+  - content/
+    - docs/
+      - ac/ <Badge text="Namespace" variant="tip"/>
+        - enums/ <Badge text="Enumerations" variant="tip"/>
+        - objects/ <Badge text="Structs and Objects" variant="tip"/>
+      - io/
+      - ui/
+      - .../
+      - .../
+      - .../
+      - primitives/ <Badge text="Primitive Types" variant="note"/>
+      - community/ <Badge text="About Us" variant="note"/>
+        - contributing.mdx <Badge text="This Page" variant="caution"/>
+</FileTree>
+
+<Aside type="caution" title="File Naming">
+  Use `kebab-case` for all filenames (e.g., `get-car.mdx`, not `getCar.mdx`).
+  This ensures URL consistency across different operating systems.
+</Aside>
+<Aside type="note" title="Directory Structure">
+  Each directory under `docs/` corresponds to a namespace in the Lua SDK.
+  For example, `ac.getCar` is documented under the `ac/` directory.
+
+  Enumerations, objects, and FFI-backed structures belonging to a namespace
+  are placed in subdirectories such as `enums/` or `objects/`.
+</Aside>
+
+## Documentation Standards
+
+To maintain consistency across the API reference,
+all pages must follow a standardized structure and writing style.
+
+### Page Anatomy
+
+Most API reference pages should follow this specific order.
+If a section is not applicable (e.g., a function has no parameters),
+it may be omitted, but the relative order must be preserved.
+Do not reorder sections for stylistic reasons.
+Consistency across pages is more important than individual preference.
+
+<Steps>
+
+1.  ##### Frontmatter
+
+    Every page starts with a `YAML` block.
+    The `title` should be the full Lua name (e.g., `ac.getCar`),
+    and the `description` should be a concise summary of what it does.
+    The `description` is what is presented along with embedded links.
+
+2.  ##### Summary & Context
+    A one- or two-sentence high-level explanation.
+    Use `<Aside>` components here for critical warnings or version requirements.
+
+    <Aside type="caution" title="Covering Information">
+    Do not restate information that is obvious from the function name,
+    preventing summaries like "`ac.getCar` gets a car".
+    </Aside>
+
+3.  ##### Usage Patterns
+
+    Use `<Tabs>` to show the most common ways to call the function.
+    This provides immediate value to the reader before they dive into any technical details.
+
+4.  ##### Description
+
+    A deeper dive into the behavior, logic, and edge cases.
+    Prefer prose over bullet points here.
+
+5.  ##### Parameters & Return Values
+
+    Use standard Markdown tables to define inputs and outputs.
+    Include types like `integer`, `number`, `string`, `vec3`, or links to custom objects.
+
+6.  ##### Examples
+
+    Practical, copy-pasteable code snippets using `<Tabs>` to categorize different use cases
+    (e.g., "Basic Usage", "Advanced Logic").
+
+</Steps>
+
+### Writing Style
+
+We write for a technically competent audience. Avoid "fluff" and conversational language.
+
+- Write in a declarative, factual style.
+<Aside type="note">
+Use "Returns the car's speed" instead of "This function will return the speed of the car".
+</Aside>
+- Exclude lead-in labels.
+<Aside type="note">
+Do not start paragraphs with "Note:" or "Warning:". Use the appropriate `<Aside>` component instead.
+</Aside>
+- Do not explain how `if` statements or `for` loops work.
+Assume the reader knows Lua and is here specifically for the CSP API.
+- Use `backticks` for code symbols, function names, and variable names in prose.
+- Avoid normative or opinionated language such as "should", "best", or "recommended" unless strictly required.
+
+### Code Example Guidelines
+
+Code examples are the most important part of the documentation.
+
+- Show only the code necessary to demonstrate the specific API, avoiding large "scaffolding" code.
+- Use realistic variable names, and scenarios that a user would actually encounter.
+- Use comments sparingly to explain why something is happening, not what the Lua syntax is doing.
+
+<Aside type="tip" title="Incomplete Pages">
+If you are creating a page but don't have all the information yet,
+add the "Incomplete" badge to the sidebar in the frontmatter:
+
+```yaml
+sidebar:
+  badge:
+    text: Incomplete
+    variant: caution
+```
+
+Remove the badge once the page meets the documentation standards described here.
+</Aside>

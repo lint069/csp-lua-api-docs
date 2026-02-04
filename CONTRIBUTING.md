@@ -1,5 +1,3 @@
-# CONTRIBUTING
-
 ## Overview
 
 This guide describes how to contribute documentation to this project.

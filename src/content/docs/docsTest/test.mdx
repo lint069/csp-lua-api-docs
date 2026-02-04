@@ -1,0 +1,26 @@
+---
+title: docsTest
+description: A test page used as a way to test specific custom components
+sidebar:
+  badge:
+    text: Internal
+    variant: danger
+---
+
+import SDKPill from "../../../components/SDKPill.astro";
+
+## Pill
+
+Returns a <SDKPill type="physics" /> structure containing vehicle state.
+Returns a <SDKPill type="render" /> structure containing vehicle state.
+Returns a <SDKPill type="readonly" /> structure containing vehicle state.
+Returns an <SDKPill type="async" /> structure containing vehicle state.
+Returns an <SDKPill type="ffi" /> containing vehicle state.
+
+## References
+
+import Ref from "../../../components/Ref.astro";
+
+Returns an <Ref id="ac/objects/state-car" /> object which contains the physical
+state of the car. Check out the <Ref id="primitives/vec3" label="3D Vector Reference" /> for math operations.
+Also: <Ref id="ac/objects/state-sim" />. Provide an ID that doesn't exist and boom: <Ref id="invalid/path/test" />.

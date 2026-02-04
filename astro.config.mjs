@@ -46,6 +46,10 @@ export default defineConfig({
           ],
         },
         {
+          label: "Test",
+          autogenerate: { directory: "docsTest" },
+        },
+        {
           label: "Primitives",
           autogenerate: { directory: "primitives" },
         },
