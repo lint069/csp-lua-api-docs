@@ -95,7 +95,7 @@ Read more on creating your first app [here](https://github.com/ac-custom-shaders
     ```lua title="hello_world.lua"
     -- this function is called every frame while the window is visible.
     -- the name matches 'FUNCTION_MAIN' in the manifest.
-    function script.windowMain(dt)
+    function script.windowMain()
         ui.text("Hello, Assetto Corsa!")
         ui.separator()
 
@@ -145,7 +145,7 @@ While in a session, look for the **Lua Debug** app in the sidebar. This app prov
 Use `ac.debug()` to track a value visually without spamming the log.
 
 ```lua
-function script.update(dt)
+function script.update()
     local car = ac.getCar(0)
     -- creates a live updating entry in the Lua Debug app
     ac.debug("Current RPM", car.rpm)

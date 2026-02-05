@@ -58,8 +58,8 @@ Retrieving the first camera and setting a wide-angle field of view.
 local cam = ac.accessCarCamera(0)
 
 if cam then
-  -- set to a very wide 110-degree FOV
-  cam.fov = 110
+    -- set to a very wide 110-degree FOV
+    cam.fov = 110
 end
 ```
 
@@ -73,10 +73,10 @@ Cycling through every camera available on the player's car to log their current 
 local car = ac.getCar(0)
 
 for i = 0, car.carCamerasCount - 1 do
-  local cam = ac.accessCarCamera(i)
-  if cam then
-    ac.log("Camera " .. i .. " FOV is currently: " .. cam.fov)
-  end
+    local cam = ac.accessCarCamera(i)
+    if cam then
+        ac.log("Camera " .. i .. " FOV is currently: " .. cam.fov)
+    end
 end
 ```
 

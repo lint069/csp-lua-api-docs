@@ -100,10 +100,10 @@ Smoothly turning a camera to face a target over time using `:slerp()`.
 local currentRot = quat() -- starting rotation
 local targetRot = quat.fromDirection(vec3(1, 0, 0)) -- target facing East
 
-function script.update(dt)
-  -- smoothly move 5% of the way toward the target every frame
-  currentRot:slerp(targetRot, 0.05)
-  ac.getSim().cameraLook:set(currentRot * vec3(0, 0, 1))
+function script.update()
+    -- smoothly move 5% of the way toward the target every frame
+    currentRot:slerp(targetRot, 0.05)
+    ac.getSim().cameraLook:set(currentRot * vec3(0, 0, 1))
 end
 ```
 

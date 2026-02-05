@@ -60,7 +60,7 @@ Verifying if "Extra A" is actually configured for the current vehicle before run
 local extraA = ac.accessExtraSwitchParams(0)
 
 if extraA and extraA.available then
-  ac.log("Extra A is available on this car.")
+    ac.log("Extra A is available on this car.")
 end
 ```
 
@@ -73,10 +73,10 @@ Using the access structure to check if a user is currently pressing the Extra B 
 ```lua
 local extraB = ac.accessExtraSwitchParams(1)
 
-function script.update(dt)
-  if extraB and extraB.down then
-    ui.text("Extra B is currently active!")
-  end
+function script.update()
+    if extraB and extraB.down then
+        ui.text("Extra B is currently active!")
+    end
 end
 ```
 

@@ -47,9 +47,9 @@ local sim = ac.getSim()
 ```lua
 local sim = ac.getSim()
 
-function script.drawUI()
-ui.text(string.format("Time: %02d:%02d", sim.timeHours, sim.timeMinutes))
-ui.text("Frame: " .. sim.frame)
+function script.windowMain()
+    ui.text(string.format("Time: %02d:%02d", sim.timeHours, sim.timeMinutes))
+    ui.text("Frame: " .. sim.frame)
 end
 ```
 
@@ -59,7 +59,7 @@ end
 ```lua
 local sim = ac.getSim()
 
-function script.update(dt)
+function script.update()
     if sim.rainIntensity > 0.5 then
         -- trigger heavy rain logic (e.g., sound effects or wipers)
     end

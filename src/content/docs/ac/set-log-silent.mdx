@@ -58,10 +58,10 @@ Silencing the log to safely monitor a variable that changes every frame.
 -- stop writing to the physical file to save performance
 ac.setLogSilent(true)
 
-function script.update(dt)
-  local car = ac.getCar(0)
-  -- this would normally spam the drive, but is now safe
-  ac.log("Current Speed:", car.speedKmh)
+function script.update()
+    local car = ac.getCar(0)
+    -- this would normally spam the drive, but is now safe
+    ac.log("Current Speed:", car.speedKmh)
 end
 ```
 
@@ -76,11 +76,11 @@ Ensuring logs are only written to disk when a specific error state is met.
 ac.setLogSilent(true)
 
 function checkSystem(status)
-  if status == "CRITICAL" then
-    -- re-enable disk logging so the error is saved for later review
-    ac.setLogSilent(false)
-    ac.error("Critical system failure detected!")
-  end
+    if status == "CRITICAL" then
+        -- re-enable disk logging so the error is saved for later review
+        ac.setLogSilent(false)
+        ac.error("Critical system failure detected!")
+    end
 end
 ```
 

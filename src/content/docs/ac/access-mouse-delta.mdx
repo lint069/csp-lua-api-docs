@@ -67,14 +67,14 @@ this function locks the cursor's OS position so movement can be tracked indefini
 Applying mouse movement to a camera orientation.
 
 ```lua
-function script.update(dt)
-  -- only capture if the right mouse button is held
-  if ui.mouseDown(ui.MouseButton.Right) then
-    local delta = ac.accessMouseDelta("camera", true, true)
+function script.update()
+    -- only capture if the right mouse button is held
+    if ui.mouseDown(ui.MouseButton.Right) then
+        local delta = ac.accessMouseDelta("camera", true, true)
 
-    myCamera.yaw = myCamera.yaw + (delta.x * 0.1)
-    myCamera.pitch = myCamera.pitch - (delta.y * 0.1)
-  end
+        myCamera.yaw = myCamera.yaw + (delta.x * 0.1)
+        myCamera.pitch = myCamera.pitch - (delta.y * 0.1)
+    end
 end
 ```
 

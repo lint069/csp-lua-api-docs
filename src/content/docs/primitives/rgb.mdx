@@ -103,9 +103,9 @@ Checking if a color is "bright" or "dark" to determine the best text color to us
 local myColor = rgb(0.2, 0.2, 0.2)
 
 if myColor:luminance() < 0.5 then
-  ui.textColored("Dark background, using white text", rgbm.colors.white)
+    ui.textColored("Dark background, using white text", rgbm.colors.white)
 else
-  ui.textColored("Light background, using black text", rgbm.colors.black)
+    ui.textColored("Light background, using black text", rgbm.colors.black)
 end
 ```
 

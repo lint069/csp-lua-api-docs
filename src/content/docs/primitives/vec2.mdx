@@ -96,11 +96,11 @@ allowing for method chaining (for example, `v:add(v2):scale(2)`).
 Using `vec2` to define the position and size of a drawn rectangle.
 
 ```lua
-function script.drawUI()
-  local pos = vec2(50, 50)
-  local size = vec2(200, 100)
-  -- draw a rectangle using the vectors
-  ui.drawRectFilled(pos, pos + size, rgbm.colors.red)
+function script.windowMain()
+    local pos = vec2(50, 50)
+    local size = vec2(200, 100)
+    -- draw a rectangle using the vectors
+    ui.drawRectFilled(pos, pos + size, rgbm.colors.red)
 end
 ```
 
@@ -117,7 +117,7 @@ local p3, p4 = vec2(0, 100), vec2(100, 0)
 local hit = vec2.intersect(p1, p2, p3, p4)
 
 if hit then
-  ac.log("Lines intersect at: " .. hit.x .. ", " .. hit.y)
+    ac.log("Lines intersect at: " .. hit.x .. ", " .. hit.y)
 end
 ```
 

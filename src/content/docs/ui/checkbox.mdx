@@ -52,7 +52,7 @@ The most efficient way to manage state in CSP.
 ```lua
 local showDebug = refbool(false)
 
-function script.drawUI()
+function script.windowMain()
     if ui.checkbox("Show Debug Info", showDebug) then
         ac.log("Toggle clicked! New state: " .. tostring(showDebug.value))
     end
@@ -67,11 +67,12 @@ Manual state management.
 ```lua
 local myState = false
 
-function script.drawUI()
-local newState, changed = ui.checkbox("Toggle Me", myState)
-if changed then
-myState = newState
-end
+function script.windowMain()
+    local newState, changed = ui.checkbox("Toggle Me", myState)
+
+    if changed then
+        myState = newState
+    end
 end
 ```
 

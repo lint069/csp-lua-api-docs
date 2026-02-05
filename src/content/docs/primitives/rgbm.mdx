@@ -119,10 +119,10 @@ Using the multiplier as an alpha channel to pulse the opacity of a rectangle.
 ```lua
 local myColor = rgbm.colors.blue:clone()
 
-function script.update(dt)
-  -- pulse the alpha (mult) between 0.0 and 1.0
-  myColor.mult = math.sin(ac.getSim().gameTime) * 0.5 + 0.5
-  ui.drawRectFilled(vec2(10, 10), vec2(60, 60), myColor)
+function script.update()
+    -- pulse the alpha (mult) between 0.0 and 1.0
+    myColor.mult = math.sin(ac.getSim().gameTime) * 0.5 + 0.5
+    ui.drawRectFilled(vec2(10, 10), vec2(60, 60), myColor)
 end
 ```
 

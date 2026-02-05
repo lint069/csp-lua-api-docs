@@ -85,11 +85,11 @@ Creating a rainbow effect by incrementing the hue every frame.
 local rainbow = hsv(0, 1, 1)
 
 function script.update(dt)
-  -- rotate the hue by 60 degrees per second
-  rainbow.h = (rainbow.h + (dt * 60)) % 360
+    -- rotate the hue by 60 degrees per second
+    rainbow.h = (rainbow.h + (dt * 60)) % 360
 
-  -- draw text with the currently active color
-  ui.textColored("Rainbow Text", rainbow:rgb():rgbm(1))
+    -- draw text with the currently active color
+    ui.textColored("Rainbow Text", rainbow:rgb():rgbm(1))
 end
 ```
 
@@ -100,9 +100,9 @@ Reducing the saturation of a color to create a "washed out" or grayscale effect.
 
 ```lua
 function getMutedColor(originalHsv, factor)
-  local muted = originalHsv:clone()
-  muted.s = muted.s * factor -- reduce saturation
-  return muted:rgb()
+    local muted = originalHsv:clone()
+    muted.s = muted.s * factor -- reduce saturation
+    return muted:rgb()
 end
 ```
 

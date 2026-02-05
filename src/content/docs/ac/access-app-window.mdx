@@ -66,7 +66,7 @@ Finding the official 'Chat' app and ensuring it is hidden.
 local chatWindow = ac.accessAppWindow("Chat")
 
 if chatWindow and chatWindow:valid() then
-  chatWindow:setVisible(false)
+    chatWindow:setVisible(false)
 end
 ```
 
@@ -80,8 +80,8 @@ Moving a specific app window to a fixed coordinate on the screen.
 local telemetry = ac.accessAppWindow("Telemetry")
 
 if telemetry and telemetry:valid() then
-  -- move to top-left corner
-  telemetry:move(vec2(10, 10))
+    -- move to top-left corner
+    telemetry:move(vec2(10, 10))
 end
 ```
 

@@ -38,12 +38,12 @@ local view = mat4x4.look(myPos, targetDir, vec3(0, 1, 0))
 Matrices are often used to sync physical bodies with visual meshes.
 
 ```lua
-function script.update(dt)
-  -- get the physical transform of a rigid body
-  local physTransform = myRigidBody:getTransformation()
+function script.update()
+    -- get the physical transform of a rigid body
+    local physTransform = myRigidBody:getTransformation()
 
-  -- apply it to a visual scene node
-  myMesh:setTransformation(physTransform)
+    -- apply it to a visual scene node
+    myMesh:setTransformation(physTransform)
 end
 ```
 
@@ -94,8 +94,8 @@ Manually setting the position of a grabbed camera using the convenience accessor
 local cam = ac.grabCamera()
 
 if cam then
-  -- move the camera 2 meters up without changing its rotation
-  cam.transform.position:add(vec3(0, 2, 0))
+    -- move the camera 2 meters up without changing its rotation
+    cam.transform.position:add(vec3(0, 2, 0))
 end
 ```
 

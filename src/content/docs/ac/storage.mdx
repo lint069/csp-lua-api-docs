@@ -23,8 +23,8 @@ Accessing the returned table automatically manages disk input and output.
 
 ```lua
 local settings = ac.storage({
-  uiVisible = true,
-  opacity = 0.8
+    uiVisible = true,
+    opacity = 0.8
 })
 ```
 
@@ -78,17 +78,17 @@ Using storage to remember the state of a UI checkbox.
 ```lua
 -- define our persistent settings
 local settings = ac.storage({
-  showMap = true
+    showMap = true
 })
 
-function script.drawUI()
-  -- checkbox updates the 'settings' table,
-  -- which triggers a disk save automatically
-  ui.checkbox("Show Minimap", settings.showMap)
+function script.windowMain(dt)
+    -- checkbox updates the 'settings' table,
+    -- which triggers a disk save automatically
+    ui.checkbox("Show Minimap", settings.showMap)
 
-  if settings.showMap then
-    drawMyMap()
-  end
+    if settings.showMap then
+        drawMyMap()
+    end
 end
 ```
 
@@ -100,7 +100,7 @@ Counting how many times the user has run this script.
 
 ```lua
 local stats = ac.storage({
-  runCount = 0
+    runCount = 0
 })
 
 -- increment and save
