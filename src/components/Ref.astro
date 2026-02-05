@@ -9,18 +9,14 @@ interface Props {
 const { id, label } = Astro.props;
 const allDocs = await getCollection("docs");
 
-/**
- * look for the entry by ID. in Astro's content layer,
- * IDs usually match the file path relative to content/docs/
- * and often exclude the file extension.
- */
+// find the document matching the id or filename
 const entry = allDocs.find((doc) => doc.id === id || doc.id === `${id}.mdx`);
 
 const title = entry?.data.title;
 const description = entry?.data.description;
 const badge = entry?.data.sidebar?.badge;
 
-// ensure base URL is clean for the link
+// handle base url for github pages or nested paths
 const baseUrl = import.meta.env.BASE_URL.replace(/\/$/, "");
 const href = `${baseUrl}/${id}/`.replace(/\/+/g, "/");
 ---
@@ -28,171 +24,151 @@ const href = `${baseUrl}/${id}/`.replace(/\/+/g, "/");
 {
   !entry ? (
     <span class="ref-error">
-      Broken Ref: {id}
-      <span class="error-tooltip">File not found: content/docs/{id}.mdx</span>
+      {label || id}
+      <span class="error-tooltip">reference not found</span>
     </span>
   ) : (
     <span class="ref-container">
-      <>
-        <a href={href} class="ref-link">
-          {label || title}
-        </a>
-        <span class="preview-card" role="tooltip">
-          <span class="card-header">
-            <span class="card-title">{title}</span>
-            {badge && (
-              <span class={`badge ${badge.variant}`}>{badge.text}</span>
-            )}
-          </span>
-          <span class="card-body">{description}</span>
-          <span class="card-footer">
-            <span class="footer-prompt">Click to view reference</span>
-            <code class="footer-path">/{id}</code>
-          </span>
+      <a href={href} class="ref-link">
+        {label || title}
+      </a>
+      <span class="preview-card" role="tooltip">
+        <span class="card-header">
+          <span class="card-title">{title}</span>
+          {badge && <span class={`badge ${badge.variant}`}>{badge.text}</span>}
         </span>
-      </>
+        {description && <span class="card-body">{description}</span>}
+      </span>
     </span>
   )
 }
 
 <style>
-  /* --- root container --- */
+  /* container is inline to stay within text flow */
   .ref-container {
     position: relative;
-    display: inline;
-    white-space: nowrap;
+    display: inline-block;
+    vertical-align: baseline;
   }
 
-  /* --- inline link --- */
+  .ref-container:hover {
+    z-index: 1000;
+  }
+
+  /* clean link with subtle persistent underline */
   .ref-link {
     color: var(--sl-color-accent-high);
     text-decoration: none;
-    border-bottom: 1px dashed var(--sl-color-accent);
-    font-weight: 500;
-    transition: color 0.2s ease;
-    display: inline;
+    border-bottom: 1px solid
+      color-mix(in srgb, var(--sl-color-accent-high), transparent 70%);
+    transition: border-color 0.1s ease;
+    /* prevents the anchor itself from wrapping to next line */
+    white-space: nowrap;
   }
 
   .ref-link:hover {
-    color: var(--sl-color-accent);
-    border-bottom-style: solid;
+    border-bottom-color: var(--sl-color-accent-high);
   }
 
-  /* --- hover preview --- */
+  /* wikipedia-style article preview card */
   .preview-card {
     position: absolute;
-    bottom: calc(100% + 12px);
+    /* centered horizontally relative to the word */
     left: 50%;
-    transform: translateX(-50%) translateY(8px);
+    bottom: calc(100% + 12px);
+    transform: translateX(-50%) translateY(4px);
 
-    width: 300px;
-    padding: 1rem;
+    width: 280px;
+    padding: 0.8rem 1rem;
     display: flex;
     flex-direction: column;
-    gap: 0.5rem;
+    gap: 0.4rem;
 
-    background-color: var(--sl-color-gray-6);
+    background-color: var(--sl-color-bg-nav);
     border: 1px solid var(--sl-color-gray-5);
-    border-radius: 0.5rem;
-    box-shadow: var(--sl-shadow-lg);
+    border-radius: 2px;
+    box-shadow: 0 4px 16px rgba(0, 0, 0, 0.4);
 
+    /* hidden by default */
     visibility: hidden;
     opacity: 0;
     pointer-events: none;
     transition:
-      transform 0.2s cubic-bezier(0.23, 1, 0.32, 1),
-      opacity 0.2s ease,
-      visibility 0.2s;
-    z-index: 1000;
+      opacity 0.15s ease,
+      transform 0.15s ease;
+    z-index: 10000000;
 
-    /* reset formatting inside the card */
+    /* card text formatting */
     white-space: normal;
+    line-height: 1.4;
     text-align: left;
-    line-height: 1.5;
+    text-decoration: none;
   }
 
+  /* vertical anchor arrow */
+  .preview-card::after {
+    content: "";
+    position: absolute;
+    top: 100%;
+    left: 50%;
+    transform: translateX(-50%);
+    border: 6px solid transparent;
+    border-top-color: var(--sl-color-gray-5);
+  }
+
+  /* reveal on hover */
   .ref-container:hover .preview-card {
     visibility: visible;
     opacity: 1;
     transform: translateX(-50%) translateY(0);
   }
 
-  /* --- card content --- */
+  /* card internal layout */
   .card-header {
     display: flex;
     justify-content: space-between;
     align-items: center;
     gap: 0.5rem;
-    margin-bottom: 0.25rem;
+    margin-bottom: 0.1rem;
   }
 
   .card-title {
+    font-size: 0.95rem;
     font-weight: 700;
     color: var(--sl-color-white);
-    font-size: 0.95rem;
-    font-family: var(--__sl-font-mono);
   }
 
   .card-body {
     font-size: 0.8rem;
     color: var(--sl-color-gray-3);
+    /* clamps desc. to 3 lines */
+    display: -webkit-box;
+    -webkit-line-clamp: 3;
+    -webkit-box-orient: vertical;
+    overflow: hidden;
   }
 
-  .card-footer {
-    margin-top: 0.5rem;
-    padding-top: 0.5rem;
-    border-top: 1px solid var(--sl-color-gray-5);
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-  }
-
-  .footer-prompt {
-    font-size: 0.65rem;
-    color: var(--sl-color-gray-4);
-    text-transform: uppercase;
-    font-weight: 600;
-    letter-spacing: 0.02rem;
-  }
-
-  .footer-path {
-    font-size: 0.7rem !important;
-    background: transparent !important;
-    border: none !important;
-    color: var(--sl-color-accent-high) !important;
-    opacity: 0.6;
-  }
-
-  /* --- badges --- */
+  /* starlight badge overrides for lowercase style */
   .badge {
-    padding: 0.1rem 0.4rem;
-    border-radius: 0.25rem;
     font-size: 0.6rem;
-    font-weight: 800;
-    text-transform: uppercase;
+    padding: 0px 5px;
+    border-radius: 2px;
+    text-transform: lowercase;
+    font-weight: 600;
+    background: var(--sl-color-gray-6);
+    color: var(--sl-color-gray-2);
+    border: 1px solid var(--sl-color-gray-5);
   }
   .badge.caution {
-    background: var(--sl-color-orange-low);
     color: var(--sl-color-orange);
-    border: 1px solid;
+    border-color: var(--sl-color-orange-low);
   }
   .badge.danger {
-    background: var(--sl-color-red-low);
     color: var(--sl-color-red);
-    border: 1px solid;
-  }
-  .badge.tip {
-    background: var(--sl-color-green-low);
-    color: var(--sl-color-green);
-    border: 1px solid;
-  }
-  .badge.note {
-    background: var(--sl-color-blue-low);
-    color: var(--sl-color-blue);
-    border: 1px solid;
+    border-color: var(--sl-color-red-low);
   }
 
-  /* --- error handling --- */
+  /* error handling for broken documentation links */
   .ref-error {
     color: var(--sl-color-red);
     text-decoration: underline wavy var(--sl-color-red-low);
@@ -204,15 +180,14 @@ const href = `${baseUrl}/${id}/`.replace(/\/+/g, "/");
   .error-tooltip {
     visibility: hidden;
     position: absolute;
-    bottom: 100%;
+    bottom: 110%;
     left: 0;
     background: var(--sl-color-red);
     color: white;
     padding: 0.2rem 0.5rem;
-    border-radius: 0.25rem;
     font-size: 0.7rem;
+    border-radius: 2px;
     white-space: nowrap;
-    z-index: 10;
   }
 
   .ref-error:hover .error-tooltip {
