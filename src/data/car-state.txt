@@ -1,0 +1,276 @@
+---@class ac.StateCar : ClassBase
+---@field mass number @Car mass in kg.
+---@field graphicsOffset vec3 @Graphics offset from car.ini
+---@field graphicsPitchRotation number @Graphics pitch rotation in radians from car.ini
+---@field graphicsToPhysicsTransform mat4x4 @Graphics-to-physics transform based on graphics offset and pitch rotation from car.ini
+---@field physicsToGraphicsTransform mat4x4 @Physics-to-graphics transform based on graphics offset and pitch rotation from car.ini
+---@field steerLock number @Maximum steering wheel angle in degrees.
+---@field maxFuel number @Maximum amount of fuel in liters.
+---@field exposureOutside number @Outboard exposure from car.ini
+---@field exposureInside number @Onboard exposure from car.ini
+---@field shakeMultiplier number @SHAKE_MUL value from car.ini
+---@field headlightsColor rgb
+---@field customCarColor rgb @Custom car color selected online, or `math.nan` if color is the default one
+---@field aabbCenter vec3 @Center of AABB (calculated from LOD D or collider mesh).
+---@field aabbSize vec3 @Size of AABB in meters (calculated from LOD D or collider mesh).
+---@field index integer @0-based (0 for first car).
+---@field gearCount integer @Excluding neutral and reverse. Physics-only (see `ac.CarState.physicsAvailable`)
+---@field turboCount integer @Physics-only (see `ac.CarState.physicsAvailable`)
+---@field tractionType integer @0 for rwd, 1 for fwd, 2 for awd, 3 for new awd, -1 for N/A. Physics-only (see `ac.CarState.physicsAvailable`)
+---@field enginePosition integer @0 for unspecified, 1 for front, 2 for rear, 3 for mid. Physics-only (see `ac.CarState.physicsAvailable`)
+---@field brakesBiasLimitDown number @Physics-only (see `ac.CarState.physicsAvailable`)
+---@field brakesBiasLimitUp number @Physics-only (see `ac.CarState.physicsAvailable`)
+---@field brakesBiasStep number @Physics-only (see `ac.CarState.physicsAvailable`)
+---@field maxRelativePlankWear number @From 0 to 1. Physics-only (see `ac.CarState.physicsAvailable`), 0 if not available.
+---@field year integer @Manufacturing year.
+---@field hShifter boolean @True if car has H-shifter in its physics data.
+---@field adjustableTurbo boolean @Physics-only (see `ac.CarState.physicsAvailable`)
+---@field brakesCockpitBias boolean @Physics-only (see `ac.CarState.physicsAvailable`)
+---@field extendedPhysics boolean @True if extended car physics is active.
+---@field isRacingCar boolean @True for racing cars (cars with class different from “road” or “street”).
+---@field isRallyCar boolean @Car counts as a rally car if it has a corresponding tag or “rally” in its name.
+---@field isDriftCar boolean @Car counts as a drift car if it has a corresponding tag or “drift” in its name.
+---@field isOpenWheeler boolean @Check is based on car tags.
+---@field isEngineDiesel boolean @Check is based on car tags.
+---@field isKunosCar boolean @True if car is standard, from Kunos.
+---@field prefersImperialUnits boolean @True for cars from UK or USA.
+---@field headlightsAreHeadlights boolean @If set to `false`, headlights do something else (like change display mode).
+---@field hasLowBeams boolean @If set to `false`, low beams are not present (as in, headlights operate in a single mode).
+---@field isLeftHandDrive boolean @If set to `true`, steering wheel is on the left side.
+---@field sirenHorn boolean @If set to `true`, horn is working in siren mode (press to toggle).
+---@field hasFlashingLights boolean
+---@field hasCockpitSwitchForUserSpeedLimiter boolean @Physics-only (see `ac.CarState.physicsAvailable`)
+---@field hasHornAudioEvent boolean
+---@field hasAnalogTelltale boolean @Car has max RPM arrow.
+---@field isRefueling string @Car is in pits and is currently being refueled.
+---@field isChangingTyres string @Car is in pits and is currently having its tyres changed.
+---@field isRepairing string @Car is in pits and is currently being repaired.
+---@field tractionControlModes integer @0 if TC is not present. Physics-only (see `ac.CarState.physicsAvailable`)
+---@field absModes integer @0 if ABS is not present. Physics-only (see `ac.CarState.physicsAvailable`)
+---@field fuelMaps integer
+---@field tractionControl2Modes integer
+---@field hasEngineBrakeSettings boolean
+---@field pitTransform mat4x4 @Transformation of pit position.
+---@field timestamp number @Time of last physics state record, in milliseconds (counting from the same point as ac.SimState.time)
+---@field transform mat4x4 @Car physics transformation in world space (does not match body transformation! for it, use `bodyTransform`)
+---@field bodyTransform mat4x4 @Car visual transformation (the one applied to 3D model).
+---@field worldToLocal mat4x4 @Inverse of car visual transformation.
+---@field position vec3 @Car position in the world (corresponds to 0 coordinate in its model space).
+---@field velocity vec3 @Car velocity in m/s.
+---@field acceleration vec3 @G-forces, X for sideways relative to car, Z for forwards/backwards.
+---@field angularVelocity vec3
+---@field localAngularVelocity vec3
+---@field localVelocity vec3
+---@field up vec3 @Vector facing upwards (normalized).
+---@field look vec3 @Vector facing forward (normalized).
+---@field side vec3 @Vector facing sideways (normalized).
+---@field driverEyesPosition vec3 @In-car coordinates for driver eyes position (can be changed by user).
+---@field groundNormal vec3 @Normal of ground below car.
+---@field groundDistance number @Distance of ground below car (defines ground plane together with normal).
+---@field gas number @Throttle, from 0 to 1.
+---@field brake number @Brake, from 0 to 1.
+---@field clutch number @Clutch, from 0 to 1 (1 for pedal fully depressed).
+---@field steer number @Angle of steering wheel in degrees.
+---@field handbrake number @Handbrake, from 0 to 1.
+---@field gear integer @Current gear, 0 for neutral, -1 for reverse. Does not go through 0 on sequential shifts
+---@field engagedGear integer @Current gear, 0 for neutral, -1 for reverse. Goes through 0 on sequential shifts
+---@field fuel number @Remaining fuel in liters.
+---@field rpm number @Engine RPM.
+---@field rpmLimiter number @RPM limiter threshold, if exists.
+---@field rpmMinimum number @Minimum RPM (or -1 if physics not available).
+---@field speedKmh number @Current speed in km/h.
+---@field speedMs number @Current speed in m/s.
+---@field turboBoost number @Turboboost value, from 0 and upwards.
+---@field drivetrainSpeed number @Speed delivered to wheels.
+---@field waterTemperature number @Approximation of water temperature in °C done by original AC.
+---@field minHeight number @Minimum allowed ride height in meters.
+---@field restrictor number @Restrictor.
+---@field ballast number @Ballast in kg.
+---@field ping integer @Ping in ms (or -1 if not available).
+---@field cgHeight number
+---@field wheelsOutside integer @Number of wheels outside of allowed area.
+---@field engineLifeLeft number @Engine life left (1000 for new engine, breaks at 0).
+---@field dirt number @Body dirt level from 0 to 1.
+---@field damage number[] @Damage values from 0 to maximum collision speed in km/h for four different zones (fifth one is not really used). 5 items, starts with 0.
+---@field gearboxDamage number @Gearbox damage (0 for new gearbox, 1 for non-functional).
+---@field nodeIndex integer @Car index if 0 is nearest to camera, 1 is second nearest and so on.
+---@field visibleIndex integer @Car index if 0 is nearest to camera and visible in main camera, 1 is second nearest visible and so on. Cars outside of main camera would have 255 here.
+---@field activeLOD integer @0-based index of visible LOD.
+---@field distanceToCamera number @Distance to camera in meters.
+---@field splinePosition number @Position of car along the track, 0 for starting line, 1 for finishing line.
+---@field driftPoints number @Drift points (calculated in any racing mode).
+---@field driftInstantPoints number @Drift instant points (calculated in any racing mode).
+---@field driftComboCounter integer @Drift combo counter (calculated in any racing mode).
+---@field collisionDepth number @How deep is current collision, in meters (generally it’s better to use change of car speed to estimate collision intensity though, depth is much less predictable).
+---@field collisionPosition vec3 @Coordinates of current collision in car space.
+---@field collidedWith integer @0 for track, non-zero for cars.
+---@field lapCutsCount integer @Number of lap cuts in current lap. Physics-only (see `ac.CarState.physicsAvailable`)
+---@field lastLapCutsCount integer @Number of lap cuts in last lap.
+---@field aiLevel number @AI level from 0 to 1 (or -1 if there is no AI).
+---@field aiAggression number @AI aggression from 0 to 1 (or -1 if there is no AI). Note: aggression level set in a launcher will be multiplied by 0.95, so 100% aggression will show up as 0.95 here.
+---@field aiLapsLeft integer @Number of laps left to make for AI before going to pits.
+---@field isAIUsingRainTyres boolean @`True` if AI is using rain tyres now.
+---@field isAIGoingToPits boolean @`True` if AI is going to go to pits when possible.
+---@field currentSplits integer[] @Time for different splits of current lap, in milliseconds. Items start with 0. To get number of elements, use `#state.currentSplits`.
+---@field lastSplits integer[] @Time for different splits of last lap, in milliseconds. Items start with 0. To get number of elements, use `#state.lastSplits`.
+---@field bestSplits integer[] @Best splits times (and not splits of best lap), in milliseconds, unlike other split lists, this one is populated with zeroes for sectors without time from the start. Items start with 0. To get number of elements, use `#state.bestSplits`.
+---@field bestLapSplits integer[] @Splits times of best lap (not necessarily best split times in itself), in milliseconds. Items start with 0. To get number of elements, use `#state.bestLapSplits`.
+---@field wheels ac.StateWheel[] @4 items, starts with 0.
+---@field extrapolatedMovement boolean @If set to false and you’re adding objects moving close to cars, use ac.CarState.timestamp to estimate dt in such a way that it would match car physics time
+---@field isActive boolean @True if car is currently active (changes to `false` for disconnected cars if server does not have them visible).
+---@field isConnected boolean @True if car is currently connected (cars can be disconnected online), or if car is not a remote one.
+---@field isRemote boolean @True if car is controlled by another player online.
+---@field isAIControlled boolean @True if car is controlled by AI (or that autopilot thing).
+---@field isUserControlled boolean @True if car is controlled by user (controls could be disabled completely).
+---@field isLapValid boolean @True if current lap is valid. Physics-only (see `ac.CarState.physicsAvailable`)
+---@field isLastLapValid boolean @True if last lap is valid.
+---@field isCameraOnBoard boolean @True if camera is inside this car.
+---@field isInPitlane boolean @True if car is in pits area.
+---@field isInPit boolean @True if car is parked in its pit stop place.
+---@field isRequestingPitStop boolean @True if car is requesting to go to pits.
+---@field isRetired boolean
+---@field isEngineLimiterOn boolean
+---@field isGearGrinding boolean
+---@field hasTurningLights boolean @There could be other components linked to turn signals state, but this variable is about emissives tied to turn signals.
+---@field headlightsActive boolean
+---@field brakeLightsActive boolean
+---@field flashingLightsActive boolean
+---@field hornActive boolean
+---@field focused boolean
+---@field focusedOnInterior boolean
+---@field useInternalAudio boolean @If `true`, `…_int` variants of audio events are used.
+---@field isHidingLabels boolean @If you’re drawing a map, don’t show cars with this flag on (those would be disconnected cars or, for example, cars acting like traffic). Flag can change during the race
+---@field isDriftBonusOn boolean @Drift bonus flag (calculated in any racing mode).
+---@field isDriftValid boolean @Is drift valid (calculated in any racing mode).
+---@field isRaceFinished boolean @Car has finished the race. Since 0.2.8, non-race sessions are never marked as finished.
+---@field isDriverVisible boolean @Driver can be hidden by apps or Lua scripts too.
+---@field isDriverDoorOpen boolean
+---@field isDriverSeatbeltOn boolean @Same as `SEATBELT` input.
+---@field hazardLights boolean
+---@field turningLeftLights boolean
+---@field turningRightLights boolean
+---@field turningLeftOnly boolean
+---@field turningRightOnly boolean
+---@field lowBeams boolean @`true` if low beams switch is currently active (doesn’t depend on the state of headlights, just on the switch state).
+---@field highBeams boolean @`true` if high beams are currently active (either with headlights active, or with high beams flashing).
+---@field daytimeRunningLights boolean
+---@field extraA boolean
+---@field extraB boolean
+---@field extraC boolean
+---@field extraD boolean
+---@field extraE boolean
+---@field extraF boolean
+---@field extraG boolean
+---@field extraH boolean
+---@field extraI boolean
+---@field extraJ boolean
+---@field extraK boolean
+---@field extraL boolean
+---@field extraM boolean
+---@field extraN boolean
+---@field extraO boolean
+---@field extraP boolean
+---@field extraQ boolean
+---@field extraR boolean
+---@field extraS boolean
+---@field extraT boolean
+---@field kersCharging boolean
+---@field turningLightsActivePhase boolean
+---@field anyFlamesActive boolean @`true` if any of car flames are currently shown.
+---@field justJumped boolean @Changes to `true` for a single frame when car jumps.
+---@field resetCounter integer @Increases by 1 each time a car resets.
+---@field kersCharge number
+---@field kersInput number
+---@field kersCurrentKJ number
+---@field kersMaxKJ number
+---@field kersLoad number
+---@field distanceDrivenTotalKm number
+---@field distanceDrivenSessionKm number
+---@field poweredWheelsSpeed number @Can be used for speedometers if they’re not using GPS and instead use powered wheels, value in km/h.
+---@field batteryVoltage number
+---@field oilPressure number
+---@field oilTemperature number
+---@field exhaustTemperature number
+---@field wiperModes integer @Number of wiper modes, no less than 1 (wipers disabled state counts like a 0th mode, all cars would have that).
+---@field wiperMode integer @Stores previous active mode when wipers are disabled, but still have a loop to complete.
+---@field wiperSelectedMode integer @Actual selected mode.
+---@field wiperSpeed number
+---@field wiperProgress number
+---@field bodyWetness number @How wet is car exterior, approximation from 0 to 1 (actual wetness is in 2D map).
+---@field compass number @Angle of where car is heading, from 0 to 360 (0/360 for north, 90 for east, etc.)
+---@field lapTimeMs integer @Time of current lap in milliseconds.
+---@field extrapolatedLapTimeMs integer @Graphics-corrected time of current lap in milliseconds: takes into account age of car state for the ultimate precision, but be warn: it might exceed actual lap time if car crosses the finishing line between last physics and current graphics frame.
+---@field bestLapTimeMs integer @Time of best lap of this session in milliseconds.
+---@field previousLapTimeMs integer @Time of last lap in milliseconds.
+---@field lapCount integer @Number of completed laps in this session (within connection online), including spoiled laps.
+---@field currentSector integer @0-based index of current track split.
+---@field previousSectorTime integer @Time of previous split in milliseconds, or 0 if it’s a first split.
+---@field racePosition integer @Position of a car in the race, 1 for first, 2 for second, etc.
+---@field drivenInRace number @Distance driven in current race in meters (can be used for estimating race position, based on number of completed laps and current lap progress, in practice or qualify session resets each lap).
+---@field estimatedLapTimeMs integer @Based on best lap and performance meter (delta of this lap time vs best lap time).
+---@field performanceMeter number @Performance meter comparing this lap with best, seconds.
+---@field performanceMeterSpeedDifferenceMs number @In AC performance app, there is that red/green bar, it shows this value.
+---@field sessionLapCount integer
+---@field compoundIndex integer @Index of currently selected tyre compounds.
+---@field sessionID integer @Index of a car in an online race (differs from regular car index: sessionID is an index in entry list, but car.index of your car is always zero)
+---@field bestLapFromGhost boolean @If `true`, `lapTimeMs` is not from this session, but from the ghost player is racing against. Can’t be `true` online (ghost never sets the best lap time online).
+---@field physicsAvailable boolean @Cars in replays, or remote cars online do not have regular physics component running, so some data will be missing. Such fields are marked as physics-only in comments.
+---@field speedLimiterInAction boolean @Physics-only (see `ac.CarState.physicsAvailable`)
+---@field absInAction boolean @Physics-only (see `ac.CarState.physicsAvailable`)
+---@field tractionControlInAction boolean @Physics-only (see `ac.CarState.physicsAvailable`)
+---@field hasUserBrakeBias boolean @Physics-only (see `ac.CarState.physicsAvailable`)
+---@field hasCockpitMGUHMode boolean
+---@field hasCockpitERSDelivery boolean
+---@field hasCockpitERSRecovery boolean
+---@field drsPresent boolean @Physics-only (see `ac.CarState.physicsAvailable`)
+---@field drsAvailable boolean @Physics-only (see `ac.CarState.physicsAvailable`)
+---@field drsActive boolean @Physics-only (see `ac.CarState.physicsAvailable`)
+---@field kersPresent boolean @Physics-only (see `ac.CarState.physicsAvailable`)
+---@field kersHasButtonOverride boolean @Physics-only (see `ac.CarState.physicsAvailable`)
+---@field kersButtonPressed boolean @Physics-only (see `ac.CarState.physicsAvailable`)
+---@field mguhChargingBatteries boolean
+---@field manualPitsSpeedLimiterEnabled boolean @Returns `true` if manual pits speed limiter is currently active. Physics-only (see `ac.CarState.physicsAvailable`)
+---@field userSpeedLimiterEnabled boolean @Returns `true` if custom physics speed limiter is currently active. Not the same as pit limiter (or manually operated speed limiter). Physics-only (see `ac.CarState.physicsAvailable`)
+---@field autoShift boolean @Returns `true` if automatic shifting is active. Physics-only (see `ac.CarState.physicsAvailable`)
+---@field autoClutch boolean @Returns `true` if auto-clutch is active. Physics-only (see `ac.CarState.physicsAvailable`)
+---@field mgukDelivery integer @Starts with 0.
+---@field mgukDeliveryCount integer
+---@field mgukRecovery integer @From 0 to 10 (for 100%).
+---@field tractionControlMode integer @0 for disabled TC. Physics-only (see `ac.CarState.physicsAvailable`)
+---@field absMode integer @0 for disabled ABS. Physics-only (see `ac.CarState.physicsAvailable`)
+---@field engineBrakeSettingsCount integer
+---@field currentEngineBrakeSetting integer
+---@field fuelPerLap number @Uses original AC fuel estimation. Zero until value is available. Physics-only (see `ac.CarState.physicsAvailable`)
+---@field differentialPreload number @Physics-only (see `ac.CarState.physicsAvailable`)
+---@field differentialCoast number @Physics-only (see `ac.CarState.physicsAvailable`)
+---@field differentialPower number @Physics-only (see `ac.CarState.physicsAvailable`)
+---@field awdFrontShare number @Physics-only (see `ac.CarState.physicsAvailable`)
+---@field awdCenterLock number @Physics-only (see `ac.CarState.physicsAvailable`)
+---@field drivetrainTorque number @Physics-only (see `ac.CarState.physicsAvailable`)
+---@field drivetrainPower number @Physics-only (see `ac.CarState.physicsAvailable`)
+---@field brakeBias number @Physics-only (see `ac.CarState.physicsAvailable`)
+---@field speedLimiter number @Returns pit limiter speed in km/h (80 by default unless session specified different settings) or 0 if no limit is currently active. Physics-only (see `ac.CarState.physicsAvailable`)
+---@field turboBoosts number[] @Values per each turbo, up to 8 (if there are less turbos in a car, rest are zeroes). Physics-only (see `ac.CarState.physicsAvailable`) 8 items, starts with 0.
+---@field turboWastegates number[] @Values per each turbo, up to 8 (if there are less turbos in a car, rest are zeroes). Physics-only (see `ac.CarState.physicsAvailable`) 8 items, starts with 0.
+---@field tractionControl2 number
+---@field fuelMap integer @Current fuel map preset.
+---@field steerTorque number
+---@field ffbSteerAssist number @Value of `STEER_ASSIST` from car.ini. Broken until 0.3.0.
+---@field ffbBase number @Value of `FFMULT` from car.ini.
+---@field ffbFinal number
+---@field ffbPure number
+---@field ffbMultiplier number @For 100% FFB multiplier, this value is set to 1.
+---@field aeroLiftFront number @Aero lift coefficient in front.
+---@field aeroLiftRear number @Aero lift coefficient in rear.
+---@field aeroDrag number @Aero drag coefficient.
+---@field caster number @Caster angle in degrees.
+---@field rideHeight number[] @0 for front, 1 for rear. 2 items, starts with 0.
+---@field p2pStatus integer
+---@field p2pActivations integer
+---@field altitude number @Altitude in meters above sea level.
+---@field ambientOcclusion number @Ambient occlusion value computed from prebaked data from track’s VAO patch. 0 for car fully shadowed (in a tunnel), 1 for car outside. Affected by WeatherFX adjustments.
+---@field rawAmbientOcclusion number @Ambient occlusion value computed from prebaked data from track’s VAO patch. 0 for car fully shadowed (in a tunnel), 1 for car outside. Not affected by WeatherFX adjustments.
+---@field carCamerasCount integer @Number of F6 cameras.
+---@field currentPenaltyType ac.PenaltyType @Current penalty type (set only for user car).
+---@field currentPenaltyParameter integer @Parameter of current penalty (role depends on penalty type).
+---@field extraIconsCount integer @Extra driver icons set with `ui.UserIconsLayer()`. To draw, use `carN::special::driver::X` texture name.

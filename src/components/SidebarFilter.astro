@@ -16,6 +16,7 @@ import { Kbd } from "starlight-kbd/components";
       <Kbd mac="/" windows="/" />
     </div>
   </div>
+  <div id="sidebar-filter-count" class="filter-count"></div>
 </div>
 
 <Default {...Astro.props}><slot /></Default>
@@ -52,6 +53,14 @@ import { Kbd } from "starlight-kbd/components";
     border-color: var(--sl-color-accent-high);
   }
 
+  .filter-count {
+    font-size: 0.7rem;
+    color: var(--sl-color-gray-3);
+    margin-top: 0.25rem;
+    height: 1rem;
+    text-align: right;
+  }
+
   /* pos */
   .kbd-hint {
     position: absolute;
@@ -76,60 +85,101 @@ import { Kbd } from "starlight-kbd/components";
   const input = document.getElementById(
     "sidebar-filter-input",
   ) as HTMLInputElement;
+  const countDisplay = document.getElementById("sidebar-filter-count");
+
+  //
+  // cache sidebar structure and initial state
+  const sidebarLinks = Array.from(
+    document.querySelectorAll(".sidebar-content a"),
+  ).map((link) => {
+    const text = link.textContent?.toLowerCase() || "";
+    return {
+      el: link,
+      listItem: link.closest("li"),
+      //
+      // normalized text: remove dots, spaces, and underscores for better matching
+      normalized: text.replace(/[\s\._]/g, ""),
+    };
+  });
+
+  const groups = Array.from(
+    document.querySelectorAll(".sidebar-content details"),
+  );
+  const initialGroupStates = new Map(
+    groups.map((g) => [g, (g as HTMLDetailsElement).open]),
+  );
 
   input?.addEventListener("input", (e) => {
     const target = e.target as HTMLInputElement;
     const rawTerm = target.value.toLowerCase();
+    const term = rawTerm.replace(/[\s\._]/g, "");
+    let matchCount = 0;
 
-    // remove dots and spaces so "getcar" matches "ac.getCar"
-    const term = rawTerm.replace(/[\s\.]/g, "");
+    //
+    // if search is empty, restore original expansion states
+    if (term === "") {
+      sidebarLinks.forEach((item) =>
+        item.listItem?.setAttribute("data-hidden", "false"),
+      );
+      groups.forEach((group) => {
+        (group as HTMLDetailsElement).open =
+          initialGroupStates.get(group) || false;
+        group.setAttribute("data-hidden", "false");
+      });
+      if (countDisplay) countDisplay.textContent = "";
+      return;
+    }
 
-    // find all sidebar links
-    const links = document.querySelectorAll(".sidebar-content a");
+    //
+    // filter items
+    sidebarLinks.forEach((item) => {
+      if (!item.listItem) return;
 
-    links.forEach((link) => {
-      const linkText = link.textContent?.toLowerCase() || "";
-      const normalizedLink = linkText.replace(/[\s\.]/g, "");
-      const listItem = link.closest("li");
+      const isMatch = item.normalized.includes(term);
+      if (isMatch) {
+        matchCount++;
+        item.listItem.setAttribute("data-hidden", "false");
 
-      if (!listItem) return;
-
-      if (normalizedLink.includes(term) || term === "") {
-        listItem.setAttribute("data-hidden", "false");
-        // if it matches, make sure all parent groups are expanded
-        let parent = listItem.parentElement;
-        while (
-          parent &&
-          parent.classList.contains("sidebar-content") === false
-        ) {
+        //
+        // if match, make sure all parent groups are expanded
+        let parent = item.listItem.parentElement;
+        while (parent && !parent.classList.contains("sidebar-content")) {
           if (parent.tagName === "DETAILS") {
             (parent as HTMLDetailsElement).open = true;
           }
           parent = parent.parentElement;
         }
       } else {
-        listItem.setAttribute("data-hidden", "true");
+        item.listItem.setAttribute("data-hidden", "true");
       }
     });
 
-    // handle empty group headers
-    // by hiding groups if all children are hidden
-    const groups = document.querySelectorAll(".sidebar-content details");
+    //
+    // handle empty group headers by hiding groups if all children are hidden
     groups.forEach((group) => {
       const visibleChildren = group.querySelectorAll('li[data-hidden="false"]');
-      if (visibleChildren.length === 0 && term !== "") {
+      if (visibleChildren.length === 0) {
         group.setAttribute("data-hidden", "true");
       } else {
         group.setAttribute("data-hidden", "false");
       }
     });
+
+    //
+    // update results counter
+    if (countDisplay) {
+      countDisplay.textContent =
+        matchCount > 0 ? `${matchCount} matches found` : "no results";
+    }
   });
 
+  //
   // shortcut key: press '/' to focus
   window.addEventListener("keydown", (e) => {
     if (e.key === "/" && document.activeElement?.tagName !== "INPUT") {
       e.preventDefault();
       input?.focus();
+      input?.select(); // select existing text for quick overwriting
     }
   });
 </script>
