@@ -9,7 +9,7 @@ const { ns } = Astro.props;
 const allDocs = await getCollection("docs");
 
 //
-// get docs in namespace, skip the index
+// get docs in namespace, skip index
 const nsDocs = allDocs.filter(
   (doc) => doc.id.startsWith(`${ns}/`) && !doc.id.endsWith("index"),
 );
@@ -17,14 +17,16 @@ const nsDocs = allDocs.filter(
 const alphabet = "ABCDEFGHIJKLMNOPQRSTUVWXYZ".split("");
 const baseUrl = import.meta.env.BASE_URL.replace(/\/$/, "");
 
+// clean titles, remove namespace
+const cleanTitle = (title: string) => title.replace(`${ns}.`, "");
+
 //
-// group docs by first letter
+// group and sort items
 function getGrouped(entries: typeof nsDocs) {
   const grouped = entries.reduce(
     (acc, entry) => {
-      const title = entry.data.title;
-      const namePart = title.includes(".") ? title.split(".").pop() : title;
-      const char = namePart ? namePart[0].toUpperCase() : "?";
+      const title = cleanTitle(entry.data.title);
+      const char = title[0].toUpperCase();
 
       if (!acc[char]) acc[char] = [];
       acc[char].push(entry);
@@ -38,20 +40,19 @@ function getGrouped(entries: typeof nsDocs) {
     .map((char) => ({
       char,
       items: grouped[char].sort((a, b) =>
-        a.data.title.localeCompare(b.data.title),
+        cleanTitle(a.data.title).localeCompare(
+          cleanTitle(b.data.title),
+          undefined,
+          { sensitivity: "base" },
+        ),
       ),
     }));
 }
 
 //
-// identify which letters have content for the scrubber
+// active letter identification
 const usedLetters = new Set(
-  nsDocs.map((d) => {
-    const name = d.data.title.includes(".")
-      ? d.data.title.split(".").pop()
-      : d.data.title;
-    return name ? name[0].toUpperCase() : "";
-  }),
+  nsDocs.map((d) => cleanTitle(d.data.title)[0].toUpperCase()),
 );
 
 const groupedEntries = getGrouped(nsDocs);
@@ -83,63 +84,53 @@ const rightColumn = groupedEntries.slice(midPoint);
 
   <div class="ns-list-container">
     <div class="ns-columns">
-      <!-- left column -->
-      <div class="ns-col">
-        {
-          leftColumn.map(({ char, items }) => (
-            <div class="ns-letter-group" id={`letter-${char}`}>
-              <div class="ns-letter-header">{char}</div>
-              <ul>
-                {items.map((entry) => (
-                  <li class="ns-item">
-                    <a href={`${baseUrl}/${entry.id}/`}>
-                      <span class="ns-link-text">{entry.data.title}</span>
-                      {entry.data.description && (
-                        <div class="ns-tooltip">
-                          <span class="ns-tooltip-content">
-                            {entry.data.description}
+      {
+        [leftColumn, rightColumn].map((column) => (
+          <div class="ns-col">
+            {column.map(({ char, items }) => (
+              <div class="ns-letter-group" id={`letter-${char}`}>
+                <div class="ns-letter-header">{char}</div>
+                <ul>
+                  {items.map((entry) => {
+                    // check for starlight badges to determine status bar color
+                    const badgeVariant =
+                      entry.data.sidebar?.badge?.variant || "default";
+                    return (
+                      <li class="ns-item">
+                        <a href={`${baseUrl}/${entry.id}/`}>
+                          <span class="ns-link-text">
+                            {cleanTitle(entry.data.title)}
                           </span>
-                        </div>
-                      )}
-                    </a>
-                  </li>
-                ))}
-              </ul>
-            </div>
-          ))
-        }
-      </div>
-      <!-- right column -->
-      <div class="ns-col">
-        {
-          rightColumn.map(({ char, items }) => (
-            <div class="ns-letter-group" id={`letter-${char}`}>
-              <div class="ns-letter-header">{char}</div>
-              <ul>
-                {items.map((entry) => (
-                  <li class="ns-item">
-                    <a href={`${baseUrl}/${entry.id}/`}>
-                      <span class="ns-link-text">{entry.data.title}</span>
-                      {entry.data.description && (
-                        <div class="ns-tooltip">
-                          <span class="ns-tooltip-content">
-                            {entry.data.description}
-                          </span>
-                        </div>
-                      )}
-                    </a>
-                  </li>
-                ))}
-              </ul>
-            </div>
-          ))
-        }
-      </div>
+                          {entry.data.description && (
+                            <div class="ns-tooltip" data-variant={badgeVariant}>
+                              <span class="ns-tooltip-content">
+                                {entry.data.description}
+                                {entry.data.sidebar?.badge && (
+                                  <div class="ns-status-bar" />
+                                )}
+                              </span>
+                            </div>
+                          )}
+                        </a>
+                      </li>
+                    );
+                  })}
+                </ul>
+              </div>
+            ))}
+          </div>
+        ))
+      }
     </div>
   </div>
 </div>
 
 <style>
+  /* scroll behavior */
+  :global(html) {
+    scroll-behavior: smooth;
+  }
+
   .ns-index-wrapper {
     margin-top: 1rem;
   }
@@ -148,15 +139,20 @@ const rightColumn = groupedEntries.slice(midPoint);
     margin-bottom: 2.5rem;
     border-bottom: 1px solid var(--sl-color-gray-5);
     padding-bottom: 1rem;
+    position: sticky;
+    top: 0;
+    background: var(--sl-color-bg);
+    z-index: 10;
   }
 
-  /* alphabet grid scrubber */
+  /* scrubber grid */
   .ns-scrubber {
     display: grid;
     grid-template-columns: repeat(26, 1fr);
     width: 100%;
     text-align: center;
   }
+
   .ns-scrubber a,
   .ns-scrubber span {
     font-size: 0.85rem;
@@ -164,17 +160,20 @@ const rightColumn = groupedEntries.slice(midPoint);
     text-decoration: none;
     padding: 4px 0;
   }
+
   .ns-scrubber a.active {
     color: var(--sl-color-gray-2);
   }
+
   .ns-scrubber a.active:hover {
     color: var(--sl-color-accent-high);
   }
+
   .ns-scrubber span.inactive {
     color: var(--sl-color-gray-5);
   }
 
-  /* layout columns */
+  /* columns */
   .ns-columns {
     display: flex;
     gap: 3rem;
@@ -194,6 +193,7 @@ const rightColumn = groupedEntries.slice(midPoint);
 
   .ns-letter-group {
     margin-bottom: 2rem;
+    scroll-margin-top: 6rem;
   }
 
   .ns-letter-header {
@@ -215,7 +215,7 @@ const rightColumn = groupedEntries.slice(midPoint);
     margin-bottom: 0.4rem;
   }
 
-  /* text-only trigger area */
+  /* trigger on text only */
   .ns-item a {
     text-decoration: none;
     font-size: 0.9rem;
@@ -229,7 +229,7 @@ const rightColumn = groupedEntries.slice(midPoint);
     text-decoration: underline;
   }
 
-  /* quote box tooltip */
+  /* tooltip container */
   .ns-tooltip {
     visibility: hidden;
     position: absolute;
@@ -244,6 +244,7 @@ const rightColumn = groupedEntries.slice(midPoint);
   .ns-tooltip-content {
     display: block;
     padding: 0.8rem;
+    padding-right: 1.2rem;
     background-color: var(--sl-color-bg-nav);
     border: 1px solid var(--sl-color-gray-5);
     color: var(--sl-color-gray-2);
@@ -253,9 +254,38 @@ const rightColumn = groupedEntries.slice(midPoint);
     box-shadow: 0 4px 16px rgba(0, 0, 0, 0.4);
     text-decoration: none;
     white-space: normal;
+    position: relative;
+    overflow: hidden;
   }
 
-  /* seamless arrow construction */
+  /* vertical status bar on right side */
+  .ns-status-bar {
+    position: absolute;
+    right: 0;
+    top: 0;
+    bottom: 0;
+    width: 6px;
+    background-color: var(--sl-color-gray-4); /* fallback */
+  }
+
+  /* color mapping */
+  .ns-tooltip[data-variant="caution"] .ns-status-bar {
+    background-color: var(--sl-color-orange);
+  }
+  .ns-tooltip[data-variant="danger"] .ns-status-bar {
+    background-color: var(--sl-color-red);
+  }
+  .ns-tooltip[data-variant="success"] .ns-status-bar {
+    background-color: var(--sl-color-green);
+  }
+  .ns-tooltip[data-variant="tip"] .ns-status-bar {
+    background-color: var(--sl-color-blue);
+  }
+  .ns-tooltip[data-variant="note"] .ns-status-bar {
+    background-color: var(--sl-color-purple);
+  }
+
+  /* arrow geometry */
   .ns-tooltip::before,
   .ns-tooltip::after {
     content: "";
@@ -267,13 +297,11 @@ const rightColumn = groupedEntries.slice(midPoint);
     border-color: transparent;
   }
 
-  /* arrow border */
   .ns-tooltip::before {
     border-width: 8px;
     border-right-color: var(--sl-color-gray-5);
   }
 
-  /* arrow fill */
   .ns-tooltip::after {
     border-width: 7px;
     border-right-color: var(--sl-color-bg-nav);

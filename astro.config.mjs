@@ -70,6 +70,11 @@ export default defineConfig({
           collapsed: true,
         },
         {
+          label: "display",
+          autogenerate: { directory: "display" },
+          collapsed: true,
+        },
+        {
           label: "io",
           autogenerate: { directory: "io" },
           collapsed: true,
