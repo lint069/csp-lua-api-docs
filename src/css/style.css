@@ -1,3 +1,4 @@
+@import "starlight-ui-tweaks/styles";
 @layer base, starlight, theme, components, utilities;
 
 /* Dark mode colors. */

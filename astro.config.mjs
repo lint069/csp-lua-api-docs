@@ -6,6 +6,8 @@ import starlightImageZoom from "starlight-image-zoom";
 import remarkMath from "remark-math";
 import rehypeMathJax from "rehype-mathjax";
 import starlightKbd from "starlight-kbd";
+import starlightUiTweaks from "starlight-ui-tweaks";
+import starlightScrollToTop from "starlight-scroll-to-top";
 
 // https://astro.build/config
 export default defineConfig({
@@ -30,6 +32,11 @@ export default defineConfig({
           label: "GitHub",
           href: "https://github.com/lint069/csp-lua-api-docs",
         },
+        {
+          icon: "discord",
+          label: "Discord",
+          href: "https://discord.gg/nM4Xkrt",
+        },
       ],
       components: {
         Sidebar: "./src/components/SidebarFilter.astro",
@@ -45,8 +52,39 @@ export default defineConfig({
       plugins: [
         starlightImageZoom(),
         // starlightLinksValidator(),
+        starlightUiTweaks({
+          navbarLinks: [
+            {
+              label: "Wiki",
+              href: "https://github.com/ac-custom-shaders-patch/acc-extension-config/wiki",
+            },
+          ],
+          footer: {
+            copyright: "Copyright 2026",
+            // if set to true, will move icons to splash page
+            showSocialIcons: false,
+            firstColumn: {
+              title: "Links",
+              links: [{ label: "Home", href: "/" }],
+            },
+            secondColumn: {
+              title: "Links",
+              links: [{ label: "Home", href: "/" }],
+            },
+            thirdColumn: {
+              title: "Links",
+              links: [{ label: "Home", href: "/" }],
+            },
+            fourthColumn: {
+              title: "Links",
+              links: [{ label: "Home", href: "/" }],
+            },
+          },
+        }),
+        starlightScrollToTop(),
         starlightKbd({
           types: [
+            // these won't actually appear on the navbar bcus of ui tweaks
             { id: "mac", label: "macOS", default: true },
             { id: "windows", label: "Windows" },
           ],
