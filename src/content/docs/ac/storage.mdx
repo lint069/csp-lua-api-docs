@@ -1,5 +1,5 @@
 ---
-title: ac.storage
+title: storage
 description: Permanent, long-term disk storage for user settings and script state.
 ---
 
@@ -81,7 +81,7 @@ local settings = ac.storage({
     showMap = true
 })
 
-function script.windowMain(dt)
+function script.windowMain()
     -- checkbox updates the 'settings' table,
     -- which triggers a disk save automatically
     ui.checkbox("Show Minimap", settings.showMap)

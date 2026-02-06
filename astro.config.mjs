@@ -2,7 +2,6 @@
 import { defineConfig } from "astro/config";
 import starlight from "@astrojs/starlight";
 import starlightImageZoom from "starlight-image-zoom";
-// import starlightSidebarSwipe from "starlight-sidebar-swipe";
 // import starlightLinksValidator from "starlight-links-validator";
 import remarkMath from "remark-math";
 import rehypeMathJax from "rehype-mathjax";
@@ -44,7 +43,6 @@ export default defineConfig({
         },
       },
       plugins: [
-        // starlightSidebarSwipe(),
         starlightImageZoom(),
         // starlightLinksValidator(),
         starlightKbd({
