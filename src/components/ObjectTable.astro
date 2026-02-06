@@ -1,0 +1,196 @@
+---
+import { Icon } from "@astrojs/starlight/components";
+
+interface Props {
+  properties: Array<{
+    name: string;
+    type: string;
+    description: string;
+    notes?: string;
+  }>;
+}
+
+const { properties } = Astro.props;
+
+//
+// sort and group by first letter
+const sorted = [...properties].sort((a, b) => a.name.localeCompare(b.name));
+const grouped = sorted.reduce(
+  (acc, prop) => {
+    const char = prop.name[0].toUpperCase();
+    if (!acc[char]) acc[char] = [];
+    acc[char].push(prop);
+    return acc;
+  },
+  {} as Record<string, typeof properties>,
+);
+
+const letters = Object.keys(grouped).sort();
+---
+
+<div class="ref-container">
+  <!-- search -->
+  <div class="search-wrapper">
+    <Icon name="magnifier" />
+    <input
+      type="text"
+      class="filter-input"
+      placeholder="Search properties..."
+    />
+  </div>
+
+  <!-- table -->
+  <table class="ref-table">
+    <thead>
+      <tr>
+        <th>Property</th>
+        <th>Type</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      {
+        letters.map((char) => (
+          <>
+            <tr class="letter-row" data-letter={char}>
+              <td colspan="3">{char}</td>
+            </tr>
+            {grouped[char].map((prop) => (
+              <tr
+                class="prop-row"
+                data-name={prop.name.toLowerCase()}
+                data-type={prop.type.toLowerCase()}
+                data-letter={char}
+              >
+                <td>
+                  <code>{prop.name}</code>
+                </td>
+                <td>
+                  <code>{prop.type}</code>
+                </td>
+                <td>
+                  {prop.description}
+                  {prop.notes && <span class="tag">{prop.notes}</span>}
+                </td>
+              </tr>
+            ))}
+          </>
+        ))
+      }
+      <tr class="no-results" style="display: none;">
+        <td colspan="3">no results found</td>
+      </tr>
+    </tbody>
+  </table>
+</div>
+
+<script>
+  const init = () => {
+    const input = document.querySelector(".filter-input") as HTMLInputElement;
+    const rows = document.querySelectorAll(
+      ".prop-row",
+    ) as NodeListOf<HTMLElement>;
+    const letters = document.querySelectorAll(
+      ".letter-row",
+    ) as NodeListOf<HTMLElement>;
+    const noResults = document.querySelector(".no-results") as HTMLElement;
+
+    input?.addEventListener("input", () => {
+      const val = input.value.toLowerCase().trim();
+      const activeLetters = new Set();
+      let count = 0;
+
+      rows.forEach((row) => {
+        const match =
+          row.dataset.name?.includes(val) || row.dataset.type?.includes(val);
+        row.style.display = match ? "" : "none";
+        if (match) {
+          activeLetters.add(row.dataset.letter);
+          count++;
+        }
+      });
+
+      letters.forEach((l) => {
+        l.style.display = activeLetters.has(l.dataset.letter) ? "" : "none";
+      });
+
+      if (noResults)
+        noResults.style.display =
+          count === 0 && val !== "" ? "table-row" : "none";
+    });
+  };
+
+  init();
+  document.addEventListener("astro:after-swap", init);
+</script>
+
+<style>
+  .ref-container {
+    margin: 2rem 0;
+  }
+
+  /* search */
+  .search-wrapper {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    padding: 0.5rem;
+    border: 1px solid var(--sl-color-gray-5);
+    border-radius: 0.5rem;
+    margin-bottom: 1rem;
+  }
+  .filter-input {
+    background: none;
+    border: none;
+    color: inherit;
+    width: 100%;
+    outline: none;
+  }
+
+  /* table */
+  .ref-table {
+    width: 100%;
+    border-collapse: collapse;
+  }
+  .ref-table th {
+    text-align: left;
+    padding: 0.5rem;
+    border-bottom: 2px solid var(--sl-color-gray-5);
+    color: var(--sl-color-gray-3);
+  }
+  .ref-table td {
+    padding: 0.75rem 0.5rem;
+    border-bottom: 1px solid var(--sl-color-gray-6);
+    vertical-align: top;
+  }
+
+  /* letter headers */
+  .letter-row td {
+    padding: 2rem 0.5rem 0.5rem 0.5rem !important;
+    font-weight: bold;
+    font-size: 1.2rem;
+    color: var(--sl-color-accent-high);
+  }
+
+  /* tags */
+  .tag {
+    display: inline-block;
+    margin-left: 0.5rem;
+    font-size: 0.7rem;
+    padding: 0.1rem 0.3rem;
+    background: var(--sl-color-gray-5);
+    border-radius: 0.2rem;
+  }
+
+  /* reset starlight code */
+  code {
+    background: none !important;
+    padding: 0 !important;
+  }
+
+  .no-results td {
+    padding: 3rem;
+    text-align: center;
+    opacity: 0.5;
+  }
+</style>

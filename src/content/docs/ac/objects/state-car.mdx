@@ -7,11 +7,9 @@ sidebar:
     variant: caution
 ---
 
-import { Aside } from "@astrojs/starlight/components";
+import ObjectTable from "../../../../components/ObjectTable.astro";
+import { stateCarProperties } from "../../../../data/state-car";
 
-<Aside type="caution" title="Work in Progress">
-  This page is a stub and is currently being drafted. Information here may be
-  incomplete or subject to change.
-</Aside>
+The `ac.StateCar` object provides direct access to vehicle memory. Most properties are read-only.
 
-The `ac.StateCar` object is a high-performance FFI structure containing the live state of a vehicle. Most properties are **Read-Only**; to modify a car's state, see `ac.overrideCarState()`.
+<ObjectTable properties={stateCarProperties} />
