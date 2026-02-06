@@ -17,6 +17,7 @@
     "remark-math": "^6.0.0",
     "sharp": "^0.34.2",
     "starlight-image-zoom": "^0.13.2",
+    "starlight-kbd": "^0.3.0",
     "starlight-links-validator": "^0.19.2",
     "starlight-sidebar-swipe": "^0.1.1",
     "summer-time": "^3.1.7"

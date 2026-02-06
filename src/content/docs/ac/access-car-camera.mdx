@@ -4,8 +4,10 @@ description: Retrieves an interface to interact with or modify a specific car-at
 ---
 
 import { Aside, Tabs, TabItem } from "@astrojs/starlight/components";
+import { Kbd } from "starlight-kbd/components";
 
-Provides access to the configuration of a car's external cameras, which are typically cycled using the `F6` key.
+Provides access to the configuration of a car's external cameras,
+which are typically cycled using the <Kbd mac="F6" windows="F6" /> key.
 It returns an `ac.CarCameraParams` object used to read or modify properties such as position, direction, and field of view.
 
 <Aside type="note" title="Camera Count">

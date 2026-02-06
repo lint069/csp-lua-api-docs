@@ -1,15 +1,21 @@
 ---
 import type { Props } from "@astrojs/starlight/props";
 import Default from "@astrojs/starlight/components/Sidebar.astro";
+import { Kbd } from "starlight-kbd/components";
 ---
 
 <div class="sidebar-filter-container">
-  <input
-    type="text"
-    id="sidebar-filter-input"
-    placeholder="/ to quick search..."
-    aria-label="Filter sidebar"
-  />
+  <div class="search-wrapper">
+    <input
+      type="text"
+      id="sidebar-filter-input"
+      placeholder="search..."
+      aria-label="Filter sidebar"
+    />
+    <div class="kbd-hint">
+      <Kbd mac="/" windows="/" />
+    </div>
+  </div>
 </div>
 
 <Default {...Astro.props}><slot /></Default>
@@ -23,9 +29,16 @@ import Default from "@astrojs/starlight/components/Sidebar.astro";
     background-color: var(--sl-color-bg-sidebar);
   }
 
+  .search-wrapper {
+    position: relative;
+    display: flex;
+    align-items: center;
+  }
+
   #sidebar-filter-input {
     width: 100%;
     padding: 0.4rem 0.8rem;
+    padding-right: 2.5rem;
     border-radius: 0.5rem;
     border: 1px solid var(--sl-color-gray-5);
     background: var(--sl-color-black);
@@ -37,6 +50,20 @@ import Default from "@astrojs/starlight/components/Sidebar.astro";
 
   #sidebar-filter-input:focus {
     border-color: var(--sl-color-accent-high);
+  }
+
+  /* pos */
+  .kbd-hint {
+    position: absolute;
+    right: 0.5rem;
+    top: 10%;
+    pointer-events: none;
+    opacity: 0.8;
+  }
+
+  /* hide hint when typing or focused */
+  .search-wrapper:focus-within .kbd-hint {
+    display: none;
   }
 
   /* hide items that don't match */

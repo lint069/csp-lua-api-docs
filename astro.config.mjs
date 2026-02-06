@@ -6,6 +6,7 @@ import starlightImageZoom from "starlight-image-zoom";
 // import starlightLinksValidator from "starlight-links-validator";
 import remarkMath from "remark-math";
 import rehypeMathJax from "rehype-mathjax";
+import starlightKbd from "starlight-kbd";
 
 // https://astro.build/config
 export default defineConfig({
@@ -46,6 +47,12 @@ export default defineConfig({
         // starlightSidebarSwipe(),
         starlightImageZoom(),
         // starlightLinksValidator(),
+        starlightKbd({
+          types: [
+            { id: "mac", label: "macOS", default: true },
+            { id: "windows", label: "Windows" },
+          ],
+        }),
       ],
       sidebar: [
         {
