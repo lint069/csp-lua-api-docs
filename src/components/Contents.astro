@@ -1,0 +1,292 @@
+---
+import { getCollection } from "astro:content";
+
+interface Props {
+  ns: string;
+}
+
+const { ns } = Astro.props;
+const allDocs = await getCollection("docs");
+
+//
+// get docs in namespace, skip the index
+const nsDocs = allDocs.filter(
+  (doc) => doc.id.startsWith(`${ns}/`) && !doc.id.endsWith("index"),
+);
+
+const alphabet = "ABCDEFGHIJKLMNOPQRSTUVWXYZ".split("");
+const baseUrl = import.meta.env.BASE_URL.replace(/\/$/, "");
+
+//
+// group docs by first letter
+function getGrouped(entries: typeof nsDocs) {
+  const grouped = entries.reduce(
+    (acc, entry) => {
+      const title = entry.data.title;
+      const namePart = title.includes(".") ? title.split(".").pop() : title;
+      const char = namePart ? namePart[0].toUpperCase() : "?";
+
+      if (!acc[char]) acc[char] = [];
+      acc[char].push(entry);
+      return acc;
+    },
+    {} as Record<string, typeof entries>,
+  );
+
+  return Object.keys(grouped)
+    .sort()
+    .map((char) => ({
+      char,
+      items: grouped[char].sort((a, b) =>
+        a.data.title.localeCompare(b.data.title),
+      ),
+    }));
+}
+
+//
+// identify which letters have content for the scrubber
+const usedLetters = new Set(
+  nsDocs.map((d) => {
+    const name = d.data.title.includes(".")
+      ? d.data.title.split(".").pop()
+      : d.data.title;
+    return name ? name[0].toUpperCase() : "";
+  }),
+);
+
+const groupedEntries = getGrouped(nsDocs);
+
+//
+// manually split columns so the layout is deterministic
+// calculate based on the number of groups
+const midPoint = Math.ceil(groupedEntries.length / 2);
+const leftColumn = groupedEntries.slice(0, midPoint);
+const rightColumn = groupedEntries.slice(midPoint);
+---
+
+<div class="ns-index-wrapper">
+  <div class="ns-header">
+    <div class="ns-scrubber">
+      {
+        alphabet.map((char) =>
+          usedLetters.has(char) ? (
+            <a href={`#letter-${char}`} class="active">
+              {char}
+            </a>
+          ) : (
+            <span class="inactive">{char}</span>
+          ),
+        )
+      }
+    </div>
+  </div>
+
+  <div class="ns-list-container">
+    <div class="ns-columns">
+      <!-- left column -->
+      <div class="ns-col">
+        {
+          leftColumn.map(({ char, items }) => (
+            <div class="ns-letter-group" id={`letter-${char}`}>
+              <div class="ns-letter-header">{char}</div>
+              <ul>
+                {items.map((entry) => (
+                  <li class="ns-item">
+                    <a href={`${baseUrl}/${entry.id}/`}>
+                      <span class="ns-link-text">{entry.data.title}</span>
+                      {entry.data.description && (
+                        <div class="ns-tooltip">
+                          <span class="ns-tooltip-content">
+                            {entry.data.description}
+                          </span>
+                        </div>
+                      )}
+                    </a>
+                  </li>
+                ))}
+              </ul>
+            </div>
+          ))
+        }
+      </div>
+      <!-- right column -->
+      <div class="ns-col">
+        {
+          rightColumn.map(({ char, items }) => (
+            <div class="ns-letter-group" id={`letter-${char}`}>
+              <div class="ns-letter-header">{char}</div>
+              <ul>
+                {items.map((entry) => (
+                  <li class="ns-item">
+                    <a href={`${baseUrl}/${entry.id}/`}>
+                      <span class="ns-link-text">{entry.data.title}</span>
+                      {entry.data.description && (
+                        <div class="ns-tooltip">
+                          <span class="ns-tooltip-content">
+                            {entry.data.description}
+                          </span>
+                        </div>
+                      )}
+                    </a>
+                  </li>
+                ))}
+              </ul>
+            </div>
+          ))
+        }
+      </div>
+    </div>
+  </div>
+</div>
+
+<style>
+  .ns-index-wrapper {
+    margin-top: 1rem;
+  }
+
+  .ns-header {
+    margin-bottom: 2.5rem;
+    border-bottom: 1px solid var(--sl-color-gray-5);
+    padding-bottom: 1rem;
+  }
+
+  /* alphabet grid scrubber */
+  .ns-scrubber {
+    display: grid;
+    grid-template-columns: repeat(26, 1fr);
+    width: 100%;
+    text-align: center;
+  }
+  .ns-scrubber a,
+  .ns-scrubber span {
+    font-size: 0.85rem;
+    font-weight: 700;
+    text-decoration: none;
+    padding: 4px 0;
+  }
+  .ns-scrubber a.active {
+    color: var(--sl-color-gray-2);
+  }
+  .ns-scrubber a.active:hover {
+    color: var(--sl-color-accent-high);
+  }
+  .ns-scrubber span.inactive {
+    color: var(--sl-color-gray-5);
+  }
+
+  /* layout columns */
+  .ns-columns {
+    display: flex;
+    gap: 3rem;
+  }
+
+  .ns-col {
+    flex: 1;
+    min-width: 0;
+  }
+
+  @media (max-width: 768px) {
+    .ns-columns {
+      flex-direction: column;
+      gap: 0;
+    }
+  }
+
+  .ns-letter-group {
+    margin-bottom: 2rem;
+  }
+
+  .ns-letter-header {
+    font-size: 1.25rem;
+    font-weight: 700;
+    color: var(--sl-color-gray-4);
+    border-bottom: 1px solid var(--sl-color-gray-5);
+    margin-bottom: 0.75rem;
+    padding-bottom: 0.25rem;
+  }
+
+  .ns-letter-group ul {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+  }
+
+  .ns-item {
+    margin-bottom: 0.4rem;
+  }
+
+  /* text-only trigger area */
+  .ns-item a {
+    text-decoration: none;
+    font-size: 0.9rem;
+    color: var(--sl-color-accent-high);
+    display: block;
+    position: relative;
+    width: fit-content;
+  }
+
+  .ns-link-text:hover {
+    text-decoration: underline;
+  }
+
+  /* quote box tooltip */
+  .ns-tooltip {
+    visibility: hidden;
+    position: absolute;
+    left: calc(100% + 15px);
+    top: 50%;
+    transform: translateY(-50%);
+    z-index: 1000;
+    width: 260px;
+    pointer-events: none;
+  }
+
+  .ns-tooltip-content {
+    display: block;
+    padding: 0.8rem;
+    background-color: var(--sl-color-bg-nav);
+    border: 1px solid var(--sl-color-gray-5);
+    color: var(--sl-color-gray-2);
+    font-size: 0.8rem;
+    font-weight: normal;
+    line-height: 1.4;
+    box-shadow: 0 4px 16px rgba(0, 0, 0, 0.4);
+    text-decoration: none;
+    white-space: normal;
+  }
+
+  /* seamless arrow construction */
+  .ns-tooltip::before,
+  .ns-tooltip::after {
+    content: "";
+    position: absolute;
+    right: 100%;
+    top: 50%;
+    transform: translateY(-50%);
+    border-style: solid;
+    border-color: transparent;
+  }
+
+  /* arrow border */
+  .ns-tooltip::before {
+    border-width: 8px;
+    border-right-color: var(--sl-color-gray-5);
+  }
+
+  /* arrow fill */
+  .ns-tooltip::after {
+    border-width: 7px;
+    border-right-color: var(--sl-color-bg-nav);
+    margin-right: -1px;
+  }
+
+  .ns-item a:hover .ns-tooltip {
+    visibility: visible;
+  }
+
+  @media (max-width: 1100px) {
+    .ns-tooltip {
+      display: none;
+    }
+  }
+</style>
