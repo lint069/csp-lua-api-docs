@@ -83,10 +83,11 @@ export default defineConfig({
         }),
         starlightScrollToTop(),
         starlightKbd({
+          // intentional
+          globalPicker: false,
           types: [
-            // these won't actually appear on the navbar bcus of ui tweaks
-            { id: "mac", label: "macOS", default: true },
-            { id: "windows", label: "Windows" },
+            { id: "mac", label: "macOS" },
+            { id: "windows", label: "Windows", default: true },
           ],
         }),
       ],
