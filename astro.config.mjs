@@ -2,21 +2,57 @@
 import { defineConfig } from "astro/config";
 import starlight from "@astrojs/starlight";
 import starlightImageZoom from "starlight-image-zoom";
-// import starlightLinksValidator from "starlight-links-validator";
+import starlightLinksValidator from "starlight-links-validator";
 import remarkMath from "remark-math";
 import rehypeMathJax from "rehype-mathjax";
 import starlightKbd from "starlight-kbd";
 import starlightUiTweaks from "starlight-ui-tweaks";
 import starlightScrollToTop from "starlight-scroll-to-top";
+import { visit } from "unist-util-visit";
+
+//
+const base = "/csp-lua-api-docs";
+
+//
+/**
+ * prepend base path to internal links and images
+ * @returns {(tree: any) => void}
+ */
+function remarkPrependBase() {
+  return (tree) => {
+    visit(tree, "link", (node) => {
+      /** @type {any} */
+      const linkNode = node;
+      if (
+        linkNode.url.startsWith("/") &&
+        !linkNode.url.startsWith(base) &&
+        !linkNode.url.startsWith("//")
+      ) {
+        linkNode.url = `${base}${linkNode.url}`;
+      }
+    });
+    visit(tree, "image", (node) => {
+      /** @type {any} */
+      const imgNode = node;
+      if (
+        imgNode.url.startsWith("/") &&
+        !imgNode.url.startsWith(base) &&
+        !imgNode.url.startsWith("//")
+      ) {
+        imgNode.url = `${base}${imgNode.url}`;
+      }
+    });
+  };
+}
 
 // https://astro.build/config
 export default defineConfig({
   site: "https://lint069.github.io",
-  base: "/csp-lua-api-docs",
+  base: base,
   trailingSlash: "always",
   server: { port: 6969, host: true },
   markdown: {
-    remarkPlugins: [remarkMath],
+    remarkPlugins: [remarkMath, remarkPrependBase],
     rehypePlugins: [rehypeMathJax],
   },
   integrations: [
@@ -51,7 +87,9 @@ export default defineConfig({
       },
       plugins: [
         starlightImageZoom(),
-        // starlightLinksValidator(),
+        starlightLinksValidator({
+          errorOnRelativeLinks: true,
+        }),
         starlightUiTweaks({
           navbarLinks: [
             {
@@ -63,21 +101,23 @@ export default defineConfig({
             copyright: "Copyright 2026",
             // if set to true, will move icons to splash page
             showSocialIcons: false,
+            // for these links, use base var manually
+            // href: `${base}/`
             firstColumn: {
               title: "Links",
-              links: [{ label: "Home", href: "/" }],
+              links: [{ label: "Home", href: `${base}/` }],
             },
             secondColumn: {
               title: "Links",
-              links: [{ label: "Home", href: "/" }],
+              links: [{ label: "Home", href: `${base}/` }],
             },
             thirdColumn: {
               title: "Links",
-              links: [{ label: "Home", href: "/" }],
+              links: [{ label: "Home", href: `${base}/` }],
             },
             fourthColumn: {
               title: "Links",
-              links: [{ label: "Home", href: "/" }],
+              links: [{ label: "Home", href: `${base}/` }],
             },
           },
         }),
