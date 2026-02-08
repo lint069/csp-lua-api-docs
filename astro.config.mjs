@@ -11,7 +11,7 @@ import starlightScrollToTop from "starlight-scroll-to-top";
 
 // https://astro.build/config
 export default defineConfig({
-  site: "https://lint069.github.io/csp-lua-api-docs",
+  site: "https://lint069.github.io",
   base: "/csp-lua-api-docs",
   trailingSlash: "always",
   server: { port: 6969, host: true },

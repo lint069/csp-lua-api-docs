@@ -15,22 +15,24 @@ ui.drawRect(p1, p2, color, rounding, roundingFlags, thickness)
 
 ## Description
 
-This function renders a hollow rectangle. The shape is defined by an axis-aligned bounding box calculated from points `p1` (usually top-left) and `p2` (usually bottom-right).
+This function renders a hollow rectangle.
+The shape is defined by an axis-aligned bounding box calculated from points `p1` (usually top-left) and `p2` (usually bottom-right).
 
 :::note[Filled Rectangles]
-This function only draws the outline. If you require a solid shape, use [`ui.drawRectFilled`](../draw-rect-filled/) instead.
+This function only draws the outline.
+If you require a solid shape, use [`ui.drawRectFilled`](/ui/draw-rect-filled/) instead.
 :::
 
 ## Parameters
 
-| Parameter       | Type                                        | Required | Default              | Description                                                  |
-| --------------- | ------------------------------------------- | -------- | -------------------- | ------------------------------------------------------------ |
-| `p1`            | `vec2`                                      | Yes      | -                    | Screen coordinates for the first corner of the rectangle.    |
-| `p2`            | `vec2`                                      | Yes      | -                    | Screen coordinates for the opposite corner of the rectangle. |
-| `color`         | `rgbm`                                      | Yes      | -                    | The color and opacity of the outline.                        |
-| `rounding`      | `number`                                    | No       | `0.0`                | The radius of the corners in pixels.                         |
-| `roundingFlags` | [`ui.CornerFlags`](../enums/#uicornerflags) | No       | `ui.CornerFlags.All` | Bitmask determining which corners apply the rounding radius. |
-| `thickness`     | `number`                                    | No       | `1.0`                | The width of the outline stroke in pixels.                   |
+| Parameter       | Type                                         | Required | Default              | Description                                                  |
+| --------------- | -------------------------------------------- | -------- | -------------------- | ------------------------------------------------------------ |
+| `p1`            | `vec2`                                       | Yes      | -                    | Screen coordinates for the first corner of the rectangle.    |
+| `p2`            | `vec2`                                       | Yes      | -                    | Screen coordinates for the opposite corner of the rectangle. |
+| `color`         | `rgbm`                                       | Yes      | -                    | The color and opacity of the outline.                        |
+| `rounding`      | `number`                                     | No       | `0.0`                | The radius of the corners in pixels.                         |
+| `roundingFlags` | [`ui.CornerFlags`](/ui/enums/#uicornerflags) | No       | `ui.CornerFlags.All` | Bitmask determining which corners apply the rounding radius. |
+| `thickness`     | `number`                                     | No       | `1.0`                | The width of the outline stroke in pixels.                   |
 
 ## Return Values
 

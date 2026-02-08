@@ -18,18 +18,18 @@ ui.drawRectFilled(p1, p2, color, rounding, roundingFlags)
 This function renders a filled rectangle. The shape is defined by an axis-aligned bounding box calculated from points `p1` (usually top-left) and `p2` (usually bottom-right).
 
 :::note[Outlines]
-If you require a hollow rectangle (borders only), use [`ui.drawRect`](../draw-rect/) instead.
+If you require a hollow rectangle (borders only), use [`ui.drawRect`](/ui/draw-rect/) instead.
 :::
 
 ## Parameters
 
-| Parameter       | Type                                        | Required | Default | Description                                    |
-| --------------- | ------------------------------------------- | -------- | ------- | ---------------------------------------------- |
-| `p1`            | `vec2`                                      | Yes      | -       | Screen coordinates for the first corner.       |
-| `p2`            | `vec2`                                      | Yes      | -       | Screen coordinates for the opposite corner.    |
-| `color`         | `rgbm`                                      | Yes      | -       | The fill color and opacity.                    |
-| `rounding`      | `number`                                    | No       | `0.0`   | The radius of the corners in pixels.           |
-| `roundingFlags` | [`ui.CornerFlags`](../enums/#uicornerflags) | No       | `All`   | Bitmask determining which corners are rounded. |
+| Parameter       | Type                                         | Required | Default | Description                                    |
+| --------------- | -------------------------------------------- | -------- | ------- | ---------------------------------------------- |
+| `p1`            | `vec2`                                       | Yes      | -       | Screen coordinates for the first corner.       |
+| `p2`            | `vec2`                                       | Yes      | -       | Screen coordinates for the opposite corner.    |
+| `color`         | `rgbm`                                       | Yes      | -       | The fill color and opacity.                    |
+| `rounding`      | `number`                                     | No       | `0.0`   | The radius of the corners in pixels.           |
+| `roundingFlags` | [`ui.CornerFlags`](/ui/enums/#uicornerflags) | No       | `All`   | Bitmask determining which corners are rounded. |
 
 ## Return Values
 

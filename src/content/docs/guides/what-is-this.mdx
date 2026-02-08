@@ -1,8 +1,6 @@
 ---
 title: What is the SDK?
 description: An overview of the history, authors, and capabilities of the Assetto Corsa Lua SDK.
-sidebar:
-  order: 1
 ---
 
 import {
@@ -13,15 +11,15 @@ import {
   Badge,
 } from "@astrojs/starlight/components";
 
-The **Custom Shaders Patch (CSP) Lua API** is a massive extension of the Assetto Corsa engine.
+The Custom Shaders Patch (CSP) Lua API is a massive extension of the Assetto Corsa engine.
 It allows developers to write high-performance logic that interacts with almost every system in the game,
 from the way light bounces off a car's paint to the way AI drivers navigate a track.
 
 ## Behind the Patch
 
 <Card title="Ilja Jusupov (x4fab)" icon="pencil">
-  The CSP Lua SDK is developed and maintained by **Ilja Jusupov**, also known as
-  **x4fab**. As the lead developer of Custom Shaders Patch and Content Manager,
+  The CSP Lua SDK is developed and maintained by Ilja Jusupov, also known as
+  @x4fab. As the lead developer of Custom Shaders Patch and Content Manager,
   Ilja transformed Assetto Corsa from a static 2014 racing simulator into a
   dynamic, modern platform. The Lua API is his solution for allowing the
   community to add features that would otherwise require access to the game's
@@ -30,7 +28,8 @@ from the way light bounces off a car's paint to the way AI drivers navigate a tr
 
 ## Why Lua?
 
-Assetto Corsa was originally built using C++ and Python. However, Python in AC is limited to basic UI and some telemetry data. CSP introduces **LuaJIT** for several key reasons:
+Assetto Corsa was originally built using C++ and Python. However,
+Python in AC is limited to basic UI and some telemetry data. CSP introduces LuaJIT for several key reasons:
 
 <CardGrid>
   <Card title="Performance" icon="rocket">
@@ -49,17 +48,17 @@ Assetto Corsa was originally built using C++ and Python. However, Python in AC i
 
 ## What Can You Build?
 
-The scope of the API is divided into several "Contexts." Depending on where your script is placed, you can create:
+The scope of the API is divided into several contexts. Depending on where your script is placed, you can create:
 
-- **Custom HUDs**
-- **New Game Modes**
-- **Physics Modifications**
-- **Visual FX:** Scripted lights, dynamic weather behavior, and animated track elements.
+- Custom HUDs
+- New Game Modes
+- Physics Modifications
+- Visual FX: Scripted lights, dynamic weather behavior, and animated track elements.
 
 <Aside type="note" title="About these Docs">
   This documentation is a community-driven effort to catalog the numerous
-  functions and types found within the SDK. It aims to provide a clear reference for
-  developers wanting to get their hands dirty with the API.
+  functions and types found within the SDK. It aims to provide a clear reference
+  for developers wanting to get their hands dirty with the API.
 </Aside>
 
 ---
@@ -68,15 +67,15 @@ The scope of the API is divided into several "Contexts." Depending on where your
 
 <Steps>
 
-1.  **The Engine**
+1.  ##### Engine
 
     Assetto Corsa provides the base physics and rendering pipeline.
 
-2.  **The Hook**
+2.  ##### Hook
 
     CSP (Custom Shaders Patch) injects itself into the engine process.
 
-3.  **The Bridge**
+3.  ##### Bridge
 
     The Lua SDK provides the bindings, the functions like `ac.getCar()`,
     that allow your Lua code to tell the C++ engine what to do.
@@ -84,6 +83,6 @@ The scope of the API is divided into several "Contexts." Depending on where your
 </Steps>
 
 <Aside type="tip" title="Ready to start coding?">
-  Head over to the [Getting Started](../getting-started/) guide to set up your
-  environment and write your first script.
+  Head over to the [Getting Started](/guides/getting-started/) guide to set up
+  your environment and write your first script.
 </Aside>
