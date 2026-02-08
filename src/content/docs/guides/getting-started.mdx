@@ -12,7 +12,7 @@ import {
     Aside,
 } from "@astrojs/starlight/components";
 
-This documentation assumes you are already proficient with **Lua** or **LuaJIT**.
+This documentation assumes you are already proficient with Lua or LuaJIT.
 The SDK is a professional toolset and does not cover foundational programming concepts.
 If you are new to the language, or to programming in general, it is recommended to study the following resources before proceeding:
 
@@ -27,7 +27,6 @@ This tutorial walks you through the process of creating a basic utility app.
   - Content Manager
   - Custom Shaders Patch
 </Aside>
-
 
 ## Project Structure
 
@@ -44,7 +43,7 @@ Scripts that do not follow this hierarchy will not be loaded.
 </FileTree>
 
 <Aside type="danger" title="Strict Naming Rule">
-    The main Lua script **must** have the exact same name as the folder it is contained in.
+    The main Lua script must have the exact same name as the folder it is contained in.
     For example: `apps/lua/telemetry/telemetry.lua`.
 </Aside>
 
@@ -55,11 +54,11 @@ Read more on creating your first app [here](https://github.com/ac-custom-shaders
 
 <Steps>
 
-1.  **Create the Application Folder**
+1.  **Create Application Folder**
 
     Navigate to your Assetto Corsa root folder, then to `apps/lua/`. Create a new folder named `hello_world`.
 
-2.  **Define a Manifest**
+2.  **Define Manifest**
 
     Create a file named `manifest.ini`. This metadata file tells Assetto Corsa how to handle your window instance.
 
@@ -81,11 +80,12 @@ Read more on creating your first app [here](https://github.com/ac-custom-shaders
     ```
 
     <Aside title="Note on WINDOW_...">
-        The `WINDOW_...` section allows you to define multiple windows for a single app.
-        Each window can point to a different entry-point function in your Lua script.
+        `WINDOW_...` lets a single app define multiple windows.  
+        Each window can point to a different entry function in the Lua script.
     </Aside>
+
     <Aside type="tip">
-        If this is done correctly, an app named `Hello World` will show up automatically in
+        If configured correctly, an app named `Hello World` will appear in
         Content Manager under `Content > Miscellaneous > Lua Apps`.
     </Aside>
 
@@ -108,14 +108,12 @@ Read more on creating your first app [here](https://github.com/ac-custom-shaders
     ```
 
     <Aside type="tip" title="Namespace Prefix">
-        Note the use of `script.windowMain`.
-        In CSP, your entry functions are usually defined as members of the global `script` table.
-        More on that later.
+        Entry functions are typically defined as members of the global `script` table.
     </Aside>
 
 4.  **Enable and Launch**
 
-    1. Open **Content Manager**.
+    1. Open Content Manager.
     4. Launch a session.
     5. Expect to find an app named `Your First Window` in the side bar, under all apps.
 
@@ -128,22 +126,24 @@ Read more on creating your first app [here](https://github.com/ac-custom-shaders
 When developing, you need to see what is happening under the hood. CSP provides several ways to monitor your script.
 
 ### The Lua Debug App
-While in a session, look for the Lua Debug app in the sidebar. This app provides:
 
-- **Console Output:** View everything sent via `ac.log()` or `print()`.
-- **Performance:** Monitor the CPU time used by your script.
+While in a session, open the Lua Debug app from the sidebar. It provides:
+
+- Console output via `ac.log()` or `print()`.
+- CPU usage for each running script.
 
 <Aside title="Developer Apps">
-    The Lua Debug app will appear under developer apps. If there is no subheading named Developer apps,
-    that means you'll have to enable them. In Content Manager, navigate to `Settings > Assetto Corsa > System`.
-    There will be a checkbox in the top-left for Developer apps, and you'll want to make sure it's checked.
+    The Lua Debug app is listed under `Developer apps`.
+    If the section is not visible, enable it in
+    `Content Manager > Settings > Assetto Corsa > System` by checking `Developer apps`.
 </Aside>
 
 <Aside type="tip" title="Live Reload">
-    Most scripts will reload automatically when saving the file in your code editor.
+    Most scripts reload automatically when the file is saved in your editor.
 </Aside>
 
 ### Real-time Watches
+
 Use `ac.debug()` to track a value visually without spamming the log.
 
 ```lua
