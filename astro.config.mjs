@@ -1,6 +1,8 @@
 // @ts-check
 import { defineConfig } from "astro/config";
-import starlight from "@astrojs/starlight";
+//import starlight from "@astrojs/starlight";
+import UnoCSS from "unocss/astro";
+import Icons from "starlight-plugin-icons";
 import starlightImageZoom from "starlight-image-zoom";
 import starlightLinksValidator from "starlight-links-validator";
 import remarkMath from "remark-math";
@@ -56,146 +58,155 @@ export default defineConfig({
     rehypePlugins: [rehypeMathJax],
   },
   integrations: [
-    starlight({
-      title: "CSP Lua API Docs",
-      //editLink: {
-      //baseUrl: "https://github.com/lint069/csp-lua-api-docs/edit/main/",
-      //},
-      lastUpdated: true,
-      social: [
-        {
-          icon: "github",
-          label: "GitHub",
-          href: "https://github.com/lint069/csp-lua-api-docs",
-        },
-        {
-          icon: "discord",
-          label: "Discord",
-          href: "https://discord.gg/nM4Xkrt",
-        },
-      ],
-      components: {
-        Sidebar: "./src/components/SidebarFilter.astro",
-      },
-      customCss: ["./src/css/style.css"],
-      expressiveCode: {
-        themes: ["dark-plus", "github-light"],
-        useStarlightDarkModeSwitch: true,
-        styleOverrides: {
-          borderRadius: "0.2rem",
-        },
-      },
-      plugins: [
-        starlightImageZoom(),
-        starlightLinksValidator({
-          errorOnRelativeLinks: true,
-        }),
-        starlightUiTweaks({
-          navbarLinks: [
-            {
-              label: "Wiki",
-              href: "https://github.com/ac-custom-shaders-patch/acc-extension-config/wiki",
-            },
-          ],
-          footer: {
-            copyright: "Copyright 2026",
-            // if set to true, will move icons to splash page
-            showSocialIcons: false,
-            // for these links, use base var manually
-            // href: `${base}/`
-            firstColumn: {
-              title: "Links",
-              links: [{ label: "Home", href: `${base}/` }],
-            },
-            secondColumn: {
-              title: "Links",
-              links: [{ label: "Home", href: `${base}/` }],
-            },
-            thirdColumn: {
-              title: "Links",
-              links: [{ label: "Home", href: `${base}/` }],
-            },
-            fourthColumn: {
-              title: "Links",
-              links: [{ label: "Home", href: `${base}/` }],
-            },
+    UnoCSS(),
+    Icons({
+      sidebar: true,
+      extractSafelist: true,
+      starlight: {
+        title: "CSP Lua API Docs",
+        //editLink: {
+        //baseUrl: "https://github.com/lint069/csp-lua-api-docs/edit/main/",
+        //},
+        lastUpdated: true,
+        social: [
+          {
+            icon: "github",
+            label: "GitHub",
+            href: "https://github.com/lint069/csp-lua-api-docs",
           },
-        }),
-        starlightScrollToTop(),
-        starlightKbd({
-          // intentional
-          globalPicker: false,
-          types: [
-            { id: "mac", label: "macOS" },
-            { id: "windows", label: "Windows", default: true },
-          ],
-        }),
-      ],
-      sidebar: [
-        {
-          label: "Start Here",
-          items: [
-            { label: "About the SDK", slug: "guides/what-is-this" },
-            { label: "Getting Started", slug: "guides/getting-started" },
-          ],
+          {
+            icon: "discord",
+            label: "Discord",
+            href: "https://discord.gg/nM4Xkrt",
+          },
+        ],
+        //components: {
+        //Sidebar: "./src/components/SidebarFilter.astro",
+        //},
+        customCss: ["./src/css/style.css"],
+        expressiveCode: {
+          themes: ["dark-plus", "github-light"],
+          useStarlightDarkModeSwitch: true,
+          styleOverrides: {
+            borderRadius: "0.2rem",
+          },
         },
-        {
-          label: "Test",
-          autogenerate: { directory: "docsTest" },
-        },
-        {
-          label: "Primitives",
-          autogenerate: { directory: "primitives" },
-          collapsed: true,
-        },
-        {
-          label: "ac",
-          autogenerate: { directory: "ac" },
-          collapsed: true,
-        },
-        {
-          label: "display",
-          autogenerate: { directory: "display" },
-          collapsed: true,
-        },
-        {
-          label: "io",
-          autogenerate: { directory: "io" },
-          collapsed: true,
-        },
-        {
-          label: "math",
-          autogenerate: { directory: "math" },
-          collapsed: true,
-        },
-        {
-          label: "render",
-          autogenerate: { directory: "render" },
-          collapsed: true,
-        },
-        {
-          label: "ui",
-          autogenerate: { directory: "ui" },
-          collapsed: true,
-        },
-        {
-          label: "web",
-          autogenerate: { directory: "web" },
-          collapsed: true,
-        },
-        {
-          label: "miscellaneous",
-          autogenerate: { directory: "miscellaneous" },
-          collapsed: true,
-        },
-        {
-          label: "Community",
-          items: [
-            { label: "About this Project", slug: "community/about" },
-            { label: "Contributing Guide", slug: "community/contributing" },
-          ],
-        },
-      ],
+        plugins: [
+          starlightImageZoom(),
+          starlightLinksValidator({
+            errorOnRelativeLinks: true,
+          }),
+          starlightUiTweaks({
+            navbarLinks: [
+              {
+                label: "Wiki",
+                href: "https://github.com/ac-custom-shaders-patch/acc-extension-config/wiki",
+              },
+            ],
+            footer: {
+              copyright: "Copyright 2026",
+              // if set to true, will move icons to splash page
+              showSocialIcons: false,
+              // for these links, use base var manually
+              // href: `${base}/`
+              firstColumn: {
+                title: "Links",
+                links: [{ label: "Home", href: `${base}/` }],
+              },
+              secondColumn: {
+                title: "Links",
+                links: [{ label: "Home", href: `${base}/` }],
+              },
+              thirdColumn: {
+                title: "Links",
+                links: [{ label: "Home", href: `${base}/` }],
+              },
+              fourthColumn: {
+                title: "Links",
+                links: [{ label: "Home", href: `${base}/` }],
+              },
+            },
+          }),
+          starlightScrollToTop(),
+          starlightKbd({
+            // intentional
+            globalPicker: false,
+            types: [
+              { id: "mac", label: "macOS" },
+              { id: "windows", label: "Windows", default: true },
+            ],
+          }),
+        ],
+        sidebar: [
+          {
+            label: "Start Here",
+            items: [
+              {
+                icon: "i-material-symbols:360",
+                label: "About the SDK",
+                slug: "guides/what-is-this",
+              },
+              { label: "Getting Started", slug: "guides/getting-started" },
+            ],
+          },
+          {
+            label: "Test",
+            autogenerate: { directory: "docsTest" },
+          },
+          {
+            label: "Primitives",
+            autogenerate: { directory: "primitives" },
+            collapsed: true,
+          },
+          {
+            label: "ac",
+            autogenerate: { directory: "ac" },
+            collapsed: true,
+          },
+          {
+            label: "display",
+            autogenerate: { directory: "display" },
+            collapsed: true,
+          },
+          {
+            label: "io",
+            autogenerate: { directory: "io" },
+            collapsed: true,
+          },
+          {
+            label: "math",
+            autogenerate: { directory: "math" },
+            collapsed: true,
+          },
+          {
+            label: "render",
+            autogenerate: { directory: "render" },
+            collapsed: true,
+          },
+          {
+            label: "ui",
+            autogenerate: { directory: "ui" },
+            collapsed: true,
+          },
+          {
+            label: "web",
+            autogenerate: { directory: "web" },
+            collapsed: true,
+          },
+          {
+            label: "miscellaneous",
+            autogenerate: { directory: "miscellaneous" },
+            collapsed: true,
+          },
+          {
+            label: "Community",
+            items: [
+              { label: "About this Project", slug: "community/about" },
+              { label: "Contributing Guide", slug: "community/contributing" },
+            ],
+          },
+        ],
+      },
     }),
   ],
 });
