@@ -64,6 +64,7 @@ export default defineConfig({
       extractSafelist: true,
       starlight: {
         title: "CSP Lua API Docs",
+        // favicon: "/favicon.png",
         //editLink: {
         //baseUrl: "https://github.com/lint069/csp-lua-api-docs/edit/main/",
         //},
@@ -80,6 +81,10 @@ export default defineConfig({
             href: "https://discord.gg/nM4Xkrt",
           },
         ],
+        components: {
+          Sidebar: "./src/components/SidebarFilter.astro",
+          Footer: "./src/components/Footer.astro"
+        },
         customCss: ["./src/css/style.css"],
         expressiveCode: {
           themes: ["dark-plus", "github-light"],
@@ -100,29 +105,6 @@ export default defineConfig({
                 href: "https://github.com/ac-custom-shaders-patch/acc-extension-config/wiki",
               },
             ],
-            footer: {
-              copyright: "Copyright 2026",
-              // if set to true, will move icons to splash page
-              showSocialIcons: false,
-              // for these links, use base var manually
-              // href: `${base}/`
-              firstColumn: {
-                title: "Links",
-                links: [{ label: "Home", href: `${base}/` }],
-              },
-              secondColumn: {
-                title: "Links",
-                links: [{ label: "Home", href: `${base}/` }],
-              },
-              thirdColumn: {
-                title: "Links",
-                links: [{ label: "Home", href: `${base}/` }],
-              },
-              fourthColumn: {
-                title: "Links",
-                links: [{ label: "Home", href: `${base}/` }],
-              },
-            },
           }),
           starlightScrollToTop(),
           starlightKbd({

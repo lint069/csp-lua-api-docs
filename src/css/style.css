@@ -24,12 +24,12 @@
   --sl-color-white: #181819;
   --sl-color-gray-1: #262729;
   --sl-color-gray-2: #37383a;
-  --sl-color-gray-3: #515153;
+  --sl-color-gray-3: #5c5c5f;
   --sl-color-gray-4: #8e8a8a;
   --sl-color-gray-5: #bdbebe;
-  --sl-color-gray-6: #dbdbdb;
+  --sl-color-gray-6: #ffffff;
   --sl-color-gray-7: #f8f8f8;
-  --sl-color-black: #eeeeee;
+  --sl-color-black: #f1f1f1;
 }
 
 /* mathjax */
@@ -43,4 +43,10 @@ mjx-container svg {
   font-size: 0.75rem;
   letter-spacing: 0.05rem;
   opacity: 0.8;
+}
+
+.footer {
+  text-align: left;
+  padding: 0.3rem 0;
+  font-size: 0.75rem;
 }
