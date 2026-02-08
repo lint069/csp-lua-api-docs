@@ -12,21 +12,22 @@ import {
     Aside,
 } from "@astrojs/starlight/components";
 
-This tutorial walks you through the process of creating a basic utility app. 
+This documentation assumes you are already proficient with **Lua** or **LuaJIT**.
+The SDK is a professional toolset and does not cover foundational programming concepts.
+If you are new to the language, or to programming in general, it is recommended to study the following resources before proceeding:
+
+- [Lua.org](https://www.lua.org/pil/contents.html)
+- [Lua by Example](https://luabyexample.techplexlabs.com/)
+
+---
+
+This tutorial walks you through the process of creating a basic utility app.
 
 <Aside type="caution" title="Prerequisites">
-  Before starting, ensure you have:
-  - **Content Manager** installed.
-  - **Custom Shaders Patch**.
+  - Content Manager
+  - Custom Shaders Patch
 </Aside>
-<Aside type="danger" title="Lua">
-  This documentation assumes you are already proficient with **Lua** or **LuaJIT**. 
-  
-  The SDK is a professional toolset and does not cover foundational programming concepts.
-  If you are new to the language, or to programming in general, it is strongly recommended to study the following resources before proceeding:
-  - [Lua.org](https://www.lua.org/pil/contents.html)
-  - [Lua by Example](https://luabyexample.techplexlabs.com/)
-</Aside>
+
 
 ## Project Structure
 
@@ -137,6 +138,7 @@ While in a session, look for the Lua Debug app in the sidebar. This app provides
     that means you'll have to enable them. In Content Manager, navigate to `Settings > Assetto Corsa > System`.
     There will be a checkbox in the top-left for Developer apps, and you'll want to make sure it's checked.
 </Aside>
+
 <Aside type="tip" title="Live Reload">
     Most scripts will reload automatically when saving the file in your code editor.
 </Aside>
@@ -155,10 +157,13 @@ end
 ---
 
 <CardGrid>
+
   <Card title="Read Sim Data" icon="magnifier">
     Learn how to access car and track data in the [ac namespace](/ac/get-car/).
   </Card>
+
   <Card title="Build Interfaces" icon="add-document">
     Discover buttons, sliders, and canvases in the [ui namespace](/ui/button/).
   </Card>
+
 </CardGrid>

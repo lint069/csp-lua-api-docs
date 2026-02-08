@@ -88,7 +88,7 @@ export const stateCarProperties: StateProperty[] = [
     name: "ambientOcclusion",
     type: "number",
     description:
-      "Ambient occlusion value computed from prebaked data from track’s VAO patch. 0 for car fully shadowed (in a tunnel), 1 for car outside. Affected by WeatherFX adjustments.",
+      "Ambient occlusion value computed from prebaked data from track's VAO patch. 0 for car fully shadowed (in a tunnel), 1 for car outside. Affected by WeatherFX adjustments.",
   },
   {
     name: "angularVelocity",
@@ -134,7 +134,7 @@ export const stateCarProperties: StateProperty[] = [
     name: "bestLapFromGhost",
     type: "boolean",
     description:
-      "If true, lapTimeMs is not from this session, but from the ghost player is racing against. Can’t be true online.",
+      "If true, lapTimeMs is not from this session, but from the ghost player is racing against. Can't be true online.",
   },
   {
     name: "bestLapSplits",
@@ -462,7 +462,7 @@ export const stateCarProperties: StateProperty[] = [
     name: "extrapolatedMovement",
     type: "boolean",
     description:
-      "If set to false and you’re adding objects moving close to cars, use ac.CarState.timestamp to estimate dt.",
+      "If set to false and you're adding objects moving close to cars, use ac.CarState.timestamp to estimate dt.",
   },
   {
     name: "ffbBase",
@@ -748,7 +748,7 @@ export const stateCarProperties: StateProperty[] = [
     name: "isHidingLabels",
     type: "boolean",
     description:
-      "If you’re drawing a map, don’t show cars with this flag on. Flag can change during the race",
+      "If you're drawing a map, don't show cars with this flag on. Flag can change during the race",
   },
   {
     name: "isKunosCar",
@@ -927,7 +927,7 @@ export const stateCarProperties: StateProperty[] = [
     name: "lowBeams",
     type: "boolean",
     description:
-      "true if low beams switch is currently active (doesn’t depend on the state of headlights, just on the switch state).",
+      "true if low beams switch is currently active (doesn't depend on the state of headlights, just on the switch state).",
   },
   {
     name: "manualPitsSpeedLimiterEnabled",
@@ -1034,7 +1034,7 @@ export const stateCarProperties: StateProperty[] = [
     name: "poweredWheelsSpeed",
     type: "number",
     description:
-      "Can be used for speedometers if they’re not using GPS and instead use powered wheels, value in km/h.",
+      "Can be used for speedometers if they're not using GPS and instead use powered wheels, value in km/h.",
   },
   {
     name: "prefersImperialUnits",
@@ -1050,7 +1050,7 @@ export const stateCarProperties: StateProperty[] = [
     name: "previousSectorTime",
     type: "integer",
     description:
-      "Time of previous split in milliseconds, or 0 if it’s a first split.",
+      "Time of previous split in milliseconds, or 0 if it's a first split.",
   },
   {
     name: "racePosition",
@@ -1062,7 +1062,7 @@ export const stateCarProperties: StateProperty[] = [
     name: "rawAmbientOcclusion",
     type: "number",
     description:
-      "Ambient occlusion value computed from prebaked data from track’s VAO patch. Not affected by WeatherFX adjustments.",
+      "Ambient occlusion value computed from prebaked data from track's VAO patch. Not affected by WeatherFX adjustments.",
   },
   {
     name: "resetCounter",
