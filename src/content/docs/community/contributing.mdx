@@ -221,3 +221,51 @@ sidebar:
 
 Remove the badge once the page meets the documentation standards described here.
 </Aside>
+
+## Contribution Workflow
+
+Submissions are handled through the GitHub fork and pull request model.
+Direct changes to the main repository are reserved for maintainers.
+
+<Aside type="tip" title="Want to become a maintainer?">
+</Aside>
+
+<Steps>
+
+1.  ##### Steps
+
+    <Aside type="caution" title="Nothing Here">
+    </Aside>
+
+
+</Steps>
+
+<Aside type="caution" title="Pre-commit Validation">
+  Before committing any changes, run the build script to ensure there are no syntax errors or broken links.
+  The project uses a link validator that will cause the build to fail if any internal references are incorrect.
+
+  ```bash
+  npm run build
+  ```
+</Aside>
+<Aside type="tip" title="Internal Linking">
+  When linking to other pages within the documentation, use absolute paths starting from the namespace folder.
+  Every link must end with a trailing forward slash. Do not include the `.mdx` extension or relative path segments like `../`.
+
+  ```diff lang="mdx" title=".mdx"
+  - [StateCar](./objects/state-car.mdx)
+  + [StateCar](/ac/objects/state-car/)
+  + [CornerFlags](/ui/enums/corner-flags/)
+  + [ui.drawCircleFilled](/ui/draw-circle-filled/)
+  ```
+
+  The same also goes for other files in the repository. Use the established aliases to ensure imports remain functional regardless
+  of the file's location in the directory. In this case:
+
+  ```diff lang="mdx" title=".mdx"
+  - import Component from "../../components/ourComponent.astro"
+  + import Component from "@components/ourComponent.astro"
+  + import Logo from "@assets/ourLogo.png"
+  + import Registry from "@data/ourRegistry.json"
+  ```
+</Aside>
