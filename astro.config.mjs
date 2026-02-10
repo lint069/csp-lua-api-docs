@@ -83,7 +83,7 @@ export default defineConfig({
         ],
         components: {
           Sidebar: "./src/components/SidebarFilter.astro",
-          Footer: "./src/components/Footer.astro"
+          Footer: "./src/components/Footer.astro",
         },
         customCss: ["./src/css/style.css"],
         expressiveCode: {
@@ -129,8 +129,8 @@ export default defineConfig({
             ],
           },
           {
-            label: "Test",
-            autogenerate: { directory: "docsTest" },
+            label: "Internal",
+            autogenerate: { directory: "internal" },
           },
           {
             label: "Primitives",
