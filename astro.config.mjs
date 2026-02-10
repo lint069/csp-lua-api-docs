@@ -60,7 +60,7 @@ export default defineConfig({
   integrations: [
     UnoCSS(),
     Icons({
-      sidebar: true,
+      sidebar: false,
       extractSafelist: true,
       starlight: {
         title: "CSP Lua API Docs",
@@ -82,7 +82,7 @@ export default defineConfig({
           },
         ],
         components: {
-          Sidebar: "./src/components/SidebarFilter.astro",
+          Sidebar: "./src/components/Sidebar.astro",
           Footer: "./src/components/Footer.astro",
         },
         customCss: ["./src/css/style.css"],
@@ -121,7 +121,7 @@ export default defineConfig({
             label: "Start Here",
             items: [
               {
-                icon: "i-material-symbols:360",
+                icon: "i-material-symbols:info-outline",
                 label: "About the SDK",
                 slug: "guides/what-is-this",
               },
