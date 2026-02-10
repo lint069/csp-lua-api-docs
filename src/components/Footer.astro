@@ -1,9 +1,33 @@
 ---
+import type { Props } from "@astrojs/starlight/props";
+import Default from "@astrojs/starlight/components/Footer.astro";
 ---
 
-<div>
-  <hr style="border: none; border-top: 1px solid #303030; margin-top:12rem;" />
-  <footer class="footer">
-    © 2026 lint0 – Licensed under the MIT License.
-  </footer>
-</div>
+<Default {...Astro.props} />
+
+<footer class="custom-license">
+  <p>
+    © 2026 lint0 - Licensed under
+    <a
+      href="https://github.com/lint069/csp-lua-api-docs/blob/main/LICENSE"
+      target="_blank">MIT</a
+    >
+  </p>
+</footer>
+
+<style>
+  .custom-license {
+    margin-top: 3rem;
+    padding-top: 1rem;
+    border-top: 1px solid var(--sl-color-gray-5);
+    font-size: var(--sl-text-sm);
+    color: var(--sl-color-gray-3);
+  }
+  a {
+    color: var(--sl-color-text-accent) !important;
+    text-decoration: none;
+  }
+  a:hover {
+    text-decoration: underline;
+  }
+</style>
