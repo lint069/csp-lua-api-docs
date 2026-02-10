@@ -1,8 +1,7 @@
 @import "starlight-ui-tweaks/styles";
 @layer base, starlight, theme, components, utilities;
 
-/* Dark mode colors. */
-:root {
+:root[data-theme="dark"] {
   --sl-color-accent-low: #0c204f;
   --sl-color-accent: #104eff;
   --sl-color-accent-high: #abc4ff; /* main highlighting */
@@ -14,9 +13,11 @@
   --sl-color-gray-5: #37383a; /* outlines / inline code */
   --sl-color-gray-6: #212225; /* sidebar */
   --sl-color-black: #161618; /* main page background */
+
+  --card-mix-color: white;
+  --card-mix-amount: 2%;
 }
 
-/* Light mode colors. */
 :root[data-theme="light"] {
   --sl-color-accent-low: #c3d7ff;
   --sl-color-accent: #2b63ff;
@@ -30,6 +31,9 @@
   --sl-color-gray-6: #ffffff;
   --sl-color-gray-7: #f8f8f8;
   --sl-color-black: #f1f1f1;
+
+  --card-mix-color: black;
+  --card-mix-amount: 3.5%;
 }
 
 /* mathjax */
@@ -43,6 +47,15 @@ mjx-container svg {
   font-size: 0.75rem;
   letter-spacing: 0.05rem;
   opacity: 0.8;
+}
+
+.card {
+  border-radius: 0.3rem;
+  background-color: color-mix(
+    in srgb,
+    var(--sl-color-black) calc(100% - var(--card-mix-amount)),
+    var(--card-mix-color) var(--card-mix-amount)
+  );
 }
 
 /* inline code */

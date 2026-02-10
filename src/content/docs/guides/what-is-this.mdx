@@ -1,5 +1,5 @@
 ---
-title: What is the SDK?
+title: CSP Lua API Overview
 description: An overview of the history, authors, and capabilities of the Assetto Corsa Lua SDK.
 ---
 
@@ -15,11 +15,17 @@ The Custom Shaders Patch (CSP) Lua API is a massive extension of the Assetto Cor
 It allows developers to write high-performance logic that interacts with almost every system in the game,
 from the way light bounces off a car's paint to the way AI drivers navigate a track.
 
+<Aside type="note" title="About these Docs">
+  This documentation is a community driven effort to catalog the numerous
+  functions and types found within the SDK. It aims to provide a clear reference
+  for developers wanting to get their hands dirty with the API.
+</Aside>
+
 ## Behind the Patch
 
-<Card title="Ilja Jusupov (x4fab)" icon="pencil">
+<Card title="Ilja Jusupov (x4fab)">
   The CSP Lua SDK is developed and maintained by Ilja Jusupov, also known as
-  @x4fab. As the lead developer of Custom Shaders Patch and Content Manager,
+  x4fab. As the lead developer of Custom Shaders Patch and Content Manager,
   Ilja transformed Assetto Corsa from a static 2014 racing simulator into a
   dynamic, modern platform. The Lua API is his solution for allowing the
   community to add features that would otherwise require access to the game's
@@ -32,15 +38,15 @@ Assetto Corsa was originally built using C++ and Python. However,
 Python in AC is limited to basic UI and some telemetry data. CSP introduces LuaJIT for several key reasons:
 
 <CardGrid>
-  <Card title="Performance" icon="rocket">
+  <Card title="Performance">
     LuaJIT is significantly faster than standard Python, making it capable of
     running logic within the physics engine without causing lag.
   </Card>
-  <Card title="Direct Memory Access" icon="setting">
+  <Card title="Direct Memory Access">
     The SDK uses Foreign Function Interfaces to communicate directly to the
     game's memory, allowing for integration with the engine's core.
   </Card>
-  <Card title="Hot Reloading" icon="approve-check">
+  <Card title="Hot Reloading">
     Unlike C++ plugins, Lua scripts can be reloaded instantly while the game is
     running, drastically speeding up development time.
   </Card>
@@ -54,14 +60,6 @@ The scope of the API is divided into several contexts. Depending on where your s
 - New Game Modes
 - Physics Modifications
 - Visual FX: Scripted lights, dynamic weather behavior, and animated track elements.
-
-<Aside type="note" title="About these Docs">
-  This documentation is a community-driven effort to catalog the numerous
-  functions and types found within the SDK. It aims to provide a clear reference
-  for developers wanting to get their hands dirty with the API.
-</Aside>
-
----
 
 ## Technical Foundation
 
