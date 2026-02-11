@@ -58,11 +58,40 @@ const usedLetters = new Set(
 const groupedEntries = getGrouped(nsDocs);
 
 //
-// manually split columns so the layout is deterministic
-// calculate based on the number of groups
-const midPoint = Math.ceil(groupedEntries.length / 2);
-const leftColumn = groupedEntries.slice(0, midPoint);
-const rightColumn = groupedEntries.slice(midPoint);
+// weighted splitting
+//
+
+const totalWeight = groupedEntries.reduce((acc, group) => {
+  return acc + 2 + group.items.length;
+}, 0);
+
+const halfWeight = totalWeight / 2;
+let currentWeight = 0;
+let splitIndex = 0;
+
+//
+// find index that best balances weight between columns
+for (let i = 0; i < groupedEntries.length; i++) {
+  const groupWeight = 2 + groupedEntries[i].items.length;
+
+  // if adding this group makes column significantly larger than half,
+  // check if it was better to stop at prev. group
+  if (currentWeight + groupWeight > halfWeight) {
+    const diffWithCurrent = Math.abs(
+      halfWeight - (currentWeight + groupWeight),
+    );
+    const diffWithoutCurrent = Math.abs(halfWeight - currentWeight);
+
+    splitIndex = diffWithCurrent < diffWithoutCurrent ? i + 1 : i;
+    break;
+  }
+
+  currentWeight += groupWeight;
+  splitIndex = i + 1;
+}
+
+const leftColumn = groupedEntries.slice(0, splitIndex);
+const rightColumn = groupedEntries.slice(splitIndex);
 ---
 
 <div class="ns-index-wrapper">
@@ -177,6 +206,7 @@ const rightColumn = groupedEntries.slice(midPoint);
   .ns-columns {
     display: flex;
     gap: 3rem;
+    align-items: flex-start;
   }
 
   .ns-col {
