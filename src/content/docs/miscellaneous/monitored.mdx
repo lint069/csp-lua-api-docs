@@ -1,0 +1,31 @@
+---
+title: __monitored
+description: Global variable
+---
+
+## Usage Patterns
+
+```lua
+if __monitored then
+    ac.debug('key', value)
+end
+```
+
+## Description
+
+`true`, if app is being viewed in Lua Debug app, false otherwise.  
+Could be a good condition for calling `ac.debug()`, if you want your script to run as fast as possible.
+
+## Examples
+
+```lua
+function script.windowMain()
+    -- This is executed even if you're not viewing the app in the Lua Debug app.
+    ac.debug('key', value)
+
+    local isWindowHovered = ui.windowHovered(ui.HoveredFlags.None)
+    if __monitored then
+        ac.debug('isWindowHovered', isWindowHovered)
+    end
+end
+```
