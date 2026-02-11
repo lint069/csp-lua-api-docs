@@ -1,0 +1,18 @@
+---
+title: class.emmy()
+description: ...
+sidebar:
+  badge:
+    text: Incomplete
+    variant: caution
+---
+
+import { Aside } from "@astrojs/starlight/components";
+
+<Aside type="note" title="No-op">
+  This function does absolutely nothing at runtime. It is a no-op helper
+  designed specifically for [EmmyLua](https://github.com/emmylua). It allows the
+  editor to understand that a class table is also a constructor function,
+  providing proper autocomplete and type-checking when writing `local myObj =
+  MyClass()`.
+</Aside>

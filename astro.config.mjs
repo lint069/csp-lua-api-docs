@@ -168,6 +168,11 @@ export default defineConfig({
             collapsed: true,
           },
           {
+            label: "system",
+            autogenerate: { directory: "system" },
+            collapsed: true,
+          },
+          {
             label: "ui",
             autogenerate: { directory: "ui" },
             collapsed: true,
