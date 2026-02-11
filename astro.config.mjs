@@ -158,6 +158,11 @@ export default defineConfig({
             collapsed: true,
           },
           {
+            label: "physics",
+            autogenerate: { directory: "physics" },
+            collapsed: true,
+          },
+          {
             label: "render",
             autogenerate: { directory: "render" },
             collapsed: true,

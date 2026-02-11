@@ -69,3 +69,9 @@ code:not(pre code) {
   padding: 0.3rem 0;
   font-size: 0.75rem;
 }
+
+/* sidebar icons */
+:root {
+  --spi-sidebar-icon-size: 1.25rem;
+  --spi-sidebar-icon-gap: 0.25rem;
+}
