@@ -64,7 +64,7 @@ export default defineConfig({
       extractSafelist: true,
       starlight: {
         title: "CSP Lua API Docs",
-        // favicon: "/favicon.png",
+        favicon: "favicon.png",
         //editLink: {
         //baseUrl: "https://github.com/lint069/csp-lua-api-docs/edit/main/",
         //},
