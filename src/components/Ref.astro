@@ -1,196 +1,189 @@
 ---
-import { getCollection } from "astro:content";
-
-interface Props {
-  id: string;
-  label?: string;
-}
+import { getEntry } from "astro:content";
 
 const { id, label } = Astro.props;
-const allDocs = await getCollection("docs");
 
-// find the document matching the id or filename
-const entry = allDocs.find((doc) => doc.id === id || doc.id === `${id}.mdx`);
+const cleanId = id.replace(/^\/|\/$/g, "");
+const entry =
+  (await getEntry("docs", cleanId)) ||
+  (await getEntry("docs", `${cleanId}.mdx`)) ||
+  (await getEntry("docs", `${cleanId}.md`));
 
-const title = entry?.data.title;
-const description = entry?.data.description;
-const badge = entry?.data.sidebar?.badge;
+const base = import.meta.env.BASE_URL.replace(/\/$/, "");
+const href = `${base}/${cleanId}/`.replace(/\/+/g, "/");
 
-// handle base url for github pages or nested paths
-const baseUrl = import.meta.env.BASE_URL.replace(/\/$/, "");
-const href = `${baseUrl}/${id}/`.replace(/\/+/g, "/");
+const badge = entry?.data?.sidebar?.badge;
+const variant = badge?.variant || "default";
 ---
 
-{
-  !entry ? (
-    <span class="ref-error">
-      {label || id}
-      <span class="error-tooltip">reference not found</span>
-    </span>
-  ) : (
-    <span class="ref-container">
-      <a href={href} class="ref-link">
-        {label || title}
-      </a>
-      <span class="preview-card" role="tooltip">
-        <span class="card-header">
-          <span class="card-title">{title}</span>
-          {badge && <span class={`badge ${badge.variant}`}>{badge.text}</span>}
+<span class="ref-container">
+  {
+    entry ? (
+      <>
+        <a href={href} class="ref-link">
+          {label || entry.data.title}
+        </a>
+        <span
+          class="ref-tooltip"
+          role="tooltip"
+          data-variant={variant}
+          data-has-badge={!!badge}
+        >
+          {badge && <span class="ref-status-bar" />}
+          <span class="tooltip-title">{entry.data.title}</span>
+          <span class="tooltip-desc">{entry.data.description}</span>
         </span>
-        {description && <span class="card-body">{description}</span>}
-      </span>
-    </span>
-  )
-}
+      </>
+    ) : (
+      <>
+        <span class="ref-link ref-error-link">{label || id}</span>
+        <span
+          class="ref-tooltip"
+          role="tooltip"
+          data-variant="danger"
+          data-has-badge="true"
+        >
+          <span class="ref-status-bar" />
+          <span class="tooltip-title">Broken reference</span>
+          <span class="tooltip-desc">
+            No docs page exists for <code class="ref-code">{cleanId}</code>.
+            Rename the reference or create{" "}
+            <code class="ref-code">{cleanId}.mdx</code>.
+          </span>
+        </span>
+      </>
+    )
+  }
+</span>
 
 <style>
-  /* container is inline to stay within text flow */
   .ref-container {
     position: relative;
     display: inline-block;
-    vertical-align: baseline;
+    text-indent: 0;
   }
 
-  .ref-container:hover {
-    z-index: 1000;
-  }
-
-  /* clean link with subtle persistent underline */
   .ref-link {
+    /* style */
     color: var(--sl-color-accent-high);
     text-decoration: none;
     border-bottom: 1px solid
       color-mix(in srgb, var(--sl-color-accent-high), transparent 70%);
-    transition: border-color 0.1s ease;
-    /* prevents the anchor itself from wrapping to next line */
     white-space: nowrap;
+
+    /* visual hover */
+    padding: 0 2px;
+    border-radius: 2px;
+    transition:
+      border-color 0.15s ease,
+      background-color 0.15s ease;
   }
 
   .ref-link:hover {
     border-bottom-color: var(--sl-color-accent-high);
+    background-color: color-mix(
+      in srgb,
+      var(--sl-color-accent-high),
+      transparent 92%
+    );
+    cursor: pointer;
   }
 
-  /* wikipedia-style article preview card */
-  .preview-card {
+  /* invalid link */
+  .ref-error-link {
+    color: var(--sl-color-red-high);
+    border-bottom: 1px dashed var(--sl-color-red-high);
+    font-family: var(--sl-font-mono);
+    font-size: 0.9em;
+  }
+
+  .ref-tooltip {
+    /* layout */
     position: absolute;
-    /* centered horizontally relative to the word */
+    bottom: calc(100% + 10px);
     left: 50%;
-    bottom: calc(100% + 12px);
     transform: translateX(-50%) translateY(4px);
+    width: 240px;
+    z-index: 1000;
 
-    width: 280px;
-    padding: 0.8rem 1rem;
-    display: flex;
-    flex-direction: column;
-    gap: 0.4rem;
-
-    background-color: var(--sl-color-bg-nav);
+    /* vis */
+    padding: 0.8rem;
+    background: var(--sl-color-bg-nav);
     border: 1px solid var(--sl-color-gray-5);
-    border-radius: 2px;
-    box-shadow: 0 4px 16px rgba(0, 0, 0, 0.4);
+    box-shadow:
+      0 10px 15px -3px rgba(0, 0, 0, 0.4),
+      0 4px 6px -2px rgba(0, 0, 0, 0.5);
+    border-radius: 4px;
+    overflow: hidden;
 
-    /* hidden by default */
+    /* behaviour */
     visibility: hidden;
     opacity: 0;
-    pointer-events: none;
     transition:
-      opacity 0.15s ease,
-      transform 0.15s ease;
-    z-index: 10000000;
+      opacity 0.2s ease,
+      transform 0.2s ease;
+    pointer-events: none;
 
-    /* card text formatting */
+    /* style */
+    font-size: var(--sl-text-xs);
+    line-height: 1.5;
     white-space: normal;
-    line-height: 1.4;
     text-align: left;
-    text-decoration: none;
   }
 
-  /* vertical anchor arrow */
-  .preview-card::after {
-    content: "";
+  /* offset content only if badge exists */
+  .ref-tooltip[data-has-badge="true"] {
+    padding-top: 1.1rem;
+  }
+
+  /* status + mappings */
+  .ref-status-bar {
     position: absolute;
-    top: 100%;
-    left: 50%;
-    transform: translateX(-50%);
-    border: 6px solid transparent;
-    border-top-color: var(--sl-color-gray-5);
+    top: 0;
+    left: 0;
+    right: 0;
+    height: 4px;
+    background-color: var(--sl-color-gray-4);
+  }
+  .ref-tooltip[data-variant="caution"] .ref-status-bar {
+    background-color: var(--sl-color-orange);
+  }
+  .ref-tooltip[data-variant="danger"] .ref-status-bar {
+    background-color: var(--sl-color-red);
+  }
+  .ref-tooltip[data-variant="success"] .ref-status-bar {
+    background-color: var(--sl-color-green);
+  }
+  .ref-tooltip[data-variant="tip"] .ref-status-bar {
+    background-color: var(--sl-color-blue);
+  }
+  .ref-tooltip[data-variant="note"] .ref-status-bar {
+    background-color: var(--sl-color-purple);
   }
 
-  /* reveal on hover */
-  .ref-container:hover .preview-card {
+  .ref-container:hover .ref-tooltip {
     visibility: visible;
     opacity: 1;
     transform: translateX(-50%) translateY(0);
   }
 
-  /* card internal layout */
-  .card-header {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    gap: 0.5rem;
-    margin-bottom: 0.1rem;
-  }
-
-  .card-title {
-    font-size: 0.95rem;
+  .tooltip-title {
+    display: block;
     font-weight: 700;
     color: var(--sl-color-white);
+    margin-bottom: 0.25rem;
   }
 
-  .card-body {
-    font-size: 0.8rem;
-    color: var(--sl-color-gray-3);
-    /* clamps desc. to 3 lines */
+  .tooltip-desc {
     display: -webkit-box;
     -webkit-line-clamp: 3;
     -webkit-box-orient: vertical;
     overflow: hidden;
+    color: var(--sl-color-gray-3);
   }
 
-  /* starlight badge overrides for lowercase style */
-  .badge {
-    font-size: 0.6rem;
-    padding: 0px 5px;
-    border-radius: 2px;
-    text-transform: lowercase;
-    font-weight: 600;
-    background: var(--sl-color-gray-6);
-    color: var(--sl-color-gray-2);
-    border: 1px solid var(--sl-color-gray-5);
-  }
-  .badge.caution {
-    color: var(--sl-color-orange);
-    border-color: var(--sl-color-orange-low);
-  }
-  .badge.danger {
-    color: var(--sl-color-red);
-    border-color: var(--sl-color-red-low);
-  }
-
-  /* error handling for broken documentation links */
-  .ref-error {
-    color: var(--sl-color-red);
-    text-decoration: underline wavy var(--sl-color-red-low);
-    cursor: help;
-    position: relative;
-    display: inline-block;
-  }
-
-  .error-tooltip {
-    visibility: hidden;
-    position: absolute;
-    bottom: 110%;
-    left: 0;
-    background: var(--sl-color-red);
-    color: white;
-    padding: 0.2rem 0.5rem;
-    font-size: 0.7rem;
-    border-radius: 2px;
-    white-space: nowrap;
-  }
-
-  .ref-error:hover .error-tooltip {
-    visibility: visible;
+  .ref-code {
+    color: var(--sl-color-red-high);
+    font-family: var(--sl-font-mono);
   }
 </style>

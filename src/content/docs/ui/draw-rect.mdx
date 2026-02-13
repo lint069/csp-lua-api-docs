@@ -4,6 +4,7 @@ description: Draws a rectangle on the UI canvas.
 ---
 
 import { Tabs, TabItem } from "@astrojs/starlight/components";
+import Ref from "@components/Ref.astro";
 
 Draws an unfilled rectangle outline between two defined points on the screen or canvas.
 
@@ -20,7 +21,7 @@ The shape is defined by an axis-aligned bounding box calculated from points `p1`
 
 :::note[Filled Rectangles]
 This function only draws the outline.
-If you require a solid shape, use [`ui.drawRectFilled`](/ui/draw-rect-filled/) instead.
+If you require a solid shape, use <Ref id="/ui/draw-rect-filled" /> instead.
 :::
 
 ## Parameters
