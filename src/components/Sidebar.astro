@@ -113,6 +113,42 @@ Astro.locals.starlightRoute.sidebar = injectIcons(sidebar);
   :global(.sidebar-content > ul) {
     margin-top: 0 !important;
   }
+
+  /*
+  // status light badge transformation
+  // converts starlight badges into small colored dots
+  */
+  :global(.sidebar-content .sl-badge) {
+    display: inline-block !important;
+    padding: 0 !important;
+    min-width: 7px !important;
+    width: 7px !important;
+    height: 7px !important;
+    border-radius: 50% !important;
+    border: none !important;
+    margin-left: 0.5rem !important;
+    font-size: 0 !important;
+    line-height: 0 !important;
+    vertical-align: middle;
+    margin-top: -2px;
+  }
+
+  /* color mappings */
+  :global(.sidebar-content .sl-badge.caution) {
+    background-color: var(--sl-color-orange) !important;
+  }
+  :global(.sidebar-content .sl-badge.danger) {
+    background-color: var(--sl-color-red) !important;
+  }
+  :global(.sidebar-content .sl-badge.success) {
+    background-color: var(--sl-color-green) !important;
+  }
+  :global(.sidebar-content .sl-badge.tip) {
+    background-color: var(--sl-color-blue) !important;
+  }
+  :global(.sidebar-content .sl-badge.note) {
+    background-color: var(--sl-color-purple) !important;
+  }
 </style>
 
 <script>
@@ -137,6 +173,13 @@ Astro.locals.starlightRoute.sidebar = injectIcons(sidebar);
     const initialGroupStates = new Map(
       groups.map((g) => [g, (g as HTMLDetailsElement).open]),
     );
+
+    //
+    // convert badge text to native tooltips
+    document.querySelectorAll(".sidebar-content .sl-badge").forEach((badge) => {
+      const text = badge.textContent;
+      if (text) badge.setAttribute("title", text);
+    });
 
     //
     // core filter logic
