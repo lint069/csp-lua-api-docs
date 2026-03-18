@@ -1,15 +1,23 @@
 ---
 title: nan
-description: ...
-sidebar:
-  badge:
-    text: Incomplete
-    variant: caution
+description: math.nan
 ---
 
-import { Aside } from "@astrojs/starlight/components";
+## Signature
 
-<Aside type="caution" title="Work in Progress">
-  This page is a stub and is currently being drafted. Information here may be
-  incomplete or subject to change.
-</Aside>
+```lua
+math.nan
+```
+
+## Description
+
+A constant representing NaN (Not a Number). NaN is the result of undefined numeric operations like `0 / 0`.
+NaN is never equal to itself or any other number. Use [`math.isnan()`](/math/is-nan/) to check for it.
+
+## Examples
+
+```lua
+local nan = 0 / 0
+
+ac.debug('nantest', nan ~= nan) -- true
+```

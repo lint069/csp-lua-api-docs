@@ -1,15 +1,33 @@
 ---
 title: isnan
-description: ...
-sidebar:
-  badge:
-    text: Incomplete
-    variant: caution
+description: math.isnan()
 ---
 
-import { Aside } from "@astrojs/starlight/components";
+## Signature
 
-<Aside type="caution" title="Work in Progress">
-  This page is a stub and is currently being drafted. Information here may be
-  incomplete or subject to change.
-</Aside>
+```lua
+math.isnan(x)
+```
+
+## Description
+
+Checks if a value is NaN (Not a Number).
+
+## Parameters
+
+| Parameter | Type     | Required | Description         |
+| --------- | -------- | -------- | ------------------- |
+| x         | `number` | Yes      | The value to check. |
+
+## Return Values
+
+| Type      | Description                                    |
+| --------- | ---------------------------------------------- |
+| `boolean` | `true` if the value isn't a number, `false` otherwise. |
+
+## Examples
+
+```lua
+math.isnan(69514) -- false
+math.isnan(math.nan) -- true
+```

@@ -1,15 +1,21 @@
 ---
 title: tau
-description: ...
-sidebar:
-  badge:
-    text: Incomplete
-    variant: caution
+description: math.tau
 ---
 
-import { Aside } from "@astrojs/starlight/components";
+## Signature
 
-<Aside type="caution" title="Work in Progress">
-  This page is a stub and is currently being drafted. Information here may be
-  incomplete or subject to change.
-</Aside>
+```lua
+math.tau
+```
+
+## Description
+
+A constant equal to 2π (~6.28). Equivalent to writing `math.pi * 2`. Useful for working with full rotations in radians.
+
+## Examples
+
+```lua
+ui.pathArcTo(vec2(50, 50), 20, 0, math.tau)
+ui.pathStroke(rgbm.colors.white)
+```

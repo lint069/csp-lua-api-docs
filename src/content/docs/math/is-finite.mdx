@@ -1,15 +1,33 @@
 ---
 title: isfinite
-description: ...
-sidebar:
-  badge:
-    text: Incomplete
-    variant: caution
+description: math.isfinite()
 ---
 
-import { Aside } from "@astrojs/starlight/components";
+## Signature
 
-<Aside type="caution" title="Work in Progress">
-  This page is a stub and is currently being drafted. Information here may be
-  incomplete or subject to change.
-</Aside>
+```lua
+math.isfinite(x)
+```
+
+## Description
+
+Checks if a number is finite (not infinity and not NaN).
+
+## Parameters
+
+| Parameter | Type     | Required | Description          |
+| --------- | -------- | -------- | -------------------- |
+| x         | `number` | Yes      | The number to check. |
+
+## Return Values
+
+| Type      | Description                                        |
+| --------- | -------------------------------------------------- |
+| `boolean` | `true` if the number is finite, `false` otherwise. |
+
+## Examples
+
+```lua
+math.isfinite(101969285) -- true
+math.isfinite(math.huge) -- false
+```
