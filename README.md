@@ -11,9 +11,9 @@ Check out [`CONTRIBUTING.md`](https://github.com/lint069/csp-lua-api-docs/blob/m
 
 ## Authors
 
-- lint0 - wallpaperengineman@gmail.com  
+- [lint0](https://www.github.com/lint069)
 - Chris
 
 ## Acknowledgments
 
-Big thanks to [@x4fab](https://github.com/gro-ove) for providing the Lua SDK.
+Big thanks to [x4fab](https://github.com/gro-ove) for providing the Lua SDK.
