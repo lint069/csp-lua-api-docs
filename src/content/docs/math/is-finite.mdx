@@ -3,31 +3,28 @@ title: isfinite
 description: math.isfinite()
 ---
 
-## Signature
-
 ```lua
 math.isfinite(x)
 ```
 
-## Description
+Checks if the given number `x` is finite (not infinite or NaN).
 
-Checks if a number is finite (not infinity and not NaN).
-
-## Parameters
+### Parameters
 
 | Parameter | Type     | Required | Description          |
 | --------- | -------- | -------- | -------------------- |
 | x         | `number` | Yes      | The number to check. |
 
-## Return Values
+### Return Values
 
 | Type      | Description                                        |
 | --------- | -------------------------------------------------- |
 | `boolean` | `true` if the number is finite, `false` otherwise. |
 
-## Examples
+### Examples
 
 ```lua
 math.isfinite(101969285) -- true
 math.isfinite(math.huge) -- false
+math.isfinite(math.nan) -- false
 ```

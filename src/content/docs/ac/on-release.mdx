@@ -43,7 +43,7 @@ end, myData)
 </TabItem>
 </Tabs>
 
-## Description
+### Description
 
 The `ac.onRelease` function allows you to hook into the script lifecycle.
 When you save a file in your editor, CSP triggers a hot-reload which unloads the current script instance before starting the new one.
@@ -53,14 +53,14 @@ If you provide an item as the second argument, CSP stores it with a weak referen
 This ensures that the documentation doesn't accidentally prevent the object from being garbage collected.
 If the object naturally leaves memory during script execution, the associated cleanup callback is automatically discarded.
 
-## Parameters
+### Parameters
 
 | Parameter  | Type       | Required | Description                                                                   |
 | :--------- | :--------- | :------- | :---------------------------------------------------------------------------- |
 | `callback` | `function` | Yes      | The function to run on release. It receives the `item` as its first argument. |
 | `item`     | `any`      | No       | An optional object to pass to the callback, stored using a weak reference.    |
 
-## Examples
+### Examples
 
 <Tabs>
 <TabItem label="Material Cleanup">

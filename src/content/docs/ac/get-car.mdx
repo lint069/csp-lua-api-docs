@@ -7,13 +7,13 @@ import { Tabs, TabItem } from "@astrojs/starlight/components";
 
 Returns a reference to a car's state structure. This is the starting point for almost any script interacting with vehicles.
 
-## Signature
+### Signature
 
 ```lua
 ac.getCar(index)
 ```
 
-## Description
+### Description
 
 This function provides access to the `ac.StateCar` object for a specific vehicle in the session. Vehicle indices are 0-based.
 
@@ -21,7 +21,7 @@ This function provides access to the `ac.StateCar` object for a specific vehicle
 The player's car is always at index `0`. In multiplayer or races with AI, other cars will occupy indices `1` through `N`.
 :::
 
-## Parameters
+### Parameters
 
 | Parameter | Type      | Required | Default | Description                   |
 | --------- | --------- | -------- | ------- | ----------------------------- |
@@ -38,7 +38,7 @@ The player's car is always at index `0`. In multiplayer or races with AI, other 
 - **Performance:** Calling `ac.getCar` is extremely cheap (it returns a pointer to a pre-allocated FFI struct). However, it is still best practice to cache the reference if you use it many times in a single loop.
 - **Thread Safety:** In physics scripts, this data is updated at the physics rate. In UI scripts, it is updated at the frame rate.
 
-## Examples
+### Examples
 
 <Tabs>
 <TabItem label="Check Player Speed">

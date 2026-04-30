@@ -16,13 +16,13 @@ The primary function for retrieving the global state of the simulation.
 It returns an [`ac.StateSim`](/ac/objects/state-sim/) object containing everything
 from graphics settings to weather conditions and session timing.
 
-## Signature
+### Signature
 
 ```lua
 local sim = ac.getSim()
 ```
 
-## Description
+### Description
 
 `ac.getSim()` provides a reference to a persistent FFI structure. This structure is updated once per graphics frame. It is the central source of truth for the environment, camera, and session progress.
 
@@ -39,7 +39,7 @@ local sim = ac.getSim()
 
 ---
 
-## Examples
+### Examples
 
 <Tabs>
 <TabItem label="Time Display">

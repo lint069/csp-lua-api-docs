@@ -11,7 +11,7 @@ Determines if debugging functions such as
 ## Usage Patterns
 
 <Tabs>
-<TabItem label="Silence Logs">
+<TabItem label="Silent Logs">
 
 Calling the function without an argument or with `true` stops disk writing.
 
@@ -20,7 +20,7 @@ ac.setLogSilent(true)
 ```
 
 </TabItem>
-<TabItem label="Enable Disk Logging">
+<TabItem label="Disk Logging">
 
 Passing `false` restores default behavior, writing all log entries to the drive.
 
@@ -31,7 +31,7 @@ ac.setLogSilent(false)
 </TabItem>
 </Tabs>
 
-## Description
+### Description
 
 The `ac.setLogSilent` function is a performance and hardware safety utility.
 Writing to a physical file on an SSD or HDD is a relatively slow operation compared to updating a UI element.
@@ -41,13 +41,13 @@ the overhead of disk I/O has potential to cause noticeable stuttering or "lag" i
 By silencing the log, you can continue to use high-frequency logging for development while ensuring the simulation remains smooth.
 This also helps prevent unnecessary wear on storage hardware during long development sessions.
 
-## Parameters
+### Parameters
 
 | Parameter | Type      | Required | Default | Description                                     |
 | :-------- | :-------- | :------- | :------ | :---------------------------------------------- |
 | `value`   | `boolean` | No       | `true`  | Whether logging to the disk should be silenced. |
 
-## Examples
+### Examples
 
 <Tabs>
 <TabItem label="High Frequency Debugging">

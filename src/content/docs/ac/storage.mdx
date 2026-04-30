@@ -49,7 +49,7 @@ ac.storage.lastActive = os.date()
 </TabItem>
 </Tabs>
 
-## Description
+### Description
 
 `ac.storage` handles the heavy lifting of reading from and writing to the storage drive.
 Writes are debounced, meaning disk access is deferred for a few seconds and skipped entirely if no value change is detected.
@@ -61,14 +61,14 @@ The storage system supports the following data types:
 - `vec2`, `vec3`, and `vec4`
 - `rgb`, and `rgbm`
 
-## Parameters
+### Parameters
 
 | Parameter   | Type                | Required | Description                                                |
 | :---------- | :------------------ | :------- | :--------------------------------------------------------- |
 | `layout`    | `table` or `string` | Yes      | Either a table of default values or a specific string key. |
 | `keyPrefix` | `string`            | No       | Optional prefix added to all keys in the storage table.    |
 
-## Examples
+### Examples
 
 <Tabs>
 <TabItem label="Settings Menu">

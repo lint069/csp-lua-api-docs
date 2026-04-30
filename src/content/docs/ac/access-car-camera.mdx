@@ -30,14 +30,14 @@ local camera = ac.accessCarCamera(0)
 </TabItem>
 </Tabs>
 
-## Description
+### Description
 
 The `ac.accessCarCamera` function allows scripts to dynamically alter the behavior of car-mounted cameras. This is frequently used for creating cinematic tools, custom replay angles, or adjusting the default "chase" views provided by the car's developer.
 
 The returned object allows scripts to modify the camera’s position and orientation relative to the car,
 adjust its field of view for cinematic effects, and fine-tune rendering parameters such as exposure and depth of field.
 
-## Parameters
+### Parameters
 
 | Parameter     | Type      | Required | Description                                    |
 | :------------ | :-------- | :------- | :--------------------------------------------- |
@@ -49,7 +49,7 @@ adjust its field of view for cinematic effects, and fine-tune rendering paramete
 | :------------------- | :-------------------------------------------------------------------------------------- |
 | `ac.CarCameraParams` | An object providing access to camera properties. Returns `nil` if the index is invalid. |
 
-## Examples
+### Examples
 
 <Tabs>
 <TabItem label="Adjusting FOV">

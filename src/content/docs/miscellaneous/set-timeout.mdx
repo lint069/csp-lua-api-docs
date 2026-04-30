@@ -9,13 +9,13 @@ description: ...
 
 import { Aside, Tabs, TabItem } from "@astrojs/starlight/components";
 
-## Signature
+### Signature
 
 ```lua
 setTimeout(callback, delay, uniqueKey)
 ```
 
-## Description
+### Description
 
 Runs callback after the specified delay time.
 Returns `integer` which can be utilized by the [`clearTimeout()`](/miscellaneous/clear-timeout/) function.
@@ -28,7 +28,7 @@ Intervals are only called once per frame.
   set it to would still act like 0.016 seconds.
 </Aside>
 
-## Parameters
+### Parameters
 
 | Parameter   | Type       | Required | Default | Description                            |
 | ----------- | ---------- | -------- | ------- | -------------------------------------- |
@@ -45,7 +45,7 @@ Intervals are only called once per frame.
 
 - `integer` CancellationID for the timeout. Can be used to cancel the timeout with [`clearTimeout()`](/miscellaneous/clear-timeout/).
 
-## Examples
+### Examples
 
 <Tabs>
 <TabItem label="Basic Usage">

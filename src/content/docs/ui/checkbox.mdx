@@ -7,7 +7,7 @@ import { Tabs, TabItem } from "@astrojs/starlight/components";
 
 A standard toggle widget used to switch between "on" and "off" states.
 
-## Signature
+### Signature
 
 ```lua
 -- using a standard boolean
@@ -17,7 +17,7 @@ local newValue, changed = ui.checkbox(label, currentState)
 local changed = ui.checkbox(label, myRefBool)
 ```
 
-## Description
+### Description
 
 The checkbox displays a label alongside a square box that shows a checkmark when the value is `true`.
 
@@ -26,7 +26,7 @@ CSP provides two ways to handle state with this widget:
 1. **Standard:** Pass a boolean. The function returns the new state and a boolean indicating if it changed.
 2. **Reference:** Pass a `refbool`. The function updates the `refbool` directly and returns `true` if the user clicked it.
 
-## Parameters
+### Parameters
 
 | Parameter | Type                   | Required | Default | Description                      |
 | --------- | ---------------------- | -------- | ------- | -------------------------------- |
@@ -42,7 +42,7 @@ CSP provides two ways to handle state with this widget:
 
 ---
 
-## Examples
+### Examples
 
 <Tabs>
 <TabItem label="Using refbool">

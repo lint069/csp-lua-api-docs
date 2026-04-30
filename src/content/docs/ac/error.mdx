@@ -28,7 +28,7 @@ ac.error("Failed to load configuration file")
 </TabItem>
 </Tabs>
 
-## Description
+### Description
 
 `ac.error` functions similarly to `ac.log`, but it is intended for messages that signify a problem.
 In the **Lua Debug** app, messages sent via this function are highlighted in red, making them much easier to spot amidst regular status logs.
@@ -37,13 +37,13 @@ Messages are written to both the in-game console and the physical `custom_shader
 Like other logging functions, its output to the physical file can be suppressed by using [`ac.setLogSilent`](/ac/set-log-silent/).
 This is recommended if an error is occurring every frame to prevent potential performance degradation.
 
-## Parameters
+### Parameters
 
 | Parameter | Type  | Required | Description                                      |
 | :-------- | :---- | :------- | :----------------------------------------------- |
 | `...`     | `any` | Yes      | One or more values to be stringified and logged. |
 
-## Examples
+### Examples
 
 <Tabs>
 <TabItem label="Resource Validation">

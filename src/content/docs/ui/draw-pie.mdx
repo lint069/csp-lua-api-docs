@@ -7,13 +7,13 @@ import { Tabs, TabItem } from "@astrojs/starlight/components";
 
 Draws a filled sector of a circle (a "pie slice"). This function can also draw a full circle if the angle difference exceeds $$2\pi$$. Unlike standard drawing functions, this one supports masking a texture inside the shape.
 
-## Signature
+### Signature
 
 ```lua
 ui.drawPie(center, radius, angleFrom, angleTo, color, image)
 ```
 
-## Description
+### Description
 
 This function renders a convex shape from the center point out to the arc defined by the start and end angles.
 
@@ -21,7 +21,7 @@ This function renders a convex shape from the center point out to the arc define
 - If the difference between angles is greater than `math.tau` ($$2\pi$$), it efficiently renders a full `ui.drawCircleFilled` instead.
 - If an `image` is provided, it applies `ui.beginTextureShade` to mask the texture within the pie shape.
 
-## Parameters
+### Parameters
 
 | Parameter   | Type             | Required | Default             | Description                                                                      |
 | ----------- | ---------------- | -------- | ------------------- | -------------------------------------------------------------------------------- |
@@ -36,7 +36,7 @@ This function renders a convex shape from the center point out to the arc define
 
 - **None**
 
-## Examples
+### Examples
 
 <Tabs>
 <TabItem label="Pacman">

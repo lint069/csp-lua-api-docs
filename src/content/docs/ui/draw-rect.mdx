@@ -8,13 +8,13 @@ import Ref from "@components/Ref.astro";
 
 Draws an unfilled rectangle outline between two defined points on the screen or canvas.
 
-## Signature
+### Signature
 
 ```lua
 ui.drawRect(p1, p2, color, rounding, roundingFlags, thickness)
 ```
 
-## Description
+### Description
 
 This function renders a hollow rectangle.
 The shape is defined by an axis-aligned bounding box calculated from points `p1` (usually top-left) and `p2` (usually bottom-right).
@@ -24,7 +24,7 @@ This function only draws the outline.
 If you require a solid shape, use <Ref id="/ui/draw-rect-filled" /> instead.
 :::
 
-## Parameters
+### Parameters
 
 | Parameter       | Type                                        | Required | Default              | Description                                                  |
 | --------------- | ------------------------------------------- | -------- | -------------------- | ------------------------------------------------------------ |
@@ -39,7 +39,7 @@ If you require a solid shape, use <Ref id="/ui/draw-rect-filled" /> instead.
 
 - None
 
-## Examples
+### Examples
 
 <Tabs>
 <TabItem label="Box">
