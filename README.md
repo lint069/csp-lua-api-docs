@@ -9,10 +9,11 @@ Community maintained documenatation for the Custom Shaders Patch **(CSP) Lua API
 Notice a mistake or think something could be improved? *Contribute!*  
 Check out [`CONTRIBUTING.md`](https://github.com/lint069/csp-lua-api-docs/blob/main/CONTRIBUTING.md) if you want to contribute, report issues, or suggest changes.
 
-## Authors
+### Contributors
 
-- [lint0](https://www.github.com/lint069)
-- Chris
+<a href="https://github.com/lint069/csp-lua-api-docs/graphs/contributors">
+  <img src="https://contrib.rocks/image?repo=lint069/csp-lua-api-docs" />
+</a>
 
 ## Acknowledgments
 
