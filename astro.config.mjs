@@ -121,7 +121,6 @@ export default defineConfig({
             label: "Start Here",
             items: [
               {
-                icon: "i-material-symbols:info-outline",
                 label: "About the SDK",
                 slug: "guides/what-is-this",
               },

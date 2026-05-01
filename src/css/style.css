@@ -2,12 +2,12 @@
 @layer base, starlight, theme, components, utilities;
 
 :root[data-theme="dark"] {
-  --sl-color-accent-low: #0c204f;
+  --sl-color-accent-low: #000000;
   --sl-color-accent: #104eff;
-  --sl-color-accent-high: #abc4ff; /* main highlighting */
-  --sl-color-white: #f0f0f0; /* main text */
+  --sl-color-accent-high: #9fb4f0; /* Main accent */
+  --sl-color-white: #e0e0e0; /* Big text */
   --sl-color-gray-1: #edeeef;
-  --sl-color-gray-2: #c1c2c3; /* secondary text */
+  --sl-color-gray-2: #cfcfcf; /* Small text */
   --sl-color-gray-3: #8a8b8e;
   --sl-color-gray-4: #57585a;
   --sl-color-gray-5: #37383a; /* outlines / inline code */
@@ -15,22 +15,22 @@
   --sl-color-black: #161618; /* main page background */
 
   --card-mix-color: white;
-  --card-mix-amount: 2%;
+  --card-mix-amount: 3%;
 }
 
 :root[data-theme="light"] {
   --sl-color-accent-low: #c3d7ff;
-  --sl-color-accent: #2b63ff;
+  --sl-color-accent: #5482ff;
   --sl-color-accent-high: #0c2975;
-  --sl-color-white: #181819;
+  --sl-color-white: #111111; /* Big text */
   --sl-color-gray-1: #262729;
-  --sl-color-gray-2: #37383a;
-  --sl-color-gray-3: #5c5c5f;
+  --sl-color-gray-2: #353535; /* Small text */
+  --sl-color-gray-3: #5c5c5f; /* Small sidebar about headers */
   --sl-color-gray-4: #8e8a8a;
-  --sl-color-gray-5: #bdbebe;
-  --sl-color-gray-6: #ffffff;
-  --sl-color-gray-7: #f8f8f8;
-  --sl-color-black: #f1f1f1;
+  --sl-color-gray-5: #cccccc; /* 1px outlines */
+  --sl-color-gray-6: #e0e0e0; /* Inline code, 1px lines */
+  --sl-color-gray-7: #ffffff; /* Header Bar */
+  --sl-color-black: #fafafa; /* Main/Background */
 
   --card-mix-color: black;
   --card-mix-amount: 3.5%;
@@ -50,7 +50,7 @@ mjx-container svg {
 }
 
 .card {
-  border-radius: 0.3rem;
+  border-radius: 0.5rem;
   background-color: color-mix(
     in srgb,
     var(--sl-color-black) calc(100% - var(--card-mix-amount)),
@@ -61,17 +61,11 @@ mjx-container svg {
 /* inline code */
 code:not(pre code) {
   border-radius: 0.2rem;
-  padding: 0.15em 0.4em;
+  padding: 0.22em 0.3em;
 }
 
 .footer {
   text-align: left;
   padding: 0.3rem 0;
   font-size: 0.75rem;
-}
-
-/* sidebar icons */
-:root {
-  --spi-sidebar-icon-size: 1.25rem;
-  --spi-sidebar-icon-gap: 0.25rem;
 }
