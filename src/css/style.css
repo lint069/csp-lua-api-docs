@@ -10,9 +10,9 @@
   --sl-color-gray-2: #cfcfcf; /* Small text */
   --sl-color-gray-3: #8a8b8e;
   --sl-color-gray-4: #57585a;
-  --sl-color-gray-5: #37383a; /* outlines / inline code */
-  --sl-color-gray-6: #212225; /* sidebar */
-  --sl-color-black: #161618; /* main page background */
+  --sl-color-gray-5: #37383a; /* 1px lines/Inline code */
+  --sl-color-gray-6: #202223; /* Side- & Header-Bar */
+  --sl-color-black: #161618; /* Main/Background */
 
   --card-mix-color: white;
   --card-mix-amount: 3%;
@@ -68,4 +68,8 @@ code:not(pre code) {
   text-align: left;
   padding: 0.3rem 0;
   font-size: 0.75rem;
+}
+
+:root {
+  --sl-sidebar-width: 20rem; /* default: 18rem */
 }

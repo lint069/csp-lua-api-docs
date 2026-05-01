@@ -15,7 +15,6 @@ import { visit } from "unist-util-visit";
 //
 const base = "/csp-lua-api-docs";
 
-//
 /**
  * prepend base path to internal links and images
  * @returns {(tree: any) => void}

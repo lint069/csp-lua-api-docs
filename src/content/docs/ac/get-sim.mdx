@@ -12,27 +12,25 @@ import {
   CardGrid,
 } from "@astrojs/starlight/components";
 
+```lua
+ac.getSim()
+```
+
 The primary function for retrieving the global state of the simulation.
 It returns an [`ac.StateSim`](/ac/objects/state-sim/) object containing everything
 from graphics settings to weather conditions and session timing.
-
-### Signature
-
-```lua
-local sim = ac.getSim()
-```
 
 ### Description
 
 `ac.getSim()` provides a reference to a persistent FFI structure. This structure is updated once per graphics frame. It is the central source of truth for the environment, camera, and session progress.
 
-## Return Value
+### Return Values
 
 | Type                                    | Description                                 |
 | :-------------------------------------- | :------------------------------------------ |
 | [`ac.StateSim`](/ac/objects/state-sim/) | A reference to the global simulation state. |
 
-## Technical Notes
+### Technical Notes
 
 - **Update Rate:** This data is updated at the **rendering rate** (FPS). For physics-rate data, refer to specialized physics namespaces.
 - **Memory:** Like `ac.getCar`, this returns a pointer. Accessing `sim.cameraPosition` is significantly faster than calling a function to calculate it.
